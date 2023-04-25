@@ -16,7 +16,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, LoginScreen.routeName);
+      Navigator.pushReplacementNamed(context, SignInScreen.routeName);
     });
     super.initState();
   }
@@ -31,14 +31,14 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
               Text(
                 "DrawTask",
-                style: TextStyle(fontSize: 10.w),
+                style: TextStyle(fontSize: 4.2.h, fontFamily: 'IrishGrover'),
               ),
               SizedBox(
                 height: 2.h,
               ),
               Text(
                 "Get Creative!",
-                style: TextStyle(fontSize: 5.w),
+                style: TextStyle(fontSize: 2.h),
               ),
             ],
           ),

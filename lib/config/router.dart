@@ -9,10 +9,15 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const SplashScreen(),
       );
-    case LoginScreen.routeName:
+    case SignInScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const LoginScreen(),
+        builder: (_) => const SignInScreen(),
+      );
+    case SignUpScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const SignUpScreen(),
       );
     default:
       return MaterialPageRoute(
