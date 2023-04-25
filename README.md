@@ -1,16 +1,7 @@
 # DrawTask
 
-A new Flutter project.
+DrawTask is a mobile game that involves drawing pictures based on received words. The user can play with friends or with random players. The game is being developed using the Flutter framework, while the backend is being written in Node.js.
 
-## Getting Started
+If you would like to learn more about the project, please feel free to check out the case study prepared by Patrycja [here](https://www.behance.net/gallery/168964301/DrawTask).
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
