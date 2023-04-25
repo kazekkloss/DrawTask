@@ -22,20 +22,20 @@ const verifyUser = async (req, res) => {
 const sendVerifyMail = async (email, user_id) => {
   try {
     let mailTransporter = nodemailer.createTransport({
-      host: "smtp.mailtrap.io",
+      host: "sandbox.smtp.mailtrap.io",
       port: 2525,
       auth: {
-        user: "3c3afb8625448e",
-        pass: "9d8834000a80f2",
+        user: "cce6db6f1eb927",
+        pass: "a76efadf7b378a",
       },
     });
 
     let details = {
-      from: "3c3afb8625448e",
+      from: "cce6db6f1eb927",
       to: email,
       subject: "DrawTask - confirm email",
       html:
-        "<p>Hii " +
+        "<p>Hi " +
         email +
         ', please click here to <a href="http://0.0.0.0:3000/verify?id=' +
         user_id +

@@ -36,6 +36,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   sizer: ^2.0.15
   http: ^0.13.5
+  flutter_bloc: ^8.1.2
+  bloc: ^8.1.1
+  equatable: ^2.0.5
+  email_validator: ^2.1.17
+  shared_preferences: ^2.1.0
+
 
 dev_dependencies:
   flutter_test:

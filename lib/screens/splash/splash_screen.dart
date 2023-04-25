@@ -24,23 +24,25 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.only(top: 25.h),
-          child: Column(
-            children: [
-              Text(
-                "DrawTask",
-                style: TextStyle(fontSize: 4.2.h, fontFamily: 'IrishGrover'),
-              ),
-              SizedBox(
-                height: 2.h,
-              ),
-              Text(
-                "Get Creative!",
-                style: TextStyle(fontSize: 2.h),
-              ),
-            ],
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.only(top: 25.h),
+            child: Column(
+              children: [
+                Text(
+                  "DrawTask",
+                  style: TextStyle(fontSize: 4.2.h, fontFamily: 'IrishGrover'),
+                ),
+                SizedBox(
+                  height: 2.h,
+                ),
+                Text(
+                  "Get Creative!",
+                  style: TextStyle(fontSize: 2.h),
+                ),
+              ],
+            ),
           ),
         ),
       ),
