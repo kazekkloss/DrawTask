@@ -5,4 +5,6 @@ DrawTask is a mobile game that involves drawing pictures based on received words
 If you would like to learn more about the project, please feel free to check out the case study 
 prepared by Patrycja [here](https://www.behance.net/gallery/168964301/DrawTask).
 
+Please be aware that the project is still in progress! Enjoy! :)
+
 
