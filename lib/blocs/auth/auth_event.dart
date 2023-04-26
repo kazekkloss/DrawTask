@@ -26,11 +26,11 @@ class SignInEvent extends AuthEvent {
   List<Object?> get props => [context, email, password];
 }
 
-class UserProviderEvent extends AuthEvent {
-  final String token;
-  final User user;
-  UserProviderEvent({required this.token, required this.user});
+class CheckAuthEvent extends AuthEvent {
+  final BuildContext context;
+
+  CheckAuthEvent({required this.context});
 
   @override
-  List<Object?> get props => [token];
+  List<Object?> get props => [context];
 }

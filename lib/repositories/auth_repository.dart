@@ -1,11 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../blocs/blocs.dart';
 import '../config/config.dart';
 import '../models/user.dart';
 
@@ -13,11 +11,12 @@ import '../models/user.dart';
 
 class AuthRepository {
   // Sign Up function ------------------
-  void signUp({
+  Future<User> signUp({
     required BuildContext context,
     required String email,
     required String password,
   }) async {
+    User resUser = User.empty;
     try {
       User user = User(
         id: '',
@@ -36,12 +35,13 @@ class AuthRepository {
             response: res,
             context: context,
             onSuccess: () {
-              signIn(context: context, email: email, password: password);
+              resUser = User.fromJson(res.body);
             });
       }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+    return resUser;
   }
 
   // Sign In function ------------------
@@ -74,13 +74,49 @@ class AuthRepository {
 
               if (context.mounted) {
                 // Send user to state
-                context.read<AuthBloc>().add(
-                    UserProviderEvent(user: user, token: '${token['token']}'));
+                // context.read<AuthBloc>().add(
+                //     GetUserEvent(user: user, token: '${token['token']}'));
               }
             });
       }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+
+  // Get user data -------------------
+  Future<String> getUserData(
+    BuildContext context,
+  ) async {
+    String userData = "";
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      if (token == null) {
+        prefs.setString('x-auth-token', '');
+      }
+
+      var tokenRes = await http.post(Uri.parse('$uri/token-is-valid'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token!
+          });
+
+      var response = jsonDecode(tokenRes.body);
+
+      if (response == true) {
+        http.Response userRes = await http.get(
+          Uri.parse('$uri/'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token
+          },
+        );
+        userData = userRes.body;
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return userData;
   }
 }

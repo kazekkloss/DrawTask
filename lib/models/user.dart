@@ -54,4 +54,6 @@ class User {
       username: username ?? this.username,
     );
   }
+
+  static const empty = User(id: '-', email: '-', password: '-', verify: 0);
 }

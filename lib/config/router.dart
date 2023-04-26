@@ -19,6 +19,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const SignUpScreen(),
       );
+      case CheckLinkScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const CheckLinkScreen(),
+      );
     default:
       return MaterialPageRoute(
         settings: routeSettings,

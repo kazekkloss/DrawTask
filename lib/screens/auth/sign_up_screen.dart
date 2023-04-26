@@ -159,14 +159,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       BlocBuilder<AuthBloc, AuthState>(
                         builder: (context, state) {
-                          if (state is AuthLoading) {
-                            return SizedBox(
-                                height: 4.7.h,
-                                width: 4.7.h,
-                                child: const CircularProgressIndicator(
-                                  color: Colors.black,
-                                ));
-                          }
                           return GestureDetector(
                             child: Container(
                               height: 4.7.h,

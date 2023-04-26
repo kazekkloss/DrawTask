@@ -1,31 +1,37 @@
 part of 'auth_bloc.dart';
 
-@immutable
-abstract class AuthState extends Equatable {
-  const AuthState();
+enum AuthStatus {
+  unknown,
+  authenticated,
+  unauthenticated,
+  notVerified,
+  noUsername,
+  error,
 }
 
-class AuthInitializing extends AuthState {
-  @override
-  List<Object?> get props => [];
-}
-
-class AuthLoading extends AuthState {
-  @override
-  List<Object?> get props => [];
-}
-
-class Authenticated extends AuthState {
+class AuthState extends Equatable {
+  final AuthStatus status;
   final User user;
-  final String token;
+  const AuthState({required this.user, required this.status});
 
-  const Authenticated({required this.user, required this.token});
+  const AuthState._({this.status = AuthStatus.unknown, this.user = User.empty});
+
+  const AuthState.unknown() : this._();
+
+  const AuthState.authenticated(User user)
+      : this._(status: AuthStatus.authenticated, user: user);
+
+  const AuthState.unauthenticated()
+      : this._(status: AuthStatus.unauthenticated);
+
+  const AuthState.notVerified(User user)
+      : this._(status: AuthStatus.notVerified, user: user);
+
+  const AuthState.noUsername(User user)
+      : this._(status: AuthStatus.noUsername, user: user);
+
+  const AuthState.error() : this._();
 
   @override
-  List<Object?> get props => [user, token];
-}
-
-class Unauthenticated extends AuthState {
-  @override
-  List<Object?> get props => [];
+  List<Object> get props => [status, user];
 }

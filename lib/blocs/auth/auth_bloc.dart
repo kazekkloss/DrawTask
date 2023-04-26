@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -12,17 +14,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
   AuthBloc({required AuthRepository authRepository})
       : _authRepository = authRepository,
-        super(AuthInitializing()) {
+        super(const AuthState.unknown()) {
     on<SignUpEvent>(_signUpEventToState);
     on<SignInEvent>(_signInEventToState);
-    on<UserProviderEvent>(_onUserProviderEventToState);
+    on<CheckAuthEvent>(_onCheckAuthEventToState);
   }
 
-  void _signUpEventToState(SignUpEvent event, Emitter<AuthState> emit) {
+  void _signUpEventToState(SignUpEvent event, Emitter<AuthState> emit) async {
     try {
-      _authRepository.signUp(
+      User user = await _authRepository.signUp(
           context: event.context, email: event.email, password: event.password);
-      emit(AuthLoading());
+      if (user != User.empty) {
+        emit(AuthState.notVerified(user));
+      } else {
+        emit(const AuthState.error());
+      }
     } catch (e) {
       debugPrint('$e');
     }
@@ -32,17 +38,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       _authRepository.signIn(
           context: event.context, email: event.email, password: event.password);
-      emit(AuthLoading());
     } catch (e) {
       debugPrint('$e');
     }
   }
 
-  void _onUserProviderEventToState(
-      UserProviderEvent event, Emitter<AuthState> emit) {
-    try {
-      print(event.token);
-    } catch (e) {
+  Future _onCheckAuthEventToState(
+      CheckAuthEvent event, Emitter<AuthState> emit) async {
+    try {} catch (e) {
       debugPrint('$e');
     }
   }
