@@ -8,11 +8,21 @@ import 'repositories/repositories.dart';
 import 'screens/screens.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const DrawTask());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class DrawTask extends StatefulWidget {
+  const DrawTask({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<DrawTask> createState() => _DrawTaskState();
+}
+
+class _DrawTaskState extends State<DrawTask> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, deviceType) {
@@ -31,7 +41,35 @@ class MyApp extends StatelessWidget {
             ),
           ],
           child: MaterialApp(
+            navigatorKey: _navigatorKey,
             initialRoute: SplashScreen.routeName,
+            builder: (context, child) {
+              return BlocListener<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  switch (state.status) {
+                    case AuthStatus.authenticated:
+                      _navigatorKey.currentState
+                          ?.pushReplacementNamed(HomeScreen.routeName);
+                      break;
+                    case AuthStatus.notVerified:
+                      _navigatorKey.currentState
+                          ?.pushReplacementNamed(CheckLinkScreen.routeName);
+                      break;
+                    case AuthStatus.noUsername:
+                      _navigatorKey.currentState
+                          ?.pushReplacementNamed(SetUsernameScreen.routeName);
+                      break;
+                    case AuthStatus.unauthenticated:
+                      _navigatorKey.currentState
+                          ?.pushReplacementNamed(SignInScreen.routeName);
+                      break;
+                    default:
+                      break;
+                  }
+                },
+                child: child,
+              );
+            },
             onGenerateRoute: (settings) => generateRoute(settings),
           ),
         ),

@@ -4,6 +4,7 @@ import '../screens/screens.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
+    // Auth screens --------------------------------------
     case SplashScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
@@ -19,10 +20,21 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const SignUpScreen(),
       );
-      case CheckLinkScreen.routeName:
+    case CheckLinkScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const CheckLinkScreen(),
+      );
+    case SetUsernameScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const SetUsernameScreen(),
+      );
+    // Home screens --------------------------------------
+    case HomeScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const HomeScreen(),
       );
     default:
       return MaterialPageRoute(

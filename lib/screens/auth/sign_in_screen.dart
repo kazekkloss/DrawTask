@@ -7,7 +7,7 @@ import '../../blocs/blocs.dart';
 import '../screens.dart';
 
 class SignInScreen extends StatefulWidget {
-  static const routeName = '/sign-in-screen';
+  static const routeName = '/sign_in_screen';
   const SignInScreen({super.key});
 
   @override
@@ -111,32 +111,27 @@ class _SignInScreenState extends State<SignInScreen> {
                       SizedBox(
                         height: 3.5.h,
                       ),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          return GestureDetector(
-                            child: Container(
-                              height: 4.7.h,
-                              width: 84.w,
-                              decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10))),
-                              child: const Center(
-                                  child: Text(
-                                'Log In',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              )),
-                            ),
-                            onTap: () {
-                              if (_signInFormKey.currentState!.validate()) {
-                                context.read<AuthBloc>().add(SignInEvent(
-                                    context: context,
-                                    email: _emailController.text,
-                                    password: _passwordController.text));
-                              }
-                            },
-                          );
+                      GestureDetector(
+                        child: Container(
+                          height: 4.7.h,
+                          width: 84.w,
+                          decoration: const BoxDecoration(
+                              color: Colors.black,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: const Center(
+                              child: Text(
+                            'Log In',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          )),
+                        ),
+                        onTap: () {
+                          if (_signInFormKey.currentState!.validate()) {
+                            context.read<AuthBloc>().add(SignInEvent(
+                                context: context,
+                                email: _emailController.text,
+                                password: _passwordController.text));
+                          }
                         },
                       ),
                       SizedBox(height: 1.7.h),

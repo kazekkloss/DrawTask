@@ -6,7 +6,7 @@ import 'package:sizer/sizer.dart';
 import '../../blocs/blocs.dart';
 
 class SignUpScreen extends StatefulWidget {
-  static const routeName = '/sign-up-screen';
+  static const routeName = '/sign_up_screen';
   const SignUpScreen({super.key});
 
   @override

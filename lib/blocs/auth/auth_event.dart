@@ -34,3 +34,12 @@ class CheckAuthEvent extends AuthEvent {
   @override
   List<Object?> get props => [context];
 }
+
+class LogoutEvent extends AuthEvent {
+  final BuildContext context;
+
+  LogoutEvent({required this.context});
+
+  @override
+  List<Object?> get props => [context];
+}

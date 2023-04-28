@@ -32,7 +32,8 @@ authRouter.post("/api/sign_up", async (req, res) => {
       verify.sendVerifyMail(req.body.email, user._id);
     }
 
-    res.json(user);
+    const token = jwt.sign({ id: user._id }, "passwordKey");
+    res.json({ token, ...user });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -60,9 +61,8 @@ authRouter.post("/api/sign_in", async (req, res) => {
 
     const token = jwt.sign({ id: user._id }, "passwordKey");
 
-    console.log("success");
-
     res.json({ token, ...user._doc });
+    console.log(user)
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

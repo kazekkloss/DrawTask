@@ -1,11 +1,13 @@
 import 'dart:async';
 
-import 'package:drawtask/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../blocs/blocs.dart';
+
 class SplashScreen extends StatefulWidget {
-  static const routeName = '/splash-screen';
+  static const routeName = '/splash_screen';
   const SplashScreen({super.key});
 
   @override
@@ -16,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, SignInScreen.routeName);
+      context.read<AuthBloc>().add(CheckAuthEvent(context: context));
     });
     super.initState();
   }
