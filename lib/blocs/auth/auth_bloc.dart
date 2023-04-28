@@ -54,7 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onLogoutEventToState(LogoutEvent event, Emitter<AuthState> emit) async {
     try {
-      User user = await _authRepository.logOut(context: event.context);
+      User user = await _authRepository.logout(context: event.context);
       if (user == User.empty) {
         emit(const AuthState.unauthenticated());
       }

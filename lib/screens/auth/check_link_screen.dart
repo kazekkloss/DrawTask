@@ -1,3 +1,4 @@
+import 'package:drawtask/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -72,20 +73,30 @@ class CheckLinkScreen extends StatelessWidget {
                 SizedBox(
                   height: 3.5.h,
                 ),
-                GestureDetector(
-                  child: Container(
-                    height: 4.7.h,
-                    width: 84.w,
-                    decoration: const BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    child: const Center(
-                        child: Text(
-                      'Send link again',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    )),
-                  ),
-                  onTap: () {},
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    return GestureDetector(
+                      child: Container(
+                        height: 4.7.h,
+                        width: 84.w,
+                        decoration: const BoxDecoration(
+                            color: Colors.black,
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        child: const Center(
+                            child: Text(
+                          'Send link again',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        )),
+                      ),
+                      onTap: () {
+                        AuthRepository().resendMail(
+                            context: context,
+                            email: state.user.email,
+                            userId: state.user.id);
+                      },
+                    );
+                  },
                 ),
                 SizedBox(height: 1.7.h),
                 SizedBox(
@@ -95,6 +106,17 @@ class CheckLinkScreen extends StatelessWidget {
                     textAlign: TextAlign.right,
                   ),
                 ),
+                Expanded(
+                    child: Center(
+                  child: IconButton(
+                    onPressed: () {
+                      context
+                          .read<AuthBloc>()
+                          .add(CheckAuthEvent(context: context));
+                    },
+                    icon: const Icon(Icons.refresh),
+                  ),
+                ))
               ],
             ),
           ),

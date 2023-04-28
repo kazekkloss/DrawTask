@@ -3,14 +3,16 @@ const User = require("../../models/user");
 
 const verifyUser = async (req, res) => {
   try {
+    console.log(req.query.id);
     const updateInfo = await User.updateOne(
       { _id: req.query.id },
       { $set: { verify: 1 } }
     );
 
     console.log(updateInfo);
-    res.sendFile(__dirname + "/layouts/verify-page.html", function (err) {
+    res.sendFile(__dirname + "/layout/verify-page.html", function (err) {
       if (err) {
+        console.log(err);
         console.log("error email link");
       }
     });

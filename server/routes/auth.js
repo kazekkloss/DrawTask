@@ -28,12 +28,25 @@ authRouter.post("/api/sign_up", async (req, res) => {
     });
     user = await user.save();
 
+    console.log(user._id);
     if (user) {
       verify.sendVerifyMail(req.body.email, user._id);
     }
 
     const token = jwt.sign({ id: user._id }, "passwordKey");
     res.json({ token, ...user });
+    console.log(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Resend mail verificaton link
+authRouter.post("/api/resend_mail", async (req, res) => {
+  try {
+    const { email, userId } = req.body;
+    await verify.sendVerifyMail(email, userId);
+    res.json(email);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -62,7 +75,7 @@ authRouter.post("/api/sign_in", async (req, res) => {
     const token = jwt.sign({ id: user._id }, "passwordKey");
 
     res.json({ token, ...user._doc });
-    console.log(user)
+    console.log(user);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

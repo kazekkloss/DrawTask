@@ -16,7 +16,6 @@ class AuthRepository {
     required String email,
     required String password,
   }) async {
-    User resUser = User.empty;
     try {
       User user = User(
         id: '',
@@ -38,13 +37,13 @@ class AuthRepository {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               await prefs.setString(
                   'x-auth-token', jsonDecode(res.body)['token']);
-              resUser = User.fromJson(res.body);
             });
       }
+      return User.fromJson(res.body);
     } catch (e) {
       showSnackBar(context, e.toString());
+      return User.empty;
     }
-    return resUser;
   }
 
   // Sign In function ------------------
@@ -78,6 +77,32 @@ class AuthRepository {
     }
   }
 
+  // Send mail ------------------
+  void resendMail(
+      {required BuildContext context,
+      required String email,
+      required String userId}) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/resend_mail'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode({'email': email, 'userId': userId}),
+      );
+      if (context.mounted) {
+        httpErrorHandle(
+            response: res,
+            context: context,
+            onSuccess: () {
+              showSnackBar(context, "Email is send on $email");
+            });
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
   // Get user data -------------------
   Future<User> getUserData({
     required BuildContext context,
@@ -98,8 +123,6 @@ class AuthRepository {
 
       var response = jsonDecode(tokenRes.body);
 
-      print(response);
-
       if (response == true) {
         http.Response res = await http.get(
           Uri.parse('$uri/'),
@@ -117,8 +140,8 @@ class AuthRepository {
     return userRes;
   }
 
-  // Get user data -------------------
-  Future<User> logOut({required BuildContext context}) async {
+  // Logout -------------------
+  Future<User> logout({required BuildContext context}) async {
     User userRes = User.empty;
     try {
       SharedPreferences sharedPreferences =
