@@ -10,6 +10,7 @@ const verifyUser = async (req, res) => {
     );
 
     console.log(updateInfo);
+
     res.sendFile(__dirname + "/layout/verify-page.html", function (err) {
       if (err) {
         console.log(err);

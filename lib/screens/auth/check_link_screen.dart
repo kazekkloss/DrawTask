@@ -5,9 +5,15 @@ import 'package:sizer/sizer.dart';
 
 import '../../blocs/blocs.dart';
 
-class CheckLinkScreen extends StatelessWidget {
+class CheckLinkScreen extends StatefulWidget {
   static const routeName = '/check_link_screen';
   const CheckLinkScreen({super.key});
+
+  @override
+  State<CheckLinkScreen> createState() => _CheckLinkScreenState();
+}
+
+class _CheckLinkScreenState extends State<CheckLinkScreen> {
 
   @override
   Widget build(BuildContext context) {
