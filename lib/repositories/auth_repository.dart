@@ -109,11 +109,52 @@ class AuthRepository {
     }
   }
 
+// Set username -------------------
+  Future<User> setUsername({
+    required BuildContext context,
+    required String username,
+  }) async {
+    User user = User.empty;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/set-username'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+        body: jsonEncode(
+          {
+            'username': username,
+          },
+        ),
+      );
+
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            user = User.fromJson(
+              jsonEncode(
+                jsonDecode(res.body),
+              ),
+            );
+          },
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return user;
+  }
+
   // Get user data -------------------
   Future<User> getUserData({
     required BuildContext context,
   }) async {
-    User userRes = User.empty;
+    User user = User.empty;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
@@ -137,15 +178,13 @@ class AuthRepository {
             'x-auth-token': token
           },
         );
-        userRes = User.fromJson(res.body);
+        user = User.fromJson(res.body);
       }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
-    return userRes;
+    return user;
   }
-
-  // Socket -------------------
 
   // Logout -------------------
   Future<User> logout({required BuildContext context}) async {

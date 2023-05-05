@@ -102,4 +102,25 @@ authRouter.get("/", auth, async (req, res) => {
   res.json({ ...user._doc, token: req.token });
 });
 
+// SAVE USERNAME
+authRouter.post("/api/set-username", auth, async (req, res) => {
+  try {
+    const { username } = req.body;
+
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res
+        .status(400)
+        .json({ msg: "User with same username already exists!" });
+    }
+
+    let user = await User.findById(req.user);
+    user.username = username;
+    user = await user.save();
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = authRouter;

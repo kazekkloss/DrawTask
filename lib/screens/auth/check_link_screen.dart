@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drawtask/repositories/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +16,33 @@ class CheckLinkScreen extends StatefulWidget {
 }
 
 class _CheckLinkScreenState extends State<CheckLinkScreen> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    _startChecking();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _stopChecking();
+  }
+
+  void _startChecking() {
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      _checking();
+    });
+  }
+
+  void _stopChecking() {
+    _timer?.cancel();
+  }
+
+  void _checking() {
+    context.read<AuthBloc>().add(CheckAuthEvent(context: context));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,17 +141,6 @@ class _CheckLinkScreenState extends State<CheckLinkScreen> {
                     textAlign: TextAlign.right,
                   ),
                 ),
-                Expanded(
-                    child: Center(
-                  child: IconButton(
-                    onPressed: () {
-                      context
-                          .read<AuthBloc>()
-                          .add(CheckAuthEvent(context: context));
-                    },
-                    icon: const Icon(Icons.refresh),
-                  ),
-                ))
               ],
             ),
           ),

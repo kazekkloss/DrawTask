@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         super(const AuthState.unknown()) {
     on<SignUpEvent>(_signUpEventToState);
     on<SignInEvent>(_signInEventToState);
+    on<SaveUsernameEvent>(_saveUsernameEventToState);
     on<CheckAuthEvent>(_onCheckAuthEventToState);
     on<LogoutEvent>(_onLogoutEventToState);
   }
@@ -43,12 +44,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  void _saveUsernameEventToState(
+      SaveUsernameEvent event, Emitter<AuthState> emit) async {
+    try {
+      User user = await _authRepository.setUsername(
+          context: event.context, username: event.username);
+      if (user != User.empty) {
+        AuthState state = await userChecker(user);
+        emit(state);
+      }
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
+
   void _onCheckAuthEventToState(
       CheckAuthEvent event, Emitter<AuthState> emit) async {
     try {
       User user = await _authRepository.getUserData(context: event.context);
-      AuthState state = await userChecker(user);
-      emit(state);
+      AuthState newState = await userChecker(user);
+      if (state.status == AuthStatus.notVerified) {
+        if (state.user.verify != user.verify) {
+          emit(newState);
+        }
+      } else {
+        emit(newState);
+      }
     } catch (e) {
       debugPrint('$e');
     }

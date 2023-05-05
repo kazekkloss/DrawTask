@@ -64,7 +64,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             return null;
                           },
                           decoration: const InputDecoration(
-                              hintText: 'email or username',
+                              hintText: 'email',
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 0, horizontal: 14),
                               border: OutlineInputBorder(
