@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../blocs/blocs.dart';
 
 class HomeScreen extends StatelessWidget {
-  static const routeName = '/home_screen';
   const HomeScreen({super.key});
 
   @override

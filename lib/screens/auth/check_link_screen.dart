@@ -8,7 +8,6 @@ import 'package:sizer/sizer.dart';
 import '../../blocs/blocs.dart';
 
 class CheckLinkScreen extends StatefulWidget {
-  static const routeName = '/check_link_screen';
   const CheckLinkScreen({super.key});
 
   @override

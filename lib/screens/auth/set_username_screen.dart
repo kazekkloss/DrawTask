@@ -5,7 +5,6 @@ import 'package:sizer/sizer.dart';
 import '../../blocs/blocs.dart';
 
 class SetUsernameScreen extends StatefulWidget {
-  static const routeName = '/set_username_screen';
   const SetUsernameScreen({super.key});
 
   @override
