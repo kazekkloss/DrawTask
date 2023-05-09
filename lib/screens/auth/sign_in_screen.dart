@@ -1,4 +1,3 @@
-import 'package:drawtask/config/route_constants.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../blocs/blocs.dart';
-import '../screens.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -149,8 +147,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: GestureDetector(
-                            onTap: () =>
-                                context.go('/sign_up'),
+                            onTap: () => context.push('/sign_in/sign_up'),
                             child: RichText(
                               text: const TextSpan(
                                 style: TextStyle(color: Colors.black),

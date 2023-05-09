@@ -194,8 +194,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: GestureDetector(
-                            onTap: () {},
-                            //=> context.pop(),
+                            onTap: () => context.pop(),
+                            //Navigator.pop(context),
                             child: RichText(
                               text: const TextSpan(
                                 style: TextStyle(color: Colors.black),

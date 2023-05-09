@@ -39,14 +39,7 @@ class _DrawTaskState extends State<DrawTask> {
               ],
               child: Builder(builder: (context) {
                 return MaterialApp.router(
-                  //routerConfig: AppRouter(context: context).router,
-                  routeInformationParser:
-                      AppRouter(context: context).router.routeInformationParser,
-                  routerDelegate:
-                      AppRouter(context: context).router.routerDelegate,
-                  routeInformationProvider: AppRouter(context: context)
-                      .router
-                      .routeInformationProvider,
+                  routerConfig: AppRouter(context: context).router,
                   debugShowCheckedModeBanner: false,
                 );
               })));

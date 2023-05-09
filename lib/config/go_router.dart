@@ -11,6 +11,28 @@ class AppRouter {
   AppRouter({required this.context});
 
   GoRouter _router() => GoRouter(
+        debugLogDiagnostics: true,
+        redirect: (context, state) {
+          var status = context.read<AuthBloc>().state.status;
+          switch (status) {
+            case AuthStatus.unknown:
+              return state.namedLocation(RouteConstants.splash);
+            case AuthStatus.authenticated:
+              return state.namedLocation(RouteConstants.home);
+            case AuthStatus.unauthenticated:
+              if (state.location == '/sign_in/sign_up') {
+                return state.namedLocation(RouteConstants.signUp);
+              } else {
+                return state.namedLocation(RouteConstants.signIn);
+              }
+            case AuthStatus.notVerified:
+              return state.namedLocation(RouteConstants.checkLink);
+            case AuthStatus.noUsername:
+              return state.namedLocation(RouteConstants.setUsername);
+          }
+        },
+        refreshListenable: GoRouterRefreshBloc<AuthBloc, AuthState>(
+            BlocProvider.of<AuthBloc>(context, listen: false)),
         routes: [
           GoRoute(
             name: RouteConstants.splash,
@@ -18,10 +40,12 @@ class AppRouter {
             builder: (context, state) => const SplashScreen(),
           ),
           GoRoute(
+            name: RouteConstants.signIn,
             path: '/sign_in',
             builder: (context, state) => const SignInScreen(),
             routes: [
               GoRoute(
+                name: RouteConstants.signUp,
                 path: 'sign_up',
                 builder: (context, state) => const SignUpScreen(),
               ),
@@ -43,25 +67,14 @@ class AppRouter {
             builder: (context, state) => const HomeScreen(),
           ),
         ],
-        debugLogDiagnostics: true,
-        redirect: (context, state) {
-          var status = context.read<AuthBloc>().state.status;
-          print(status);
-          switch (status) {
-            case AuthStatus.unknown:
-              return state.namedLocation(RouteConstants.splash);
-            case AuthStatus.authenticated:
-              return state.namedLocation(RouteConstants.home);
-            case AuthStatus.unauthenticated:
-              return '/sign_in';
-            case AuthStatus.notVerified:
-              return state.namedLocation(RouteConstants.checkLink);
-            case AuthStatus.noUsername:
-              return state.namedLocation(RouteConstants.setUsername);
-          }
+        errorPageBuilder: (context, state) {
+          return const MaterialPage(
+              child: Scaffold(
+            body: Center(
+              child: Text('Error route'),
+            ),
+          ));
         },
-        refreshListenable: GoRouterRefreshBloc<AuthBloc, AuthState>(
-            BlocProvider.of<AuthBloc>(context, listen: false)),
       );
   GoRouter get router => _router();
 }
