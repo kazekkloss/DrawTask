@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
 import 'blocs/blocs.dart';
-import 'config/go_router.dart';
+import 'config/router/router.dart';
 import 'repositories/repositories.dart';
 
 void main() {

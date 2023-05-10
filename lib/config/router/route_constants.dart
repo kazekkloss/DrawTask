@@ -5,4 +5,7 @@ class RouteConstants {
   static String checkLink = 'check_link';
   static String setUsername = 'set_username';
   static String home = 'home';
+  static String games = 'games';
+  static String newGame = 'new_game';
+  static String profile = 'profile';
 }

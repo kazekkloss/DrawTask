@@ -7,4 +7,7 @@ export 'auth/check_link_screen.dart';
 export 'auth/set_username_screen.dart';
 
 // Screens to home
-export 'home/home_screen.dart';
+export 'main/new_game_screen.dart';
+export 'main/home_screen.dart';
+export 'main/games_screen.dart';
+export 'main/profile_screen.dart';

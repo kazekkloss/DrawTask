@@ -7,8 +7,7 @@ const authRouter = require("./routes/auth");
 //INIT
 const port = process.env.PORT || 3000;
 const app = express();
-const DB =
-  "";
+const DB = "";
 var server = http.createServer(app);
 var io = require("socket.io")(server);
 

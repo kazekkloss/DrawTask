@@ -1,3 +1,4 @@
+import 'package:drawtask/config/config.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,7 +148,8 @@ class _SignInScreenState extends State<SignInScreen> {
                         child: Align(
                           alignment: Alignment.bottomCenter,
                           child: GestureDetector(
-                            onTap: () => context.push('/sign_in/sign_up'),
+                            onTap: () =>
+                                context.pushNamed(RouteConstants.signUp),
                             child: RichText(
                               text: const TextSpan(
                                 style: TextStyle(color: Colors.black),
