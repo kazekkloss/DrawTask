@@ -1,5 +1,10 @@
+import 'package:drawtask/screens/main/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sizer/sizer.dart';
+
+import '../../../blocs/blocs.dart';
 
 class BottomNavBar extends StatefulWidget {
   final Widget child;
@@ -27,13 +32,48 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const TopAppBar(),
+      drawer: Drawer(
+        child: Column(
+          children: [
+            SizedBox(height: 30.h),
+            GestureDetector(
+              onTap: () {
+                context.read<AuthBloc>().add(LogoutEvent(context: context));
+              },
+              child: const Text(
+                'Log out',
+                style: TextStyle(fontSize: 25),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: widget.child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        items: widget.tabs,
-        onTap: (index) => _onItemTapped(context, index),
-        selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.black,
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(boxShadow: [
+          BoxShadow(
+            offset: Offset(0, 0),
+            spreadRadius: -2,
+            blurRadius: 8,
+            color: Color.fromRGBO(0, 0, 0, 1),
+          ),
+        ], borderRadius: BorderRadius.all(Radius.circular(15))),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(15.0),
+            topRight: Radius.circular(15.0),
+          ),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            iconSize: 35,
+            currentIndex: _currentIndex,
+            items: widget.tabs,
+            onTap: (index) => _onItemTapped(context, index),
+            selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+            unselectedItemColor: const Color.fromARGB(255, 149, 149, 149),
+          ),
+        ),
       ),
     );
   }

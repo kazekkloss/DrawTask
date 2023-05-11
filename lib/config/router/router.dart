@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../blocs/blocs.dart';
 import '../../screens/main/widgets/bottom_nav_bar.dart';
 import '../config.dart';
-import 'stream_bloc.dart';
 
 class AppRouter {
   final BuildContext context;
@@ -23,13 +22,11 @@ class AppRouter {
     const NavBarItem(
         initialLocation: '/home', icon: Icon(Icons.home), label: ''),
     const NavBarItem(
-        initialLocation: '/games', icon: Icon(Icons.games), label: ''),
+        initialLocation: '/games', icon: Icon(Icons.dashboard), label: ''),
     const NavBarItem(
         initialLocation: '/new_game', icon: Icon(Icons.games), label: ''),
     const NavBarItem(
-        initialLocation: '/profile',
-        icon: Icon(Icons.person_outline),
-        label: ''),
+        initialLocation: '/profile', icon: Icon(Icons.person), label: ''),
   ];
 
   GoRouter _router() => GoRouter(
@@ -122,6 +119,14 @@ class AppRouter {
                   path: '/new_game',
                   pageBuilder: (context, state) => MaterialPage(
                       child: const NewGameScreen(), key: state.pageKey),
+                  routes: [
+                    GoRoute(
+                        name: RouteConstants.friendsGame,
+                        path: 'friends_game',
+                        pageBuilder: ((context, state) =>
+                            const NoTransitionPage(
+                                child: FriendsGameScreen()))),
+                  ],
                 ),
                 // Profile Screen
                 GoRoute(

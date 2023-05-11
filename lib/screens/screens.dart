@@ -11,3 +11,6 @@ export 'main/new_game_screen.dart';
 export 'main/home_screen.dart';
 export 'main/games_screen.dart';
 export 'main/profile_screen.dart';
+
+// -------
+export 'main/friends_game_screen.dart';

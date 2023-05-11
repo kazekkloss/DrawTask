@@ -109,26 +109,28 @@ class _CheckLinkScreenState extends State<CheckLinkScreen> {
                 ),
                 BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
-                    return GestureDetector(
-                      child: Container(
-                        height: 4.7.h,
-                        width: 84.w,
-                        decoration: const BoxDecoration(
-                            color: Colors.black,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        child: const Center(
-                            child: Text(
-                          'Send link again',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        )),
-                      ),
+                    return InkWell(
+                      splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
                       onTap: () {
                         AuthRepository().resendMail(
                             context: context,
                             email: state.user.email,
                             userId: state.user.id);
                       },
+                      child: Ink(
+                        decoration: const BoxDecoration(
+                            color: Color.fromRGBO(75, 75, 75, 1.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        height: 4.7.h,
+                        width: 84.w,
+                        child: const Center(
+                            child: Text(
+                          'Send link again',
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        )),
+                      ),
                     );
                   },
                 ),

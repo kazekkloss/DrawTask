@@ -1,5 +1,8 @@
+import 'package:drawtask/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../blocs/blocs.dart';
 
@@ -8,14 +11,52 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: ElevatedButton(
-            onPressed: () {
-              context.read<AuthBloc>().add(LogoutEvent(context: context));
-            },
-            child: const Text("Logout")),
-      ),
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 3.h),
+              child: Column(
+                children: [
+                  Container(
+                    height: 11.h,
+                    width: 11.h,
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 149, 149, 149),
+                        borderRadius: BorderRadius.circular(15)),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    state.user.username.toString(),
+                    style: const TextStyle(fontSize: 25),
+                  ),
+                  SizedBox(height: 2.h),
+                  InkWell(
+                    splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    onTap: () {
+                      context.goNamed(RouteConstants.newGame);
+                    },
+                    child: Ink(
+                      decoration: const BoxDecoration(
+                          color: Color.fromRGBO(75, 75, 75, 1.0),
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      height: 4.7.h,
+                      width: 84.w,
+                      child: const Center(
+                          child: Text(
+                        'New Game',
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      )),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

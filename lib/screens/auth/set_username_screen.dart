@@ -71,7 +71,7 @@ class _SetUsernameScreenState extends State<SetUsernameScreen> {
                                   if (value!.isEmpty) {
                                     return 'username is empty';
                                   }
-                                  if (value.length <= 4) {
+                                  if (value.length <= 3) {
                                     return 'username is too short, min 4 characters';
                                   }
                                   return null;
@@ -196,20 +196,10 @@ class _SetUsernameScreenState extends State<SetUsernameScreen> {
                         ),
                       ),
                       SizedBox(height: 3.17.h),
-                      GestureDetector(
-                        child: Container(
-                          height: 4.7.h,
-                          width: 84.w,
-                          decoration: const BoxDecoration(
-                              color: Colors.black,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: const Center(
-                              child: Text(
-                            'Next',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          )),
-                        ),
+                      InkWell(
+                        splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         onTap: () {
                           if (_usernameFormKey.currentState!.validate()) {
                             context.read<AuthBloc>().add(SaveUsernameEvent(
@@ -217,6 +207,21 @@ class _SetUsernameScreenState extends State<SetUsernameScreen> {
                                 username: _usernameController.text));
                           }
                         },
+                        child: Ink(
+                          decoration: const BoxDecoration(
+                              color: Color.fromRGBO(75, 75, 75, 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          height: 4.7.h,
+                          width: 84.w,
+                          child: const Center(
+                            child: Text(
+                              'Next',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 18),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),

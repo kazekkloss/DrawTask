@@ -111,20 +111,10 @@ class _SignInScreenState extends State<SignInScreen> {
                       SizedBox(
                         height: 3.5.h,
                       ),
-                      GestureDetector(
-                        child: Container(
-                          height: 4.7.h,
-                          width: 84.w,
-                          decoration: const BoxDecoration(
-                              color: Colors.black,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10))),
-                          child: const Center(
-                              child: Text(
-                            'Log In',
-                            style: TextStyle(color: Colors.white, fontSize: 18),
-                          )),
-                        ),
+                      InkWell(
+                        splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
                         onTap: () {
                           if (_signInFormKey.currentState!.validate()) {
                             context.read<AuthBloc>().add(SignInEvent(
@@ -133,6 +123,19 @@ class _SignInScreenState extends State<SignInScreen> {
                                 password: _passwordController.text));
                           }
                         },
+                        child: Ink(
+                          decoration: const BoxDecoration(
+                              color: Color.fromRGBO(75, 75, 75, 1.0),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          height: 4.7.h,
+                          width: 84.w,
+                          child: const Center(
+                              child: Text(
+                            'Log In',
+                            style: TextStyle(color: Colors.white, fontSize: 18),
+                          )),
+                        ),
                       ),
                       SizedBox(height: 1.7.h),
                       SizedBox(
