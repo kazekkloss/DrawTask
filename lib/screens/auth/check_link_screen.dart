@@ -91,15 +91,20 @@ class _CheckLinkScreenState extends State<CheckLinkScreen> {
                         color: Colors.black,
                       ),
                       children: [
-                        TextSpan(text: 'Please check your e-mail and click '),
+                        TextSpan(
+                            text: 'Please check your e-mail and click ',
+                            style: TextStyle(fontSize: 16)),
                         TextSpan(
                           text: 'link',
                           style: TextStyle(
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             decoration: TextDecoration.underline,
                           ),
                         ),
-                        TextSpan(text: ' to activate your account.'),
+                        TextSpan(
+                            text: ' to activate your account.',
+                            style: TextStyle(fontSize: 16)),
                       ],
                     ),
                   ),

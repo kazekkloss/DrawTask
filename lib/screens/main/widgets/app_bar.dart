@@ -17,13 +17,6 @@ class _TopAppBarState extends State<TopAppBar> {
   String _title = 'DrawTask';
   late GoRouter _router;
 
-  final List<String> mainLocation = [
-    "/games",
-    "/home",
-    "/new_game",
-    "/profile",
-  ];
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -42,16 +35,25 @@ class _TopAppBarState extends State<TopAppBar> {
   }
 
   void settingsAppBar() {
-    if (_router.location == "/new_game/friends_game") {
-      setState(() {
-        _isLeading = true;
-        _title = "Friend's Game";
-      });
-    } else if (mainLocation.contains(_router.location)) {
-      setState(() {
-        _isLeading = false;
-        _title = "DrawTask";
-      });
+    switch (_router.location) {
+      case "/new_game/friends_game":
+        setState(() {
+          _isLeading = true;
+          _title = "Friend's Game";
+        });
+        break;
+      case '/new_game/randoms_game':
+        setState(() {
+          _isLeading = true;
+          _title = "Random's Game";
+        });
+        break;
+      default:
+        setState(() {
+          _isLeading = false;
+          _title = "DrawTask";
+        });
+        break;
     }
   }
 

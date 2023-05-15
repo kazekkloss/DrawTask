@@ -126,6 +126,12 @@ class AppRouter {
                         pageBuilder: ((context, state) =>
                             const NoTransitionPage(
                                 child: FriendsGameScreen()))),
+                    GoRoute(
+                        name: RouteConstants.randomsGame,
+                        path: 'randoms_game',
+                        pageBuilder: ((context, state) =>
+                            const NoTransitionPage(
+                                child: RandomsGameScreen()))),
                   ],
                 ),
                 // Profile Screen

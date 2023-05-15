@@ -55,5 +55,5 @@ class User {
     );
   }
 
-  static const empty = User(id: '-', email: '-', password: '-', verify: 0);
+  static const empty = User(id: '', email: '', password: '', verify: 0);
 }

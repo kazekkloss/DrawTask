@@ -42,7 +42,7 @@ const sendVerifyMail = async (email, user_id) => {
         email +
         ', please click here to <a href="http://0.0.0.0:3000/verify?id=' +
         user_id +
-        '"> Verify </a> your mail',
+        '"> verify </a> your mail',
     };
 
     mailTransporter.sendMail(details, (err) => {

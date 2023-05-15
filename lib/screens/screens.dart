@@ -14,3 +14,4 @@ export 'main/profile_screen.dart';
 
 // -------
 export 'main/friends_game_screen.dart';
+export 'main/randoms_game_screen.dart';

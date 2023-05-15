@@ -8,5 +8,6 @@ class RouteConstants {
   static String games = 'games';
   static String newGame = 'new_game';
   static String profile = 'profile';
-  static String friendsGame= 'friends_game';
+  static String friendsGame = 'friends_game';
+  static String randomsGame = 'randoms_game';
 }

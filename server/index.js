@@ -3,17 +3,20 @@ const mongoose = require("mongoose");
 const http = require("http");
 
 const authRouter = require("./routes/auth");
+const userRouter = require("./routes/user");
 
 //INIT
 const port = process.env.PORT || 3000;
 const app = express();
-const DB = "";
+const DB =
+  "";
 var server = http.createServer(app);
 var io = require("socket.io")(server);
 
 // middleware
 app.use(express.json());
 app.use(authRouter);
+app.use(userRouter);
 
 // Connections
 mongoose
