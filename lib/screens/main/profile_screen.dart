@@ -182,25 +182,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 10.h),
-                    const Text('Your Friends'),
-                    SizedBox(height: 0.8.h),
+                    SizedBox(height: 10.8.h),
                     Expanded(
                         child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25),
-                          boxShadow: const [
-                            BoxShadow(
-                                offset: Offset(0, 0),
-                                spreadRadius: -2,
-                                blurRadius: 6,
-                                color: Colors.black)
-                          ]),
-                      child: const Center(
-                        child: Text('You are lonely'),
-                      ),
-                    )),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(25),
+                                boxShadow: const [
+                                  BoxShadow(
+                                      offset: Offset(0, 0),
+                                      spreadRadius: -2,
+                                      blurRadius: 6,
+                                      color: Colors.black)
+                                ]),
+                            child: Column(
+                              children: [
+                                const Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text("Your Friends"),
+                                    Text("friend invitations"),
+                                    Text("sent friend requests"),
+                                  ],
+                                )
+                              ],
+                            ))),
                     SizedBox(
                       height: 2.h,
                     )
@@ -245,7 +252,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                   IconButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        context.read<UserBloc>().add(
+                                            SendInvitationEvent(
+                                                context: context,
+                                                userId: users[index].id));
+                                      },
                                       icon:
                                           const Icon(Icons.add_circle_outline))
                                 ],

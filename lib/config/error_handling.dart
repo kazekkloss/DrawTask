@@ -7,7 +7,7 @@ void httpErrorHandle({
   required http.Response response,
   required BuildContext context,
   required VoidCallback onSuccess,
-}) {
+}) async {
   switch (response.statusCode) {
     case 200:
       onSuccess();

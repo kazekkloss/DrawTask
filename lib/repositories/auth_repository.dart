@@ -1,20 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:drawtask/sockets/auth_socket.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:socket_io_client/socket_io_client.dart';
 
 import '../config/config.dart';
 import '../models/user.dart';
-import '../sockets/socket_connect.dart';
 
 // All functions activated from authBloc
 
 class AuthRepository {
-  final _socketClient = SocketConnect.instance.socket!;
-  Socket get socketConnect => _socketClient;
+  final AuthSocket _authSocket = AuthSocket();
 
   // Sign Up function ------------------
   Future<User> signUp({
@@ -22,8 +20,9 @@ class AuthRepository {
     required String email,
     required String password,
   }) async {
+    Completer<User> completer = Completer<User>();
     try {
-      User user = User(
+      User newUser = User(
         id: '',
         email: email,
         password: password,
@@ -34,7 +33,7 @@ class AuthRepository {
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: user.toJson());
+          body: newUser.toJson());
       if (context.mounted) {
         httpErrorHandle(
             response: res,
@@ -43,13 +42,16 @@ class AuthRepository {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               await prefs.setString(
                   'x-auth-token', jsonDecode(res.body)['token']);
+              User user = User.fromJson(res.body);
+              completer.complete(user);
             });
       }
-      return User.fromJson(res.body);
     } catch (e) {
       showSnackBar(context, e.toString());
       return User.empty;
     }
+    User user = await completer.future;
+    return user;
   }
 
   // Sign In function ------------------
@@ -58,6 +60,7 @@ class AuthRepository {
     required String email,
     required String password,
   }) async {
+    Completer<User> completer = Completer<User>();
     try {
       http.Response res = await http.post(
         Uri.parse('$uri/api/sign_in'),
@@ -68,19 +71,26 @@ class AuthRepository {
       );
       if (context.mounted) {
         httpErrorHandle(
-            response: res,
-            context: context,
-            onSuccess: () async {
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              await prefs.setString(
-                  'x-auth-token', jsonDecode(res.body)['token']);
-            });
+          response: res,
+          context: context,
+          onSuccess: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString(
+                'x-auth-token', jsonDecode(res.body)['token']);
+            User user = User.fromJson(res.body);
+            if (context.mounted) {
+              _authSocket.authSocket(context: context, userId: user.id);
+            }
+            completer.complete(user);
+          },
+        );
       }
-      return User.fromJson(res.body);
     } catch (e) {
       showSnackBar(context, e.toString());
       return User.empty;
     }
+    User user = await completer.future;
+    return user;
   }
 
   // Send mail ------------------
@@ -178,7 +188,10 @@ class AuthRepository {
             'x-auth-token': token
           },
         );
-        user = User.fromJson(res.body);
+        if (context.mounted) {
+          user = User.fromJson(res.body);
+          _authSocket.authSocket(context: context, userId: user.id);
+        }
       }
     } catch (e) {
       showSnackBar(context, e.toString());
@@ -193,6 +206,9 @@ class AuthRepository {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       await sharedPreferences.setString('x-auth-token', '');
+      if (context.mounted) {
+        _authSocket.disconnectSocket(context: context);
+      }
     } catch (e) {
       showSnackBar(context, e.toString());
     }

@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 const userSchema = mongoose.Schema({
-    username: {
-        type: String,
-        default: "",
-      },
+  username: {
+    type: String,
+    default: "",
+  },
   email: {
     required: true,
     type: String,
@@ -22,11 +22,18 @@ const userSchema = mongoose.Schema({
     required: true,
     type: String,
   },
+  socketId: {
+    type: String,
+    default: "",
+  },
   verify: {
     required: true,
     type: Number,
     default: 0,
   },
+  invitationsToMe: [String],
+  invitationsFromMe: [String],
+  friendsList: [String],
 });
 
 const User = mongoose.model("User", userSchema);

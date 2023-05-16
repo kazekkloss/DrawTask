@@ -1,3 +1,4 @@
+import 'package:drawtask/sockets/user_socket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -28,6 +29,12 @@ class _DrawTaskState extends State<DrawTask> {
             RepositoryProvider<AuthRepository>(
               create: (context) => AuthRepository(),
             ),
+            RepositoryProvider<UserRepository>(
+              create: (context) => UserRepository(),
+            ),
+            RepositoryProvider<UserSocket>(
+              create: (context) => UserSocket(),
+            ),
           ],
           child: MultiBlocProvider(
               providers: [
@@ -35,6 +42,11 @@ class _DrawTaskState extends State<DrawTask> {
                   create: (context) => AuthBloc(
                     authRepository: context.read<AuthRepository>(),
                   ),
+                ),
+                BlocProvider(
+                  create: (context) => UserBloc(
+                      userRepository: context.read<UserRepository>(),
+                      userSocket: context.read<UserSocket>()),
                 ),
               ],
               child: Builder(builder: (context) {

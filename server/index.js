@@ -8,10 +8,12 @@ const userRouter = require("./routes/user");
 //INIT
 const port = process.env.PORT || 3000;
 const app = express();
-const DB =
-  "";
+const DB = "";
 var server = http.createServer(app);
 var io = require("socket.io")(server);
+
+// SOCKETS
+const UserSocket = require("./sockets/user_socket");
 
 // middleware
 app.use(express.json());
@@ -33,6 +35,23 @@ server.listen(port, "0.0.0.0", function () {
 });
 
 io.on("connection", async (socket) => {
+  const userSocket = new UserSocket(socket, io);
+
+  const User = require("./models/user");
   console.log("connection socket");
   console.log(socket.id);
+
+  socket.on("authToSocket", async (data) => {
+    console.log(socket.id);
+    await User.findOneAndUpdate(
+      { _id: data },
+      { socketId: socket.id },
+      { new: true }
+    );
+  });
+
+  // User sockets -------------------------------------
+  socket.on("sendInvitation", (data) => {
+    userSocket.sendInvitaionSocket(data);
+  });
 });
