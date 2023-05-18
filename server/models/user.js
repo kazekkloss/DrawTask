@@ -33,7 +33,7 @@ const userSchema = mongoose.Schema({
   },
   invitationsToMe: [String],
   invitationsFromMe: [String],
-  friendsList: [String],
+  friends: [String],
 });
 
 const User = mongoose.model("User", userSchema);

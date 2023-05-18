@@ -8,7 +8,7 @@ class User {
   final String? username;
   final List<String>? invitationsToMe;
   final List<String>? invitationsFromMe;
-  final List<String>? friendsList;
+  final List<String>? friends;
   const User({
     required this.id,
     required this.email,
@@ -17,7 +17,7 @@ class User {
     this.username,
     this.invitationsToMe,
     this.invitationsFromMe,
-    this.friendsList,
+    this.friends,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,7 +29,7 @@ class User {
       'username': username,
       'invitationsToMe': invitationsToMe,
       'invitationsFromMe': invitationsFromMe,
-      'friendsList': friendsList,
+      'friends': friends,
     };
   }
 
@@ -42,7 +42,7 @@ class User {
       username: map['username'] ?? '',
       invitationsToMe: List<String>.from(map['invitationsToMe'] ?? []),
       invitationsFromMe: List<String>.from(map['invitationsFromMe'] ?? []),
-      friendsList: List<String>.from(map['friendsList'] ?? []),
+      friends: List<String>.from(map['friends'] ?? []),
     );
   }
 
@@ -58,7 +58,7 @@ class User {
     int? verify,
     List<String>? invitationsToMe,
     List<String>? invitationsFromMe,
-    List<String>? friendsList,
+    List<String>? friends,
     String? username,
   }) {
     return User(
@@ -69,7 +69,7 @@ class User {
       username: username ?? this.username,
       invitationsToMe: invitationsToMe ?? this.invitationsToMe,
       invitationsFromMe: invitationsFromMe ?? this.invitationsFromMe,
-      friendsList: friendsList ?? this.friendsList,
+      friends: friends ?? this.friends,
     );
   }
 

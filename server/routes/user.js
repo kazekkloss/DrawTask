@@ -14,4 +14,15 @@ userRouter.get("/api/user/search/:name", auth, async (req, res) => {
   }
 });
 
+// get user list
+userRouter.post("/api/get_users", auth, async (req, res) => {
+  try {
+    const { userList } = req.body;
+    const user = await User.find({ _id: { $in: userList } });
+    res.json(user);
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = userRouter;

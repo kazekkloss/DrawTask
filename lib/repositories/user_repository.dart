@@ -8,6 +8,7 @@ import '../config/config.dart';
 import '../models/models.dart';
 
 class UserRepository {
+  // search users from text field -------------------------------------
   Future<List<User>> searchUsers({
     required BuildContext context,
     required String searchQuery,
@@ -41,8 +42,52 @@ class UserRepository {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+    print(usersList);
     return usersList;
   }
 
-// get list ------------------------------------
+// get list ------------------------------------------------------------
+
+  Future<List<User>> getUserList({
+    required BuildContext context,
+    required List<String> list,
+  }) async {
+    List<User> userList = [];
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/get_users'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+        body: jsonEncode(
+          {
+            'userList': list,
+          },
+        ),
+      );
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            for (int i = 0; i < jsonDecode(res.body).length; i++) {
+              userList.add(
+                User.fromJson(
+                  jsonEncode(
+                    jsonDecode(res.body)[i],
+                  ),
+                ),
+              );
+            }
+          },
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return userList;
+  }
 }

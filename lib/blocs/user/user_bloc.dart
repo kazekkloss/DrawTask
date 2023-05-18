@@ -16,8 +16,34 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       {required UserRepository userRepository, required UserSocket userSocket})
       : _userRepository = userRepository,
         _userSocket = userSocket,
-        super(UserInitial()) {
+        super(const UserState.loading()) {
     on<SendInvitationEvent>(_sendInvitationEventToState);
+    on<GetUsersEvent>(_getFriendsEventToState);
+  }
+
+  void _getFriendsEventToState(
+      GetUsersEvent event, Emitter<UserState> emit) async {
+    final BuildContext context = event.context;
+    List<User> friends = [];
+    List<User> invitationsToMe = [];
+    List<User> invitationsFromMe = [];
+    if (context.mounted) {
+      friends = await _userRepository.getUserList(
+          context: event.context, list: event.friends);
+    }
+    if (context.mounted) {
+      invitationsToMe = await _userRepository.getUserList(
+          context: event.context, list: event.invitationsToMe);
+    }
+    if (context.mounted) {
+      invitationsFromMe = await _userRepository.getUserList(
+          context: event.context, list: event.invitationsFromMe);
+    }
+
+    print(friends);
+    print(invitationsFromMe);
+    print(invitationsToMe);
+    emit(UserState.loaded(friends, invitationsToMe, invitationsFromMe));
   }
 
   void _sendInvitationEventToState(
@@ -25,6 +51,11 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     try {
       User user = await _userSocket.sendInvitation(
           context: event.context, userId: event.userId);
+      if (user != User.empty) {
+        print('is not empty: ${user.email}');
+      } else {
+        print('is empty');
+      }
     } catch (e) {
       debugPrint('$e');
     }

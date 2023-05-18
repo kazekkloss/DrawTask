@@ -30,7 +30,7 @@ class AppRouter {
   ];
 
   GoRouter _router() => GoRouter(
-        debugLogDiagnostics: true,
+        //debugLogDiagnostics: true,
         navigatorKey: _rootNavigatorKey,
         redirect: (context, state) {
           var status = context.read<AuthBloc>().state.status;
@@ -40,7 +40,7 @@ class AppRouter {
             case AuthStatus.authenticated:
               if (previousStatus != status) {
                 previousStatus = status;
-                return state.namedLocation(RouteConstants.home);
+                return state.namedLocation(RouteConstants.loading);
               } else {
                 return null;
               }
@@ -88,6 +88,13 @@ class AppRouter {
             name: RouteConstants.setUsername,
             path: '/set_username',
             builder: (context, state) => const SetUsernameScreen(),
+          ),
+          // Intermediate screen --------------------------------------
+          GoRoute(
+            parentNavigatorKey: _rootNavigatorKey,
+            name: RouteConstants.loading,
+            path: '/loading_screen',
+            builder: (context, state) => const LoadingScreen(),
           ),
           // Home screens ----------------------------------------------
           ShellRoute(
