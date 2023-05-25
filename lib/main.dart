@@ -1,4 +1,3 @@
-import 'package:drawtask/sockets/user_socket.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -25,36 +24,37 @@ class _DrawTaskState extends State<DrawTask> {
   Widget build(BuildContext context) {
     return Sizer(builder: (context, orientation, deviceType) {
       return MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider<AuthRepository>(
+            create: (context) => AuthRepository(),
+          ),
+          RepositoryProvider<UserRepository>(
+            create: (context) => UserRepository(),
+          ),
+        ],
+        child: MultiBlocProvider(
           providers: [
-            RepositoryProvider<AuthRepository>(
-              create: (context) => AuthRepository(),
+            BlocProvider(
+              create: (context) => AuthBloc(
+                authRepository: context.read<AuthRepository>(),
+              ),
             ),
-            RepositoryProvider<UserRepository>(
-              create: (context) => UserRepository(),
-            ),
-            RepositoryProvider<UserSocket>(
-              create: (context) => UserSocket(),
+            BlocProvider(
+              create: (context) => UsersBloc(
+                userRepository: context.read<UserRepository>(),
+              ),
             ),
           ],
-          child: MultiBlocProvider(
-              providers: [
-                BlocProvider(
-                  create: (context) => AuthBloc(
-                    authRepository: context.read<AuthRepository>(),
-                  ),
-                ),
-                BlocProvider(
-                  create: (context) => UserBloc(
-                      userRepository: context.read<UserRepository>(),
-                      userSocket: context.read<UserSocket>()),
-                ),
-              ],
-              child: Builder(builder: (context) {
-                return MaterialApp.router(
-                  routerConfig: AppRouter(context: context).router,
-                  debugShowCheckedModeBanner: false,
-                );
-              })));
+          child: Builder(
+            builder: (context) {
+              return MaterialApp.router(
+                routerConfig: AppRouter(context: context).router,
+                debugShowCheckedModeBanner: false,
+              );
+            },
+          ),
+        ),
+      );
     });
   }
 }

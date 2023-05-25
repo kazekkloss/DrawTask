@@ -8,7 +8,8 @@ const userRouter = require("./routes/user");
 //INIT
 const port = process.env.PORT || 3000;
 const app = express();
-const DB = "";
+const DB =
+  "";
 var server = http.createServer(app);
 var io = require("socket.io")(server);
 
@@ -51,7 +52,4 @@ io.on("connection", async (socket) => {
   });
 
   // User sockets -------------------------------------
-  socket.on("sendInvitation", (data) => {
-    userSocket.sendInvitaionSocket(data);
-  });
 });

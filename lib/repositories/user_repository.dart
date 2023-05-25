@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:drawtask/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -48,12 +49,14 @@ class UserRepository {
 
 // get list ------------------------------------------------------------
 
-  Future<List<User>> getUserList({
+  Future<List<User>> getUsersList({
     required BuildContext context,
-    required List<String> list,
+    required int currentListLength,
+    required FriendsType friendsType,
   }) async {
     List<User> userList = [];
     try {
+      print('działa');
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
       http.Response res = await http.post(
@@ -64,7 +67,8 @@ class UserRepository {
         },
         body: jsonEncode(
           {
-            'userList': list,
+            'currentListLength': currentListLength,
+            'friendsType': friendsType.toString(),
           },
         ),
       );
@@ -89,5 +93,116 @@ class UserRepository {
       showSnackBar(context, e.toString());
     }
     return userList;
+  }
+
+  Future<User> sendInvitation(
+      {required BuildContext context, required String userId}) async {
+    User user = User.empty;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/send_invitation_to_friend'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+        body: jsonEncode(
+          {
+            'userId': userId,
+          },
+        ),
+      );
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            var resUser = User.fromJson(
+              jsonEncode(
+                jsonDecode(res.body),
+              ),
+            );
+            user = resUser;
+          },
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+      return User.empty;
+    }
+    return user;
+  }
+
+  Future<User> confirmInvitation(
+      {required BuildContext context, required String userId}) async {
+    User user = User.empty;
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/confirm_invitation'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+        body: jsonEncode(
+          {
+            'userId': userId,
+          },
+        ),
+      );
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            var resUser = User.fromJson(
+              jsonEncode(
+                jsonDecode(res.body),
+              ),
+            );
+            user = resUser;
+          },
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return user;
+  }
+
+  void deleteFriend({
+    required BuildContext context,
+    required String userId,
+    required int currentListLength,
+    required FriendsType friendsType,
+  }) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/delete_friend'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+        body: jsonEncode(
+          {
+            'userId': userId,
+            'friendsType': friendsType.toString(),
+          },
+        ),
+      );
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {},
+        );
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
   }
 }

@@ -40,7 +40,7 @@ class AppRouter {
             case AuthStatus.authenticated:
               if (previousStatus != status) {
                 previousStatus = status;
-                return state.namedLocation(RouteConstants.loading);
+                return state.namedLocation(RouteConstants.home);
               } else {
                 return null;
               }

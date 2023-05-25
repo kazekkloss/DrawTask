@@ -1,4 +1,4 @@
-import 'package:drawtask/screens/main/profile_screen/widgets/friends_widget.dart';
+import 'package:drawtask/screens/main/profile_screen/content/friends/friends_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -175,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Text('Drawings'),
         );
       case ContentType.firends:
-        return const FriendsWidget();
+        return const FriendsContent();
     }
   }
 }

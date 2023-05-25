@@ -5,31 +5,14 @@ import 'package:sizer/sizer.dart';
 
 import '../../blocs/blocs.dart';
 import '../../config/config.dart';
-import '../../models/models.dart';
 
-class LoadingScreen extends StatefulWidget {
+class LoadingScreen extends StatelessWidget {
   const LoadingScreen({super.key});
 
   @override
-  State<LoadingScreen> createState() => _LoadingScreenState();
-}
-
-class _LoadingScreenState extends State<LoadingScreen> {
-  @override
-  void initState() {
-    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-    User user = authBloc.state.user;
-    context.read<UserBloc>().add(GetUsersEvent(
-        friends: user.friends!,
-        invitationsToMe: user.invitationsToMe!,
-        invitationsFromMe: user.invitationsFromMe!,
-        context: context));
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return BlocListener<UserBloc, UserState>(
+    return BlocListener<UsersBloc, UsersState>(
       listener: (context, state) {
         if (state.status == UsersStatus.loaded) {
           context.goNamed(RouteConstants.home);
@@ -57,9 +40,16 @@ class _LoadingScreenState extends State<LoadingScreen> {
                   SizedBox(
                     height: 13.h,
                   ),
-                  const CircularProgressIndicator(
-                    color: Colors.black,
-                  )
+                  // const CircularProgressIndicator(
+                  //   color: Colors.black,
+                  // )
+                  ElevatedButton(
+                    onPressed: () {
+                      // context.read<UsersBloc>().add(GetUsersEvent(
+                      //     friendsType: FriendsType.accepted, context: context));
+                    },
+                    child: const Text('test button'),
+                  ),
                 ],
               ),
             ),

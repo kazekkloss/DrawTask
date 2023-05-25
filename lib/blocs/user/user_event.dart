@@ -1,23 +1,25 @@
 part of 'user_bloc.dart';
 
+enum FriendsType {
+  accepted,
+  waiting,
+  invitations,
+}
+
 abstract class UserEvent extends Equatable {}
 
 class GetUsersEvent extends UserEvent {
-  final List<String> friends;
-  final List<String> invitationsToMe;
-  final List<String> invitationsFromMe;
+  final int listLength;
+  final FriendsType friendsType;
   final BuildContext context;
-
   GetUsersEvent({
-    required this.friends,
-    required this.invitationsToMe,
-    required this.invitationsFromMe,
+    required this.listLength,
+    required this.friendsType,
     required this.context,
   });
 
   @override
-  List<Object?> get props =>
-      [friends, invitationsToMe, invitationsFromMe, context];
+  List<Object?> get props => [context, friendsType, listLength];
 }
 
 class SendInvitationEvent extends UserEvent {
@@ -25,6 +27,30 @@ class SendInvitationEvent extends UserEvent {
   final String userId;
 
   SendInvitationEvent({required this.context, required this.userId});
+
+  @override
+  List<Object?> get props => [context];
+}
+
+class DeleteUserEvent extends UserEvent {
+  final BuildContext context;
+  final String userId;
+  final FriendsType friendsType;
+
+  DeleteUserEvent(
+      {required this.context,
+      required this.userId,
+      required this.friendsType});
+
+  @override
+  List<Object?> get props => [context, userId, friendsType];
+}
+
+class ConfirmInvitationEvent extends UserEvent {
+  final BuildContext context;
+  final String userId;
+
+  ConfirmInvitationEvent({required this.context, required this.userId});
 
   @override
   List<Object?> get props => [context];
