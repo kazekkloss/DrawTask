@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../../../blocs/blocs.dart';
+import '../../../../../../config/config.dart';
 
 class FriendsList extends StatefulWidget {
   const FriendsList({super.key});
@@ -193,11 +195,16 @@ class _FriendsListState extends State<FriendsList> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceAround,
                                           children: [
-                                            Text(
-                                              state.friends[index].username!,
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 21),
+                                            GestureDetector(
+                                              onTap: () => context.pushNamed(
+                                                  RouteConstants.user,
+                                                  extra: state.friends[index]),
+                                              child: Text(
+                                                state.friends[index].username!,
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 21),
+                                              ),
                                             ),
                                             IconButton(
                                                 onPressed: () {
@@ -252,12 +259,17 @@ class _FriendsListState extends State<FriendsList> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceAround,
                                               children: [
-                                                Text(
-                                                  state.invitationsFromMe[index]
-                                                      .username!,
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 21),
+                                                GestureDetector(
+                                                  onTap: () => context.pushNamed(
+                                                  RouteConstants.user,
+                                                  extra: state.invitationsFromMe[index]),
+                                                  child: Text(
+                                                    state.invitationsFromMe[index]
+                                                        .username!,
+                                                    style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 21),
+                                                  ),
                                                 ),
                                                 IconButton(
                                                     onPressed: () {
@@ -332,12 +344,17 @@ class _FriendsListState extends State<FriendsList> {
                                               mainAxisAlignment:
                                                   MainAxisAlignment.spaceAround,
                                               children: [
-                                                Text(
-                                                  state.invitationsToMe[index]
-                                                      .username!,
-                                                  style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 21),
+                                                GestureDetector(
+                                                  onTap: () => context.pushNamed(
+                                                  RouteConstants.user,
+                                                  extra: state.invitationsToMe[index]),
+                                                  child: Text(
+                                                    state.invitationsToMe[index]
+                                                        .username!,
+                                                    style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 21),
+                                                  ),
                                                 ),
                                                 IconButton(
                                                     onPressed: () {

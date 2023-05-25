@@ -43,7 +43,6 @@ class UserRepository {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
-    print(usersList);
     return usersList;
   }
 
@@ -56,7 +55,6 @@ class UserRepository {
   }) async {
     List<User> userList = [];
     try {
-      print('działa');
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
       http.Response res = await http.post(

@@ -1,9 +1,11 @@
+import 'package:drawtask/screens/main/user_screen.dart';
 import 'package:drawtask/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../blocs/blocs.dart';
+import '../../models/user.dart';
 import '../../screens/main/widgets/bottom_nav_bar.dart';
 import '../config.dart';
 
@@ -147,6 +149,16 @@ class AppRouter {
                   path: '/profile',
                   pageBuilder: (context, state) => MaterialPage(
                       child: const ProfileScreen(), key: state.pageKey),
+                  routes: [
+                    GoRoute(
+                        name: RouteConstants.user,
+                        path: 'user',
+                        pageBuilder: ((context, state) {
+                          User user = state.extra as User;
+                          return NoTransitionPage(
+                              child: UserScreen(user: user));
+                        })),
+                  ],
                 ),
               ]),
         ],

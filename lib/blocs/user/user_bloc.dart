@@ -68,7 +68,7 @@ class UsersBloc extends Bloc<UserEvent, UsersState> {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint('$e');
     }
   }
 
@@ -92,8 +92,6 @@ class UsersBloc extends Bloc<UserEvent, UsersState> {
         List<User> updatedList = List.from(state.invitationsFromMe);
         updatedList.removeWhere((user) => user.id == event.userId);
 
-        print(updatedList.length);
-
         emit(state.copyWith(
           invitationsFromMe: updatedList,
         ));
@@ -106,7 +104,7 @@ class UsersBloc extends Bloc<UserEvent, UsersState> {
         ));
       }
     } catch (e) {
-      print(e);
+      debugPrint('$e');
     }
   }
 

@@ -48,6 +48,12 @@ class _TopAppBarState extends State<TopAppBar> {
           _title = "Random's Game";
         });
         break;
+      case "/profile/user":
+        setState(() {
+          _isLeading = true;
+          _title = "DrawTask";
+        });
+        break;
       default:
         setState(() {
           _isLeading = false;

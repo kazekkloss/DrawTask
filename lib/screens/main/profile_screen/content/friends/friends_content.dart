@@ -1,5 +1,7 @@
+import 'package:drawtask/config/router/route_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../../../blocs/blocs.dart';
@@ -60,9 +62,16 @@ class _FriendsContentState extends State<FriendsContent> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    users[index].username!,
-                                    style: const TextStyle(fontSize: 16),
+                                  GestureDetector(
+                                    onTap: () => users[index].id !=
+                                            currentUser.id
+                                        ? context.pushNamed(RouteConstants.user,
+                                            extra: users[index])
+                                        : null,
+                                    child: Text(
+                                      users[index].username!,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
                                   ),
                                   if (users[index].id == currentUser.id)
                                     const Text('')
