@@ -36,7 +36,7 @@ class NewGameScreen extends StatelessWidget {
                     splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     onTap: () {
-                      context.goNamed(RouteConstants.randomsGame);
+                      context.goNamed(RouteConstants.joiningToGame);
                     },
                     child: Ink(
                       decoration: const BoxDecoration(

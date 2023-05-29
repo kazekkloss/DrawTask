@@ -44,6 +44,9 @@ class _DrawTaskState extends State<DrawTask> {
                 userRepository: context.read<UserRepository>(),
               ),
             ),
+            BlocProvider(
+              create: (context) => DrawBloc(),
+            ),
           ],
           child: Builder(
             builder: (context) {

@@ -5,3 +5,7 @@ export 'global_variables.dart';
 export 'router/route_constants.dart';
 export 'router/router.dart';
 export 'router/stream_bloc.dart';
+
+// drawing
+export 'drawing/sketcher.dart';
+export 'drawing/controller.dart';

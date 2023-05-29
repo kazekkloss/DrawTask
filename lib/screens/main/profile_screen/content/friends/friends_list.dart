@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../../../../blocs/blocs.dart';
-import '../../../../../../config/config.dart';
+import '../../../../../blocs/blocs.dart';
+import '../../../../../config/config.dart';
 
 class FriendsList extends StatefulWidget {
   const FriendsList({super.key});

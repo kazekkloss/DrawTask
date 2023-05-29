@@ -6,17 +6,17 @@ class RouteConstants {
   static String checkLink = 'check_link';
   static String setUsername = 'set_username';
 
-  // Intermediate screen
-  static String loading = 'loading';
-
-  // Screens to home
+  // Main screens with bottom nav bar
   static String home = 'home';
   static String games = 'games';
   static String newGame = 'new_game';
   static String profile = 'profile';
 
-  // -------
+  // Screens to push with bottom nav bar
   static String friendsGame = 'friends_game';
-  static String randomsGame = 'randoms_game';
   static String user = 'user';
+
+  // Screens without bottom nav bar
+  static String joiningToGame = 'joining_to_game';
+  static String drawingScreen = 'drawing_screen';
 }

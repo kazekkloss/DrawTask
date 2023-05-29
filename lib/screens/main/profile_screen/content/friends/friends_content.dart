@@ -7,7 +7,7 @@ import 'package:sizer/sizer.dart';
 import '../../../../../blocs/blocs.dart';
 import '../../../../../models/models.dart';
 import '../../../../../repositories/repositories.dart';
-import 'widgets/friends_list.dart';
+import 'friends_list.dart';
 
 class FriendsContent extends StatefulWidget {
   const FriendsContent({super.key});

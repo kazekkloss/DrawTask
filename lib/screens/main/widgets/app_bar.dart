@@ -42,12 +42,6 @@ class _TopAppBarState extends State<TopAppBar> {
           _title = "Friend's Game";
         });
         break;
-      case '/new_game/randoms_game':
-        setState(() {
-          _isLeading = true;
-          _title = "Random's Game";
-        });
-        break;
       case "/profile/user":
         setState(() {
           _isLeading = true;

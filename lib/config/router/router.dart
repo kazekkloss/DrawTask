@@ -91,13 +91,6 @@ class AppRouter {
             path: '/set_username',
             builder: (context, state) => const SetUsernameScreen(),
           ),
-          // Intermediate screen --------------------------------------
-          GoRoute(
-            parentNavigatorKey: _rootNavigatorKey,
-            name: RouteConstants.loading,
-            path: '/loading_screen',
-            builder: (context, state) => const LoadingScreen(),
-          ),
           // Home screens ----------------------------------------------
           ShellRoute(
               navigatorKey: _shellNavigatorKey,
@@ -135,12 +128,6 @@ class AppRouter {
                         pageBuilder: ((context, state) =>
                             const NoTransitionPage(
                                 child: FriendsGameScreen()))),
-                    GoRoute(
-                        name: RouteConstants.randomsGame,
-                        path: 'randoms_game',
-                        pageBuilder: ((context, state) =>
-                            const NoTransitionPage(
-                                child: RandomsGameScreen()))),
                   ],
                 ),
                 // Profile Screen
@@ -161,6 +148,16 @@ class AppRouter {
                   ],
                 ),
               ]),
+          GoRoute(
+              name: RouteConstants.joiningToGame,
+              path: '/joining_to_game',
+              pageBuilder: ((context, state) =>
+                  const NoTransitionPage(child: JoiningToGameScreen()))),
+          GoRoute(
+              name: RouteConstants.drawingScreen,
+              path: '/drawing_screen',
+              pageBuilder: ((context, state) =>
+                  const NoTransitionPage(child: DrawingScreen()))),
         ],
         errorPageBuilder: (context, state) {
           return const MaterialPage(
