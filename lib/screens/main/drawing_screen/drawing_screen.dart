@@ -5,9 +5,11 @@ import 'package:sizer/sizer.dart';
 
 import '../../../blocs/blocs.dart';
 import '../../../config/config.dart';
+import '../../../models/models.dart';
 
 class DrawingScreen extends StatefulWidget {
-  const DrawingScreen({super.key});
+  final Game game;
+  const DrawingScreen({super.key, required this.game});
 
   @override
   State<DrawingScreen> createState() => _DrawingScreenState();
@@ -16,27 +18,26 @@ class DrawingScreen extends StatefulWidget {
 class _DrawingScreenState extends State<DrawingScreen> {
   WidgetsToImageController controller = WidgetsToImageController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Text(
-              '#three',
-              style: TextStyle(
+              '#${widget.game.gameWords[0]}',
+              style: const TextStyle(
                   fontSize: 24, fontFamily: 'IrishGrover', color: Colors.black),
             ),
             Text(
-              '#random',
-              style: TextStyle(
+              '#${widget.game.gameWords[1]}',
+              style: const TextStyle(
                   fontSize: 24, fontFamily: 'IrishGrover', color: Colors.black),
             ),
             Text(
-              '#words',
-              style: TextStyle(
+              '#${widget.game.gameWords[2]}',
+              style: const TextStyle(
                   fontSize: 24, fontFamily: 'IrishGrover', color: Colors.black),
             )
           ],
@@ -55,7 +56,6 @@ class _DrawingScreenState extends State<DrawingScreen> {
               key: controller.containerKey,
               child: GestureDetector(
                 onPanStart: (details) {
-                  print(details);
                   context
                       .read<DrawBloc>()
                       .add(OnStartEvent(details: details, context: context));
@@ -146,7 +146,10 @@ class _DrawingScreenState extends State<DrawingScreen> {
           InkWell(
             splashColor: const Color.fromRGBO(217, 217, 217, 1),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
-            onTap: () => {context.goNamed(RouteConstants.newGame), context.read<DrawBloc>().add(ClearEvent()) },
+            onTap: () => {
+              context.goNamed(RouteConstants.newGame),
+              context.read<DrawBloc>().add(ClearEvent())
+            },
             child: Ink(
               decoration: const BoxDecoration(
                   color: Color.fromRGBO(217, 217, 217, 1),

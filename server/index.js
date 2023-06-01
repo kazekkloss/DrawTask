@@ -14,7 +14,7 @@ var server = http.createServer(app);
 var io = require("socket.io")(server);
 
 // SOCKETS
-const UserSocket = require("./sockets/user_socket");
+const GameSocket = require("./sockets/game_socket");
 
 // middleware
 app.use(express.json());
@@ -36,7 +36,7 @@ server.listen(port, "0.0.0.0", function () {
 });
 
 io.on("connection", async (socket) => {
-  const userSocket = new UserSocket(socket, io);
+  const gameSocket = new GameSocket(socket, io);
 
   const User = require("./models/user");
   console.log("connection socket");
@@ -51,5 +51,8 @@ io.on("connection", async (socket) => {
     );
   });
 
-  // User sockets -------------------------------------
+  // Game sockets -------------------------------------
+  socket.on("joinToGame", (data) => {
+    gameSocket.joinToGame(data);
+  })
 });

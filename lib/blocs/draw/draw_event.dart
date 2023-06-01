@@ -35,9 +35,9 @@ class ChangeModeEvent extends DrawEvent {
   ChangeModeEvent({required this.mode});
 }
 
-class SetFilledEvent extends DrawEvent {
+class SetFillEvent extends DrawEvent {
   final bool filled;
-  SetFilledEvent({required this.filled});
+  SetFillEvent({required this.filled});
 }
 
 class UndoEvent extends DrawEvent {}

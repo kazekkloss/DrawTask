@@ -1,3 +1,4 @@
+import 'package:drawtask/sockets/sockets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -31,6 +32,9 @@ class _DrawTaskState extends State<DrawTask> {
           RepositoryProvider<UserRepository>(
             create: (context) => UserRepository(),
           ),
+          RepositoryProvider<GameSocket>(
+            create: (context) => GameSocket(),
+          ),
         ],
         child: MultiBlocProvider(
           providers: [
@@ -42,6 +46,11 @@ class _DrawTaskState extends State<DrawTask> {
             BlocProvider(
               create: (context) => UsersBloc(
                 userRepository: context.read<UserRepository>(),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => GameBloc(
+                gameSocket: context.read<GameSocket>(),
               ),
             ),
             BlocProvider(

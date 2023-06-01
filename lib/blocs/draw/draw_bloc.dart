@@ -27,7 +27,7 @@ class DrawBloc extends Bloc<DrawEvent, DrawState> {
     on<SkechWidthEvent>(_skechWidthEventToState);
     on<ChangeColorEvent>(_changeColorEventToState);
     on<ChangeModeEvent>(_changeTypeEventToState);
-    on<SetFilledEvent>(_setFilledEventToState);
+    on<SetFillEvent>(_setFilledEventToState);
     on<UndoEvent>(_undoEventToState);
     on<ClearEvent>(_clearEventToState);
   }
@@ -99,7 +99,7 @@ class DrawBloc extends Bloc<DrawEvent, DrawState> {
     }
   }
 
-  void _setFilledEventToState(SetFilledEvent event, Emitter<DrawState> emit) {
+  void _setFilledEventToState(SetFillEvent event, Emitter<DrawState> emit) {
     try {
       emit(DrawState(
           sketch: state.sketch.copyWith(points: [], filled: event.filled),

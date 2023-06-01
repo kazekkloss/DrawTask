@@ -1,3 +1,4 @@
+import 'package:drawtask/models/game.dart';
 import 'package:drawtask/screens/main/user_screen.dart';
 import 'package:drawtask/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -156,8 +157,13 @@ class AppRouter {
           GoRoute(
               name: RouteConstants.drawingScreen,
               path: '/drawing_screen',
-              pageBuilder: ((context, state) =>
-                  const NoTransitionPage(child: DrawingScreen()))),
+              pageBuilder: ((context, state) {
+                Game game = state.extra as Game;
+                return NoTransitionPage(
+                    child: DrawingScreen(
+                  game: game,
+                ));
+              })),
         ],
         errorPageBuilder: (context, state) {
           return const MaterialPage(

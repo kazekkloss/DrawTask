@@ -29,7 +29,7 @@ class SendInvitationEvent extends UserEvent {
   SendInvitationEvent({required this.context, required this.userId});
 
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [context, userId];
 }
 
 class DeleteUserEvent extends UserEvent {
@@ -53,5 +53,5 @@ class ConfirmInvitationEvent extends UserEvent {
   ConfirmInvitationEvent({required this.context, required this.userId});
 
   @override
-  List<Object?> get props => [context];
+  List<Object?> get props => [context, userId];
 }
