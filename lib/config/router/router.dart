@@ -43,7 +43,7 @@ class AppRouter {
             case AuthStatus.authenticated:
               if (previousStatus != status) {
                 previousStatus = status;
-                return state.namedLocation(RouteConstants.home);
+                return state.namedLocation(RouteConstants.loading);
               } else {
                 return null;
               }
@@ -92,6 +92,13 @@ class AppRouter {
             path: '/set_username',
             builder: (context, state) => const SetUsernameScreen(),
           ),
+          GoRoute(
+              parentNavigatorKey: _rootNavigatorKey,
+              name: RouteConstants.loading,
+              path: '/loading',
+              pageBuilder: ((context, state) {
+                return const NoTransitionPage(child: LoadingScreen());
+              })),
           // Home screens ----------------------------------------------
           ShellRoute(
               navigatorKey: _shellNavigatorKey,

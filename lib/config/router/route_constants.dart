@@ -6,6 +6,8 @@ class RouteConstants {
   static String checkLink = 'check_link';
   static String setUsername = 'set_username';
 
+  static String loading = 'loading';
+
   // Main screens with bottom nav bar
   static String home = 'home';
   static String games = 'games';

@@ -12,16 +12,30 @@ class GameBloc extends Bloc<GameEvent, GameState> {
   final GameSocket _gameSocket;
   GameBloc({required GameSocket gameSocket})
       : _gameSocket = gameSocket,
-        super(GameInitial()) {
+        super(const GameState.loading()) {
+    on<AddGamesEvent>(_addGamesToState);
     on<AddGameEvent>(_addGameToState);
   }
 
-  void _addGameToState(AddGameEvent event, Emitter<GameState> emit) {
+  void _addGamesToState(AddGamesEvent event, Emitter<GameState> emit) {
     try {
-      print('event: ${event.game}');
+      List<Game> updatedGames = List.from(state.games)..addAll(event.games);
+
+      emit(GameState.loaded(updatedGames));
+      print(state.games.length);
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
+  void _addGameToState(AddGameEvent event, Emitter<GameState> emit) {
+    try {
+      List<Game> updatedGames = List.from(state.games)..add(event.game);
+
+      emit(GameState.loaded(updatedGames));
+      print(state.games.length);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }

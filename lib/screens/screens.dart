@@ -6,10 +6,12 @@ export 'auth/sign_up_screen.dart';
 export 'auth/check_link_screen.dart';
 export 'auth/set_username_screen.dart';
 
+export 'auth/loading_screen.dart';
+
 // Screens to home
 export 'main/new_game_screen.dart';
 export 'main/home_screen.dart';
-export 'main/games_screen.dart';
+export 'main/dashboard_screen/games_screen.dart';
 export 'main/profile_screen/profile_screen.dart';
 
 // -------

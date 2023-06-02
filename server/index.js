@@ -52,6 +52,10 @@ io.on("connection", async (socket) => {
   });
 
   // Game sockets -------------------------------------
+  socket.on("getAllGames", (data) => {
+    gameSocket.getAllGames(data);
+  })
+
   socket.on("joinToGame", (data) => {
     gameSocket.joinToGame(data);
   })

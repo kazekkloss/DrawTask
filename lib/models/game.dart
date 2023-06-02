@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:drawtask/models/models.dart';
+
 class Game {
   final String id;
   final List<String> gameWords;
-  final List<String> users;
+  final List<User> users;
 
   Game({
     required this.id,
@@ -23,7 +25,11 @@ class Game {
     return Game(
       id: map['_id'] ?? '',
       gameWords: List<String>.from(map['gameWords']),
-      users: List<String>.from(map['users']),
+      users: List<User>.from(
+        map['users']?.map(
+          (x) => User.fromMap(x),
+        ),
+      ),
     );
   }
 
@@ -34,7 +40,7 @@ class Game {
   Game copyWith({
     String? id,
     List<String>? gameWords,
-    List<String>? users,
+    List<User>? users,
   }) {
     return Game(
       id: id ?? this.id,

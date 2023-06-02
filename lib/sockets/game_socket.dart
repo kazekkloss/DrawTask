@@ -16,6 +16,25 @@ class GameSocket {
 
   // EMITTER
 
+  void getAllGames({required BuildContext context}) {
+    try {
+      List<Game> gamesList = [];
+      final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
+      _socketClient
+          .emit("getAllGames", {"currentUserId": authBloc.state.user.id});
+
+      _socketClient.on("allGamesToState", (data) {
+        for (var gameData in data) {
+          gamesList.add(Game.fromMap(gameData));
+        }
+        context.read<GameBloc>().add(AddGamesEvent(games: gamesList));
+        _socketClient.off('allGamesToState');
+      });
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
   void joinToGame({required BuildContext context}) {
     try {
       final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
@@ -24,7 +43,6 @@ class GameSocket {
 
       _socketClient.on("joinedToGame", (data) {
         final game = Game.fromJson(jsonEncode(data));
-
         // add game to list in block state
         context.read<GameBloc>().add(AddGameEvent(game: game));
 
