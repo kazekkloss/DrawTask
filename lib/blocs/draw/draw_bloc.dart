@@ -15,7 +15,7 @@ class DrawBloc extends Bloc<DrawEvent, DrawState> {
             sketch: Sketch(
               points: [],
               color: Colors.black,
-              width: 10.0,
+              width: 12.0,
               mode: DrawingMode.pencil,
               filled: false,
             ),

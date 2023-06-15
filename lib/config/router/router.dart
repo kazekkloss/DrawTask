@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../blocs/blocs.dart';
 import '../../models/user.dart';
 import '../../screens/main/widgets/bottom_nav_bar.dart';
+import '../../sockets/sockets.dart';
 import '../config.dart';
 
 class AppRouter {
@@ -43,6 +44,7 @@ class AppRouter {
             case AuthStatus.authenticated:
               if (previousStatus != status) {
                 previousStatus = status;
+                PictureSocket().pictureOnListener(context);
                 return state.namedLocation(RouteConstants.loading);
               } else {
                 return null;

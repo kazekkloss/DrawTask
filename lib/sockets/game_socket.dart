@@ -47,7 +47,6 @@ class GameSocket {
         context.read<GameBloc>().add(AddGameEvent(game: game));
 
         // turn off listener
-
         _socketClient.off('joinedToGame');
 
         // go to screen
@@ -59,6 +58,24 @@ class GameSocket {
   }
 
   // LISTENERS
+
+    Future<Picture> pictureOnListener(BuildContext context) async {
+    Picture picture = Picture.empty;
+    try {
+      _socketClient.on(
+        "pictureListener",
+        (data) {
+          Picture picture = Picture.fromMap(data);
+          print(picture);
+          picture = picture;
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+
+    return picture;
+  }
 
   void setVoidName({required BuildContext context}) {
     try {} catch (e) {

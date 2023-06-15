@@ -21,3 +21,13 @@ class AddGameEvent extends GameEvent {
   @override
   List<Object?> get props => [game];
 }
+
+class ChangePictureEvent extends GameEvent {
+  final Picture picture;
+  ChangePictureEvent({
+    required this.picture,
+  });
+
+  @override
+  List<Object?> get props => [picture];
+}
