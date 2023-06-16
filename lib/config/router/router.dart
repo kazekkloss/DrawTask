@@ -26,7 +26,7 @@ class AppRouter {
     const NavBarItem(
         initialLocation: '/home', icon: Icon(Icons.home), label: ''),
     const NavBarItem(
-        initialLocation: '/games', icon: Icon(Icons.dashboard), label: ''),
+        initialLocation: '/dashboard', icon: Icon(Icons.dashboard), label: ''),
     const NavBarItem(
         initialLocation: '/new_game', icon: Icon(Icons.games), label: ''),
     const NavBarItem(
@@ -120,11 +120,22 @@ class AppRouter {
                 ),
                 // Game Screen
                 GoRoute(
-                  name: RouteConstants.games,
-                  path: '/games',
-                  pageBuilder: (context, state) => MaterialPage(
-                      child: const GamesScreen(), key: state.pageKey),
-                ),
+                    name: RouteConstants.dashboard,
+                    path: '/dashboard',
+                    pageBuilder: (context, state) => MaterialPage(
+                        child: const DashboardScreen(), key: state.pageKey),
+                    routes: [
+                      GoRoute(
+                          name: RouteConstants.gameScreen,
+                          path: 'game',
+                          pageBuilder: ((context, state) {
+                            Game game = state.extra as Game;
+                            return NoTransitionPage(
+                                child: GameScreen(
+                              game: game,
+                            ));
+                          })),
+                    ]),
                 // New Game Screen
                 GoRoute(
                   name: RouteConstants.newGame,
@@ -165,7 +176,7 @@ class AppRouter {
                   const NoTransitionPage(child: JoiningToGameScreen()))),
           GoRoute(
               name: RouteConstants.drawingScreen,
-              path: '/drawing_screen',
+              path: '/drawing',
               pageBuilder: ((context, state) {
                 Game game = state.extra as Game;
                 return NoTransitionPage(

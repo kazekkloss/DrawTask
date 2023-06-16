@@ -11,10 +11,11 @@ export 'auth/loading_screen.dart';
 // Screens to home
 export 'main/new_game_screen.dart';
 export 'main/home_screen.dart';
-export 'main/dashboard_screen/games_screen.dart';
+export 'main/dashboard_screen/dashboard_screen.dart';
 export 'main/profile_screen/profile_screen.dart';
 
 // -------
 export 'main/friends_game_screen.dart';
 export 'main/joining_to_game_screen.dart';
 export 'main/drawing_screen/drawing_screen.dart';
+export 'main/game_screen.dart';

@@ -10,7 +10,7 @@ class RouteConstants {
 
   // Main screens with bottom nav bar
   static String home = 'home';
-  static String games = 'games';
+  static String dashboard = 'dashboard';
   static String newGame = 'new_game';
   static String profile = 'profile';
 
@@ -20,5 +20,6 @@ class RouteConstants {
 
   // Screens without bottom nav bar
   static String joiningToGame = 'joining_to_game';
-  static String drawingScreen = 'drawing_screen';
+  static String drawingScreen = 'drawing';
+  static String gameScreen = 'game';
 }

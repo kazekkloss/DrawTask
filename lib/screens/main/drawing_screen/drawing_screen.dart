@@ -22,15 +22,15 @@ class _DrawingScreenState extends State<DrawingScreen> {
   WidgetsToImageController controller = WidgetsToImageController();
   Uint8List? bytes;
   bool loading = false;
+  bool preparing = false;
 
   bool colorsPalette = false;
   bool shapesPalette = false;
   bool widthPalette = false;
 
-
   void _renderPicture() {
     setState(() {
-      loading = true;
+      preparing = true;
     });
 
     Future.microtask(() async {
@@ -38,8 +38,8 @@ class _DrawingScreenState extends State<DrawingScreen> {
       final bytes = await controller.capture();
       setState(() {
         this.bytes = bytes!;
+        loading = true;
         PictureSocket().addPicture(context, bytes, widget.game.id);
-        loading = false;
       });
     });
   }
@@ -732,11 +732,18 @@ class _DrawingScreenState extends State<DrawingScreen> {
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     height: 4.7.h,
                     width: 84.w,
-                    child: const Center(
-                        child: Text(
-                      'Finish',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    )),
+                    child: Center(
+                        child: !preparing
+                            ? const Text(
+                                'Finish',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              )
+                            : const Text(
+                                'Preparing...',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              )),
                   ),
                 )
               : SizedBox(

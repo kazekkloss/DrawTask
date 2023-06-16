@@ -53,27 +53,27 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       ChangePictureEvent event, Emitter<GameState> emit) {
     try {
       final List<Game> updatedGames = state.games.map((game) {
-        final List<Picture> updatedPictures = game.pictures.map((picture) {
-          if (picture.id == event.picture.id) {
-            return event.picture;
-          } else {
-            return picture;
-          }
-        }).toList();
+        if (game.id == event.gameId) {
+          final List<Picture> updatedPictures = game.pictures.map((picture) {
+            if (picture.id == event.picture.id) {
+              return event.picture;
+            } else {
+              return picture;
+            }
+          }).toList();
 
-        return game.copyWith(pictures: updatedPictures);
+          if (!updatedPictures
+              .any((picture) => picture.id == event.picture.id)) {
+            updatedPictures.add(event.picture);
+          }
+
+          return game.copyWith(pictures: updatedPictures);
+        } else {
+          return game;
+        }
       }).toList();
 
       emit(state.copyWith(games: updatedGames));
-
-      for (var game in state.games) {
-        print('Game ID: ${game.id}');
-        print('Game Words: ${game.gameWords}');
-        for (var picture in game.pictures) {
-          print(' - Picture ID: ${picture.id}');
-          print(' - imageUrl: ${picture.imageUrl}');
-        }
-      }
     } catch (e) {
       debugPrint(e.toString());
     }

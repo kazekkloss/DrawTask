@@ -23,8 +23,10 @@ class AddGameEvent extends GameEvent {
 }
 
 class ChangePictureEvent extends GameEvent {
+  final String gameId;
   final Picture picture;
   ChangePictureEvent({
+    required this.gameId,
     required this.picture,
   });
 

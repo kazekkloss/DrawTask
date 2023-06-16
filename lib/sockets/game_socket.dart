@@ -16,6 +16,7 @@ class GameSocket {
 
   // EMITTER
 
+  // --------------------------------------------------------------------------------------
   void getAllGames({required BuildContext context}) {
     try {
       List<Game> gamesList = [];
@@ -35,6 +36,9 @@ class GameSocket {
     }
   }
 
+
+
+  // --------------------------------------------------------------------------------------
   void joinToGame({required BuildContext context}) {
     try {
       final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
@@ -57,8 +61,9 @@ class GameSocket {
     }
   }
 
-  // LISTENERS
+    // LISTENERS
 
+    // --------------------------------------------------------------------------------------
     Future<Picture> pictureOnListener(BuildContext context) async {
     Picture picture = Picture.empty;
     try {
@@ -75,11 +80,5 @@ class GameSocket {
     }
 
     return picture;
-  }
-
-  void setVoidName({required BuildContext context}) {
-    try {} catch (e) {
-      showSnackBar(context, e.toString());
-    }
   }
 }

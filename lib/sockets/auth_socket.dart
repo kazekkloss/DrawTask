@@ -8,6 +8,7 @@ class AuthSocket {
   final _socketClient = SocketConnect.instance.socket!;
   Socket get socketConnect => _socketClient;
 
+  // --------------------------------------------------------------------------------------
   void authSocket({
     required BuildContext context,
     required String userId,

@@ -5,6 +5,7 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:drawtask/sockets/sockets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 
@@ -31,10 +32,17 @@ class PictureSocket {
           .uploadFile(CloudinaryFile.fromFile(file.path, folder: gameId));
       file.delete();
 
+      // EMIT PICTURE TO DATABASE
       _socketClient.emit("addPicture", {
         "gameId": gameId,
         "imageUrl": imageRes.secureUrl,
         "userOwnerId": authBloc.state.user.id,
+      });
+
+      // LISTENER TO SUCCESS
+      _socketClient.on("addPictureSuccess", (_) {
+        context.goNamed(RouteConstants.dashboard);
+        context.read<DrawBloc>().add(ClearEvent());
       });
     } catch (e) {
       showSnackBar(context, e.toString());
@@ -43,15 +51,19 @@ class PictureSocket {
 
   // LISTENERS --------------------------
 
+  // --------------------------------------------------------------------------------------
   void pictureOnListener(BuildContext context) async {
     try {
       print('listener');
       _socketClient.on(
         "pictureListener",
         (data) {
-          Picture picture = Picture.fromMap(data);
-          print(picture);
-          context.read<GameBloc>().add(ChangePictureEvent(picture: picture));
+          Map<String, dynamic> responseData = data as Map<String, dynamic>;
+          Picture picture = Picture.fromMap(responseData['pictureRes']);
+          String gameId = responseData['gameId'];
+          context
+              .read<GameBloc>()
+              .add(ChangePictureEvent(gameId: gameId, picture: picture));
         },
       );
     } catch (e) {
@@ -59,6 +71,7 @@ class PictureSocket {
     }
   }
 
+  // --------------------------------------------------------------------------------------
   void pictureOffListener(BuildContext context) {
     try {
       print("listener off");

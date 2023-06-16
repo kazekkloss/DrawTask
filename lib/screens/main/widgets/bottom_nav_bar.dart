@@ -1,4 +1,5 @@
 import 'package:drawtask/screens/main/widgets/app_bar.dart';
+import 'package:drawtask/sockets/sockets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -39,6 +40,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             SizedBox(height: 30.h),
             GestureDetector(
               onTap: () {
+                PictureSocket().pictureOffListener(context);
                 context.read<AuthBloc>().add(LogoutEvent(context: context));
               },
               child: const Text(
