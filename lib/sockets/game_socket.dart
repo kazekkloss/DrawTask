@@ -25,6 +25,7 @@ class GameSocket {
           .emit("getAllGames", {"currentUserId": authBloc.state.user.id});
 
       _socketClient.on("allGamesToState", (data) {
+        print(data);
         for (var gameData in data) {
           gamesList.add(Game.fromMap(gameData));
         }
@@ -36,8 +37,6 @@ class GameSocket {
     }
   }
 
-
-
   // --------------------------------------------------------------------------------------
   void joinToGame({required BuildContext context}) {
     try {
@@ -47,6 +46,7 @@ class GameSocket {
 
       _socketClient.on("joinedToGame", (data) {
         final game = Game.fromJson(jsonEncode(data));
+        print(game.createdAt);
         // add game to list in block state
         context.read<GameBloc>().add(AddGameEvent(game: game));
 
@@ -61,18 +61,18 @@ class GameSocket {
     }
   }
 
-    // LISTENERS
+  // LISTENERS
 
-    // --------------------------------------------------------------------------------------
-    Future<Picture> pictureOnListener(BuildContext context) async {
+  // --------------------------------------------------------------------------------------
+  Future<Picture> pictureOnListener(BuildContext context) async {
     Picture picture = Picture.empty;
     try {
       _socketClient.on(
         "pictureListener",
         (data) {
-          Picture picture = Picture.fromMap(data);
-          print(picture);
-          picture = picture;
+           Picture picture = Picture.fromMap(data);
+           print(picture);
+           picture = picture;
         },
       );
     } catch (e) {

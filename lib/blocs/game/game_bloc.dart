@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:drawtask/sockets/sockets.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -9,12 +8,10 @@ part 'game_event.dart';
 part 'game_state.dart';
 
 class GameBloc extends Bloc<GameEvent, GameState> {
-  final GameSocket _gameSocket;
-  GameBloc({required GameSocket gameSocket})
-      : _gameSocket = gameSocket,
-        super(const GameState.loading()) {
+  GameBloc() : super(const GameState.loading()) {
     on<AddGamesEvent>(_addGamesToState);
     on<AddGameEvent>(_addGameToState);
+    on<DeleteGameEvent>(_deleteGameToState);
     on<ChangePictureEvent>(_changePictureToToState);
   }
 
@@ -36,14 +33,25 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       emit(GameState.loaded(updatedGames));
       print(state.games.length);
 
-      for (var game in state.games) {
-        print('Game ID: ${game.id}');
-        print('Game Words: ${game.gameWords}');
-        for (var picture in game.pictures) {
-          print(' - Picture ID: ${picture.id}');
-          print(' - imageUrl: ${picture.imageUrl}');
-        }
-      }
+      // for (var game in state.games) {
+      //   print('Game ID: ${game.id}');
+      //   print('Game Words: ${game.gameWords}');
+      //   for (var picture in game.pictures) {
+      //     print(' - Picture ID: ${picture.id}');
+      //     print(' - imageUrl: ${picture.imageUrl}');
+      //   }
+      // }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void _deleteGameToState(DeleteGameEvent event, Emitter<GameState> emit) {
+    try {
+      List<Game> updatedGames = List.from(state.games)
+        ..removeWhere((game) => game.id == event.gameId);
+
+      emit(GameState.loaded(updatedGames));
     } catch (e) {
       debugPrint(e.toString());
     }

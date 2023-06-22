@@ -34,7 +34,6 @@ class _DrawingScreenState extends State<DrawingScreen> {
     });
 
     Future.microtask(() async {
-      await Future.delayed(const Duration(seconds: 1));
       final bytes = await controller.capture();
       setState(() {
         this.bytes = bytes!;
@@ -44,8 +43,17 @@ class _DrawingScreenState extends State<DrawingScreen> {
     });
   }
 
+  String formatDuration(Duration duration) {
+    return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
+    final timeStream =
+        Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now())
+            .map((currentTime) => currentTime.difference(widget.game.createdAt))
+            .transform(DurationTransformer(context, widget.game.id));
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -634,6 +642,30 @@ class _DrawingScreenState extends State<DrawingScreen> {
                     ),
                   ],
                 ),
+              ),
+              Positioned(
+                right: 2.8.w,
+                top: 2.8.w,
+                child: StreamBuilder<Object>(
+                    stream: timeStream,
+                    builder: (context, snapshot) {
+                      return Container(
+                        height: 10.7.h,
+                        width: 10.7.h,
+                        decoration: BoxDecoration(
+                            color: const Color.fromRGBO(255, 255, 255, 0.5),
+                            border: Border.all(
+                                color: const Color.fromRGBO(210, 184, 245, 1),
+                                width: 3.5),
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                            child: Text(
+                          '${snapshot.data ?? "loading"}',
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                        )),
+                      );
+                    }),
               ),
             ],
           ),
