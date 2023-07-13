@@ -47,7 +47,9 @@ class AuthRepository {
             });
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if(context.mounted) {
+         showSnackBar(context, e.toString());
+      }
       return User.empty;
     }
     User user = await completer.future;
@@ -86,7 +88,9 @@ class AuthRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
       return User.empty;
     }
     User user = await completer.future;
@@ -115,7 +119,9 @@ class AuthRepository {
             });
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
     }
   }
 
@@ -155,7 +161,9 @@ class AuthRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
     }
     return user;
   }
@@ -194,7 +202,9 @@ class AuthRepository {
         }
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
     }
     return user;
   }
@@ -210,7 +220,9 @@ class AuthRepository {
         _authSocket.disconnectSocket(context: context);
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
     }
     return userRes;
   }

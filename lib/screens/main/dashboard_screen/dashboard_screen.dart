@@ -58,7 +58,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     authBloc.state.user.id &&
                                 picture.imageUrl.isNotEmpty);
 
-                        final timeStream = Stream.periodic(
+                        var timeStream = Stream.periodic(
                                 const Duration(seconds: 1),
                                 (_) => DateTime.now())
                             .map((currentTime) => currentTime

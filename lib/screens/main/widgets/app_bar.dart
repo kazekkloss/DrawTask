@@ -83,10 +83,12 @@ class _TopAppBarState extends State<TopAppBar> {
           bottom: Radius.circular(15),
         ),
       ),
-      title: Text(
-        _title,
-        style: TextStyle(
-            fontSize: 2.8.h, fontFamily: 'IrishGrover', color: Colors.black),
+      title: Center(
+        child: Text(
+          _title,
+          style: TextStyle(
+              fontSize: 2.8.h, fontFamily: 'IrishGrover', color: Colors.black),
+        ),
       ),
     );
   }

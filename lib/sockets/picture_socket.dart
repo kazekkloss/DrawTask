@@ -45,7 +45,9 @@ class PictureSocket {
         context.read<DrawBloc>().add(ClearEvent());
       });
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if(context.mounted) {
+        showSnackBar(context, e.toString());
+      }
     }
   }
 
