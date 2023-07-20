@@ -42,6 +42,7 @@ class AppRouter {
             case AuthStatus.unknown:
               return state.namedLocation(RouteConstants.splash);
             case AuthStatus.authenticated:
+            print('bug in router - 45 line');
               if (previousStatus != status) {
                 previousStatus = status;
                 PictureSocket().pictureOnListener(context);

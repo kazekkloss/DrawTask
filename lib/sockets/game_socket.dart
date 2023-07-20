@@ -64,21 +64,5 @@ class GameSocket {
   // LISTENERS
 
   // --------------------------------------------------------------------------------------
-  Future<Picture> pictureOnListener(BuildContext context) async {
-    Picture picture = Picture.empty;
-    try {
-      _socketClient.on(
-        "pictureListener",
-        (data) {
-           Picture picture = Picture.fromMap(data);
-           print(picture);
-           picture = picture;
-        },
-      );
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
 
-    return picture;
-  }
 }

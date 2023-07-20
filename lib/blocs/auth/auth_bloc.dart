@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:drawtask/blocs/draw/draw_bloc.dart';
+import 'package:drawtask/blocs/game/game_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -37,8 +39,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       User user = await _authRepository.signIn(
           context: event.context, email: event.email, password: event.password);
+      print("sign in in block - ${user.username}");
       AuthState state = await userChecker(user);
       emit(state);
+      print("state - ${state.user.username}");
     } catch (e) {
       debugPrint('$e');
     }

@@ -47,8 +47,8 @@ class AuthRepository {
             });
       }
     } catch (e) {
-      if(context.mounted) {
-         showSnackBar(context, e.toString());
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
       }
       return User.empty;
     }
@@ -80,6 +80,7 @@ class AuthRepository {
             await prefs.setString(
                 'x-auth-token', jsonDecode(res.body)['token']);
             User user = User.fromJson(res.body);
+            print("sign in from repo - ${user.username}");
             if (context.mounted) {
               _authSocket.authSocket(context: context, userId: user.id);
             }

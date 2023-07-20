@@ -13,6 +13,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     on<AddGameEvent>(_addGameToState);
     on<DeleteGameEvent>(_deleteGameToState);
     on<ChangePictureEvent>(_changePictureToToState);
+    on<ClearGamesEvent>(_clearEventToState);
   }
 
   void _addGamesToState(AddGamesEvent event, Emitter<GameState> emit) {
@@ -84,6 +85,15 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       emit(state.copyWith(games: updatedGames));
     } catch (e) {
       debugPrint(e.toString());
+    }
+  }
+
+  void _clearEventToState(
+      ClearGamesEvent event, Emitter<GameState> emit) async {
+    try {
+      emit(const GameState.loading());
+    } catch (e) {
+      debugPrint('$e');
     }
   }
 }

@@ -45,7 +45,7 @@ class _TopAppBarState extends State<TopAppBar> {
       case "/dashboard/game":
         setState(() {
           _isLeading = true;
-          _title = "Game Screen";
+          _title = "Vote";
         });
         break;
       case "/profile/user":
@@ -83,12 +83,11 @@ class _TopAppBarState extends State<TopAppBar> {
           bottom: Radius.circular(15),
         ),
       ),
-      title: Center(
-        child: Text(
-          _title,
-          style: TextStyle(
-              fontSize: 2.8.h, fontFamily: 'IrishGrover', color: Colors.black),
-        ),
+      centerTitle: true,
+      title: Text(
+        _title,
+        style: TextStyle(
+            fontSize: 2.8.h, fontFamily: 'IrishGrover', color: Colors.black),
       ),
     );
   }

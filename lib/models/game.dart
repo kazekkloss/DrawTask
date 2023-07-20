@@ -8,6 +8,7 @@ class Game {
   final List<User> users;
   final List<Picture> pictures;
   final DateTime createdAt;
+  final List<String> voted;
 
   Game({
     required this.id,
@@ -15,6 +16,7 @@ class Game {
     required this.users,
     required this.pictures,
     required this.createdAt,
+    required this.voted,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,7 +25,8 @@ class Game {
       'gameWords': gameWords,
       'users': users,
       'pictures': pictures,
-      'createdAt': createdAt.toUtc().toIso8601String()
+      'createdAt': createdAt.toUtc().toIso8601String(),
+      'voted': voted,
     };
   }
 
@@ -42,6 +45,7 @@ class Game {
         ),
       ),
       createdAt: DateTime.parse(map['createdAt']).toLocal(),
+      voted: List<String>.from(map['voted']),
     );
   }
 
@@ -54,7 +58,8 @@ class Game {
     List<String>? gameWords,
     List<User>? users,
     List<Picture>? pictures,
-     DateTime? createdAt, 
+    DateTime? createdAt,
+    List<String>? voted,
   }) {
     return Game(
       id: id ?? this.id,
@@ -62,6 +67,7 @@ class Game {
       users: users ?? this.users,
       pictures: pictures ?? this.pictures,
       createdAt: createdAt ?? this.createdAt,
+      voted: voted ?? this.voted,
     );
   }
 }

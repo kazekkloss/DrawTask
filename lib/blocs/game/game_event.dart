@@ -12,6 +12,13 @@ class AddGamesEvent extends GameEvent {
   List<Object?> get props => [games];
 }
 
+class ClearGamesEvent extends GameEvent {
+  ClearGamesEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class AddGameEvent extends GameEvent {
   final Game game;
   AddGameEvent({

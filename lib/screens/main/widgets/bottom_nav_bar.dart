@@ -41,6 +41,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             GestureDetector(
               onTap: () {
                 PictureSocket().pictureOffListener(context);
+                context.read<GameBloc>().add(ClearGamesEvent());
                 context.read<AuthBloc>().add(LogoutEvent(context: context));
               },
               child: const Text(
