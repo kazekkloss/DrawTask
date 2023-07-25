@@ -48,6 +48,12 @@ class _TopAppBarState extends State<TopAppBar> {
           _title = "Vote";
         });
         break;
+      case "/dashboard/score":
+        setState(() {
+          _isLeading = true;
+          _title = "Score";
+        });
+        break;
       case "/profile/user":
         setState(() {
           _isLeading = true;

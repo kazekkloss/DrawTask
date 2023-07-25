@@ -40,7 +40,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             SizedBox(height: 30.h),
             GestureDetector(
               onTap: () {
-                PictureSocket().pictureOffListener(context);
+                GameSocket().gameOffListener(context);
                 context.read<GameBloc>().add(ClearGamesEvent());
                 context.read<AuthBloc>().add(LogoutEvent(context: context));
               },

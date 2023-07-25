@@ -19,3 +19,4 @@ export 'main/friends_game_screen.dart';
 export 'main/joining_to_game_screen.dart';
 export 'main/drawing_screen/drawing_screen.dart';
 export 'main/game_screen.dart';
+export 'main/score_screen.dart';

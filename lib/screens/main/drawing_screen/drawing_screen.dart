@@ -28,21 +28,6 @@ class _DrawingScreenState extends State<DrawingScreen> {
   bool shapesPalette = false;
   bool widthPalette = false;
 
-  void _renderPicture() {
-    setState(() {
-      preparing = true;
-    });
-
-    Future.microtask(() async {
-      final bytes = await controller.capture();
-      setState(() {
-        this.bytes = bytes!;
-        loading = true;
-        PictureSocket().addPicture(context, bytes, widget.game.id);
-      });
-    });
-  }
-
   String formatDuration(Duration duration) {
     return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
   }
@@ -757,7 +742,21 @@ class _DrawingScreenState extends State<DrawingScreen> {
               ? InkWell(
                   splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  onTap: () => _renderPicture(),
+                  onTap: () {
+                    setState(() {
+                      preparing = true;
+                    });
+
+                    Future.microtask(() async {
+                      final bytes = await controller.capture();
+                      setState(() {
+                        this.bytes = bytes!;
+                        loading = true;
+                        PictureSocket()
+                            .addPicture(context, bytes, widget.game.id);
+                      });
+                    });
+                  },
                   child: Ink(
                     decoration: const BoxDecoration(
                         color: Color.fromRGBO(75, 75, 75, 1.0),

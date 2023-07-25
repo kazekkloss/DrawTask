@@ -71,12 +71,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               left: 5.12.w, right: 5.12.w, top: 1.2.h),
                           child: GestureDetector(
                             onTap: () {
-                              hasMatchingPicture
-                                  ? context.pushNamed(RouteConstants.gameScreen,
-                                      extra: game)
-                                  : context.goNamed(
-                                      RouteConstants.drawingScreen,
-                                      extra: game);
+                              if (game.pictures.length != 5) {
+                                print('add here zoom picture');
+                              } else if (game.voted.length ==
+                                  game.pictures.length) {
+                                context.goNamed(RouteConstants.scoreScreen,
+                                    extra: game);
+                              } else if (hasMatchingPicture) {
+                                context.pushNamed(RouteConstants.gameScreen,
+                                    extra: game.id);
+                              } else {
+                                context.goNamed(RouteConstants.drawingScreen,
+                                    extra: game);
+                              }
                             },
                             child: Container(
                               height: 15.h,
@@ -119,6 +126,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
                                     children: [
+                                      game.voted.length == game.pictures.length
+                                          ? const Text(
+                                              "Finish!",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.white),
+                                            )
+                                          : game.voted.contains(
+                                                  authBloc.state.user.id)
+                                              ? const Text(
+                                                  "Waiting!",
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white),
+                                                )
+                                              : hasMatchingPicture
+                                                  ? const Text(
+                                                      "Vote!",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.white),
+                                                    )
+                                                  : const Text(
+                                                      "Draw!",
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.white),
+                                                    ),
                                       StreamBuilder<String>(
                                         stream: timeStream,
                                         builder: (context, snapshot) {

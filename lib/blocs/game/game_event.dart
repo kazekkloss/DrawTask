@@ -39,14 +39,12 @@ class DeleteGameEvent extends GameEvent {
   List<Object?> get props => [gameId];
 }
 
-class ChangePictureEvent extends GameEvent {
-  final String gameId;
-  final Picture picture;
-  ChangePictureEvent({
-    required this.gameId,
-    required this.picture,
+class UpdateGameEvent extends GameEvent {
+  final Game game;
+  UpdateGameEvent({
+    required this.game,
   });
 
   @override
-  List<Object?> get props => [picture];
+  List<Object?> get props => [game];
 }

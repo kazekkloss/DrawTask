@@ -34,7 +34,7 @@ class AppRouter {
   ];
 
   GoRouter _router() => GoRouter(
-        //debugLogDiagnostics: true,
+        debugLogDiagnostics: true,
         navigatorKey: _rootNavigatorKey,
         redirect: (context, state) {
           var status = context.read<AuthBloc>().state.status;
@@ -42,10 +42,10 @@ class AppRouter {
             case AuthStatus.unknown:
               return state.namedLocation(RouteConstants.splash);
             case AuthStatus.authenticated:
-            print('bug in router - 45 line');
+              print('bug in router - 45 line');
               if (previousStatus != status) {
                 previousStatus = status;
-                PictureSocket().pictureOnListener(context);
+                GameSocket().gameOnListener(context);
                 return state.namedLocation(RouteConstants.loading);
               } else {
                 return null;
@@ -127,15 +127,27 @@ class AppRouter {
                         child: const DashboardScreen(), key: state.pageKey),
                     routes: [
                       GoRoute(
-                          name: RouteConstants.gameScreen,
-                          path: 'game',
-                          pageBuilder: ((context, state) {
-                            Game game = state.extra as Game;
-                            return NoTransitionPage(
-                                child: GameScreen(
-                              game: game,
-                            ));
-                          })),
+                        name: RouteConstants.gameScreen,
+                        path: 'game',
+                        pageBuilder: ((context, state) {
+                          String gameId = state.extra as String;
+                          return NoTransitionPage(
+                              child: GameScreen(
+                            gameId: gameId,
+                          ));
+                        }),
+                      ),
+                      GoRoute(
+                        name: RouteConstants.scoreScreen,
+                        path: 'score',
+                        pageBuilder: ((context, state) {
+                          Game game = state.extra as Game;
+                          return NoTransitionPage(
+                              child: ScoreScreen(
+                            game: game,
+                          ));
+                        }),
+                      ),
                     ]),
                 // New Game Screen
                 GoRoute(

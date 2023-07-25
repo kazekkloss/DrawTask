@@ -12,7 +12,7 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     on<AddGamesEvent>(_addGamesToState);
     on<AddGameEvent>(_addGameToState);
     on<DeleteGameEvent>(_deleteGameToState);
-    on<ChangePictureEvent>(_changePictureToToState);
+    on<UpdateGameEvent>(_updateGameToState);
     on<ClearGamesEvent>(_clearEventToState);
   }
 
@@ -58,30 +58,19 @@ class GameBloc extends Bloc<GameEvent, GameState> {
     }
   }
 
-  void _changePictureToToState(
-      ChangePictureEvent event, Emitter<GameState> emit) {
+  void _updateGameToState(UpdateGameEvent event, Emitter<GameState> emit) {
     try {
-      final List<Game> updatedGames = state.games.map((game) {
-        if (game.id == event.gameId) {
-          final List<Picture> updatedPictures = game.pictures.map((picture) {
-            if (picture.id == event.picture.id) {
-              return event.picture;
-            } else {
-              return picture;
-            }
-          }).toList();
+      List<Game> updatedGames = List.from(state.games);
 
-          if (!updatedPictures
-              .any((picture) => picture.id == event.picture.id)) {
-            updatedPictures.add(event.picture);
-          }
+      int gameIndex =
+          updatedGames.indexWhere((game) => game.id == event.game.id);
 
-          return game.copyWith(pictures: updatedPictures);
-        } else {
-          return game;
-        }
-      }).toList();
-
+      if (gameIndex != -1) {
+        updatedGames[gameIndex] = event.game;
+      } else {
+        // Jeśli nie ma gry o podanym identyfikatorze, dodaj nową do listy
+        updatedGames.add(event.game);
+      }
       emit(state.copyWith(games: updatedGames));
     } catch (e) {
       debugPrint(e.toString());

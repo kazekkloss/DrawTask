@@ -37,7 +37,6 @@ class GameSocket {
     }
   }
 
-  // --------------------------------------------------------------------------------------
   void joinToGame({required BuildContext context}) {
     try {
       final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
@@ -46,14 +45,11 @@ class GameSocket {
 
       _socketClient.on("joinedToGame", (data) {
         final game = Game.fromJson(jsonEncode(data));
-        print(game.createdAt);
         // add game to list in block state
         context.read<GameBloc>().add(AddGameEvent(game: game));
 
         // turn off listener
         _socketClient.off('joinedToGame');
-
-        // go to screen
         context.goNamed(RouteConstants.drawingScreen, extra: game);
       });
     } catch (e) {
@@ -63,6 +59,25 @@ class GameSocket {
 
   // LISTENERS
 
-  // --------------------------------------------------------------------------------------
+  void gameOnListener(BuildContext context) async {
+    try {
+      print('game listener');
+      _socketClient.on("gameListener", (data) {
+        final game = Game.fromJson(jsonEncode(data));
+        context.read<GameBloc>().add(UpdateGameEvent(game: game));
+      });
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
 
+  void gameOffListener(BuildContext context) {
+    try {
+      print("game listener off");
+      _socketClient.off("gameListener");
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+  // --------------------------------------------------------------------------------------
 }

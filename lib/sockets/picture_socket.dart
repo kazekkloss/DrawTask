@@ -11,7 +11,6 @@ import 'package:socket_io_client/socket_io_client.dart';
 
 import '../blocs/blocs.dart';
 import '../config/config.dart';
-import '../models/models.dart';
 
 class PictureSocket {
   final _socketClient = SocketConnect.instance.socket!;
@@ -40,46 +39,16 @@ class PictureSocket {
       });
 
       // LISTENER TO SUCCESS
-      _socketClient.on("addPictureSuccess", (_) {
+      _socketClient.on("addPictureSuccess", (_) async {
         context.goNamed(RouteConstants.dashboard);
         context.read<DrawBloc>().add(ClearEvent());
+        
+        _socketClient.off('addPictureSuccess');
       });
     } catch (e) {
       if(context.mounted) {
         showSnackBar(context, e.toString());
       }
-    }
-  }
-
-  // LISTENERS --------------------------
-
-  // --------------------------------------------------------------------------------------
-  void pictureOnListener(BuildContext context) async {
-    try {
-      print('listener');
-      _socketClient.on(
-        "pictureListener",
-        (data) {
-          Map<String, dynamic> responseData = data as Map<String, dynamic>;
-          Picture picture = Picture.fromMap(responseData['pictureRes']);
-          String gameId = responseData['gameId'];
-          context
-              .read<GameBloc>()
-              .add(ChangePictureEvent(gameId: gameId, picture: picture));
-        },
-      );
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
-  }
-
-  // --------------------------------------------------------------------------------------
-  void pictureOffListener(BuildContext context) {
-    try {
-      print("listener off");
-      _socketClient.off("pictureListener");
-    } catch (e) {
-      showSnackBar(context, e.toString());
     }
   }
 
