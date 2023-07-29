@@ -23,4 +23,5 @@ class RouteConstants {
   static String drawingScreen = 'drawing';
   static String gameScreen = 'game';
   static String scoreScreen = 'score';
+  static String zoomDrawing = 'zoom';
 }

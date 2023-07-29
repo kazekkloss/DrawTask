@@ -1,3 +1,4 @@
+import 'package:drawtask/screens/main/profile_screen/content/drawings/drawings.dart';
 import 'package:drawtask/screens/main/profile_screen/content/friends/friends_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -153,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(
                       height: 3.2.h,
                     ),
-                    getContentWidget()
+                    getContentWidget(),
                   ],
                 ),
               ),
@@ -171,9 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Text('Account Settings'),
         );
       case ContentType.drawings:
-        return const Center(
-          child: Text('Drawings'),
-        );
+        return const DrawingsWidget();
       case ContentType.firends:
         return const FriendsContent();
     }

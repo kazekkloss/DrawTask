@@ -37,6 +37,9 @@ class _DrawTaskState extends State<DrawTask> {
           RepositoryProvider<UserRepository>(
             create: (context) => UserRepository(),
           ),
+          RepositoryProvider<DrawingsRepository>(
+            create: (context) => DrawingsRepository(),
+          ),
         ],
         child: MultiBlocProvider(
           providers: [
@@ -48,6 +51,11 @@ class _DrawTaskState extends State<DrawTask> {
             BlocProvider(
               create: (context) => UsersBloc(
                 userRepository: context.read<UserRepository>(),
+              ),
+            ),
+            BlocProvider(
+              create: (context) => DrawingsBloc(
+                drawingsRepository: context.read<DrawingsRepository>(),
               ),
             ),
             BlocProvider(

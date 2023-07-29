@@ -71,18 +71,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               left: 5.12.w, right: 5.12.w, top: 1.2.h),
                           child: GestureDetector(
                             onTap: () {
-                              if (game.pictures.length != 5) {
-                                print('add here zoom picture');
-                              } else if (game.voted.length ==
-                                  game.pictures.length) {
-                                context.goNamed(RouteConstants.scoreScreen,
-                                    extra: game);
-                              } else if (hasMatchingPicture) {
-                                context.pushNamed(RouteConstants.gameScreen,
-                                    extra: game.id);
-                              } else {
+                              if (!hasMatchingPicture) {
                                 context.goNamed(RouteConstants.drawingScreen,
                                     extra: game);
+                              } else {
+                                if (game.pictures.length != 5) {
+                                  final picture = game.pictures.firstWhere(
+                                    (picture) =>
+                                        picture.userOwner.id ==
+                                        authBloc.state.user.id,
+                                  );
+                                  context.goNamed(RouteConstants.zoomDrawing,
+                                      extra: picture.imageUrl);
+                                } else if (game.voted.length ==
+                                    game.pictures.length) {
+                                  context.goNamed(RouteConstants.scoreScreen,
+                                      extra: game);
+                                } else {
+                                  context.pushNamed(RouteConstants.gameScreen,
+                                      extra: game.id);
+                                }
                               }
                             },
                             child: Container(

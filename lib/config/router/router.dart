@@ -1,4 +1,4 @@
-import 'package:drawtask/models/game.dart';
+import 'package:drawtask/screens/main/dashboard_screen/zoom_widget.dart';
 import 'package:drawtask/screens/main/user_screen.dart';
 import 'package:drawtask/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../blocs/blocs.dart';
-import '../../models/user.dart';
+import '../../models/models.dart';
 import '../../screens/main/widgets/bottom_nav_bar.dart';
 import '../../sockets/sockets.dart';
 import '../config.dart';
@@ -145,6 +145,17 @@ class AppRouter {
                           return NoTransitionPage(
                               child: ScoreScreen(
                             game: game,
+                          ));
+                        }),
+                      ),
+                      GoRoute(
+                        name: RouteConstants.zoomDrawing,
+                        path: 'zoom',
+                        pageBuilder: ((context, state) {
+                          String imageUrl = state.extra as String;
+                          return NoTransitionPage(
+                              child: ZoomDrawing(
+                            imageUrl: imageUrl,
                           ));
                         }),
                       ),

@@ -48,6 +48,11 @@ class _TopAppBarState extends State<TopAppBar> {
           _title = "Vote";
         });
         break;
+      case "/dashboard/zoom":
+        setState(() {
+          _isLeading = true;
+        });
+        break;
       case "/dashboard/score":
         setState(() {
           _isLeading = true;

@@ -721,7 +721,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
             splashColor: const Color.fromRGBO(217, 217, 217, 1),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
             onTap: () => {
-              context.goNamed(RouteConstants.newGame),
+              context.goNamed(RouteConstants.dashboard),
               context.read<DrawBloc>().add(ClearEvent())
             },
             child: Ink(

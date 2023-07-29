@@ -26,13 +26,15 @@ class _GameScreenState extends State<GameScreen> {
     final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
     return BlocConsumer<GameBloc, GameState>(
       listener: (context, state) {
-        Game game = state.games.firstWhere((game) => game.id == widget.gameId);
+        Game game =
+            state.games.firstWhere((game) => game.id == widget.gameId);
         if (game.voted.length == game.pictures.length) {
           context.goNamed(RouteConstants.scoreScreen, extra: game);
         }
       },
       builder: (context, state) {
-        Game game = state.games.firstWhere((game) => game.id == widget.gameId);
+        Game game =
+            state.games.firstWhere((game) => game.id == widget.gameId);
         return Scaffold(
           body: SingleChildScrollView(
             child: Center(
