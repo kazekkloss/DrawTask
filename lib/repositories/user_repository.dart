@@ -128,7 +128,9 @@ class UserRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if(context.mounted) {
+        showSnackBar(context, e.toString());
+      }
       return User.empty;
     }
     return user;
@@ -167,7 +169,9 @@ class UserRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if(context.mounted){
+        showSnackBar(context, e.toString());
+      }
     }
     return user;
   }

@@ -21,7 +21,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       List<Game> updatedGames = List.from(state.games)..addAll(event.games);
 
       emit(GameState.loaded(updatedGames));
-      print(state.games.length);
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -32,7 +31,6 @@ class GameBloc extends Bloc<GameEvent, GameState> {
       List<Game> updatedGames = List.from(state.games)..add(event.game);
 
       emit(GameState.loaded(updatedGames));
-      print(state.games.length);
 
       // for (var game in state.games) {
       //   print('Game ID: ${game.id}');

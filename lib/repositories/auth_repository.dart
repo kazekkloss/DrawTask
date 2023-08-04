@@ -130,6 +130,7 @@ class AuthRepository {
   Future<User> setUsername({
     required BuildContext context,
     required String username,
+    required String avatar,
   }) async {
     User user = User.empty;
     try {
@@ -144,6 +145,7 @@ class AuthRepository {
         body: jsonEncode(
           {
             'username': username,
+            'avatar': avatar,
           },
         ),
       );

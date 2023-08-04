@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rive/rive.dart';
 
 import 'package:sizer/sizer.dart';
 
@@ -17,7 +18,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 4), () {
       context.read<AuthBloc>().add(CheckAuthEvent(context: context));
     });
     super.initState();
@@ -26,26 +27,13 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: EdgeInsets.only(top: 25.h),
-            child: Column(
-              children: [
-                Text(
-                  "DrawTask",
-                  style: TextStyle(fontSize: 4.2.h, fontFamily: 'IrishGrover'),
-                ),
-                SizedBox(
-                  height: 2.h,
-                ),
-                Text(
-                  "Get Creative!",
-                  style: TextStyle(fontSize: 2.h),
-                ),
-              ],
-            ),
-          ),
+      body: Container(
+        height: 100.h,
+        width: 100.w,
+        color: Colors.white,
+        child: const RiveAnimation.asset(
+          'assets/animations/background.riv',
+          fit: BoxFit.cover,
         ),
       ),
     );

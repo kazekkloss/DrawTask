@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:drawtask/blocs/draw/draw_bloc.dart';
-import 'package:drawtask/blocs/game/game_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +50,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       SaveUsernameEvent event, Emitter<AuthState> emit) async {
     try {
       User user = await _authRepository.setUsername(
-          context: event.context, username: event.username);
+          context: event.context,
+          username: event.username,
+          avatar: event.avatar);
       if (user != User.empty) {
         AuthState state = await userChecker(user);
         emit(state);

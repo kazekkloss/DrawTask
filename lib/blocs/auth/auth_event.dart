@@ -47,9 +47,10 @@ class LogoutEvent extends AuthEvent {
 class SaveUsernameEvent extends AuthEvent {
   final BuildContext context;
   final String username;
+  final String avatar;
 
-  SaveUsernameEvent({required this.context, required this.username});
+  SaveUsernameEvent({required this.context, required this.username, required this.avatar});
 
   @override
-  List<Object?> get props => [context, username];
+  List<Object?> get props => [context, username, avatar];
 }

@@ -1,7 +1,9 @@
 import 'package:drawtask/config/config.dart';
+import 'package:drawtask/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../blocs/blocs.dart';
@@ -22,9 +24,12 @@ class HomeScreen extends StatelessWidget {
                   Container(
                     height: 11.h,
                     width: 11.h,
-                    decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 149, 149, 149),
-                        borderRadius: BorderRadius.circular(15)),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: state.user.avatar == null
+                          ? null
+                          : Lottie.asset(state.user.avatar!, fit: BoxFit.cover),
+                    ),
                   ),
                   SizedBox(height: 2.h),
                   Text(
@@ -32,25 +37,11 @@ class HomeScreen extends StatelessWidget {
                     style: const TextStyle(fontSize: 25),
                   ),
                   SizedBox(height: 2.h),
-                  InkWell(
-                    splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    onTap: () {
-                      context.goNamed(RouteConstants.newGame);
-                    },
-                    child: Ink(
-                      decoration: const BoxDecoration(
-                          color: Color.fromRGBO(75, 75, 75, 1.0),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      height: 4.7.h,
-                      width: 84.w,
-                      child: const Center(
-                          child: Text(
-                        'New Game',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
-                      )),
-                    ),
-                  ),
+                  MainButton(
+                      text: 'New Game',
+                      onPressed: () {
+                        context.goNamed(RouteConstants.newGame);
+                      })
                 ],
               ),
             ),

@@ -25,7 +25,6 @@ class GameSocket {
           .emit("getAllGames", {"currentUserId": authBloc.state.user.id});
 
       _socketClient.on("allGamesToState", (data) {
-        print(data);
         for (var gameData in data) {
           gamesList.add(Game.fromMap(gameData));
         }
@@ -61,7 +60,6 @@ class GameSocket {
 
   void gameOnListener(BuildContext context) async {
     try {
-      print('game listener');
       _socketClient.on("gameListener", (data) {
         final game = Game.fromJson(jsonEncode(data));
         context.read<GameBloc>().add(UpdateGameEvent(game: game));
@@ -73,7 +71,6 @@ class GameSocket {
 
   void gameOffListener(BuildContext context) {
     try {
-      print("game listener off");
       _socketClient.off("gameListener");
     } catch (e) {
       showSnackBar(context, e.toString());

@@ -1,5 +1,9 @@
 class RouteConstants {
   // Screens to auth
+
+    static String auth = 'auth';
+
+
   static String splash = 'splash';
   static String signIn = 'sign_in';
   static String signUp = 'sign_up';

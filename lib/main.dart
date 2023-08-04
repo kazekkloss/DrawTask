@@ -1,3 +1,4 @@
+import 'package:drawtask/config/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,6 +6,7 @@ import 'package:sizer/sizer.dart';
 
 import 'blocs/blocs.dart';
 import 'config/router/router.dart';
+import 'cubits/cubits.dart';
 import 'repositories/repositories.dart';
 
 void main() {
@@ -64,15 +66,17 @@ class _DrawTaskState extends State<DrawTask> {
             BlocProvider(
               create: (context) => DrawBloc(),
             ),
+            BlocProvider(
+              create: (context) => ThemeCubit(),
+            ),
           ],
-          child: Builder(
-            builder: (context) {
-              return MaterialApp.router(
-                routerConfig: AppRouter(context: context).router,
-                debugShowCheckedModeBanner: false,
-              );
-            },
-          ),
+          child: Builder(builder: (context) {
+            return MaterialApp.router(
+              routerConfig: AppRouter(context: context).router,
+              debugShowCheckedModeBanner: false,
+              theme: theme(),
+            );
+          }),
         ),
       );
     });

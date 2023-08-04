@@ -48,6 +48,9 @@ dependencies:
   path_provider: ^2.0.15
   flutter_image_compress: ^2.0.3
   cached_network_image: ^3.2.3
+  rive: ^0.11.4
+  flutter_svg: ^2.0.7
+  lottie: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +76,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/svg/background_animation.svg
+    - assets/svg/static_background.svg
+    - assets/avatars/green_avatar.json
+    - assets/avatars/grey_avatar.json
+    - assets/avatars/pink_avatar.json
+    - assets/avatars/purple_avatar.json
+    - assets/animations/background.riv
+    - assets/animations/post.riv
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -87,6 +97,12 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: Righteous
+      fonts:
+        - asset: assets/fonts/Righteous/Righteous-Regular.ttf
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/Noto_Sans/NotoSans-Regular.ttf
     - family: IrishGrover
       fonts:
         - asset: assets/fonts/Irish_Grover/IrishGrover-Regular.ttf

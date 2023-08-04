@@ -1,3 +1,4 @@
+import 'package:drawtask/cubits/theme/theme_cubit.dart';
 import 'package:drawtask/screens/main/dashboard_screen/zoom_widget.dart';
 import 'package:drawtask/screens/main/user_screen.dart';
 import 'package:drawtask/screens/screens.dart';
@@ -34,33 +35,40 @@ class AppRouter {
   ];
 
   GoRouter _router() => GoRouter(
-        debugLogDiagnostics: true,
+        //debugLogDiagnostics: true,
         navigatorKey: _rootNavigatorKey,
         redirect: (context, state) {
-          var status = context.read<AuthBloc>().state.status;
-          switch (status) {
+          var authState = context.read<AuthBloc>().state;
+          switch (authState.status) {
             case AuthStatus.unknown:
               return state.namedLocation(RouteConstants.splash);
             case AuthStatus.authenticated:
-              print('bug in router - 45 line');
-              if (previousStatus != status) {
-                previousStatus = status;
+              if (previousStatus != authState.status) {
+
+                previousStatus = authState.status;
+
+                context.read<ThemeCubit>().updateAvatarColor(authState.user.avatar!);
+
                 GameSocket().gameOnListener(context);
+
                 return state.namedLocation(RouteConstants.loading);
               } else {
                 return null;
               }
-            case AuthStatus.unauthenticated:
-              if (previousStatus != status) {
-                previousStatus = status;
-                return state.namedLocation(RouteConstants.signIn);
+            case AuthStatus.unauthenticated ||
+                  AuthStatus.notVerified ||
+                  AuthStatus.noUsername:
+              if (previousStatus != authState.status) {
+                previousStatus = authState.status;
+                context.read<ThemeCubit>().updateAvatarColor('');
+                return state.namedLocation(RouteConstants.auth);
               } else {
                 return null;
               }
-            case AuthStatus.notVerified:
-              return state.namedLocation(RouteConstants.checkLink);
-            case AuthStatus.noUsername:
-              return state.namedLocation(RouteConstants.setUsername);
+            //case AuthStatus.notVerified:
+            //return state.namedLocation(RouteConstants.checkLink);
+            //case AuthStatus.noUsername:
+            //return state.namedLocation(RouteConstants.setUsername);
           }
         },
         refreshListenable: RouterRefreshBloc<AuthBloc, AuthState>(
@@ -73,28 +81,14 @@ class AppRouter {
             path: '/splash',
             builder: (context, state) => const SplashScreen(),
           ),
+          // new auth screen ==============
+
           GoRoute(
-            name: RouteConstants.signIn,
-            path: '/sign_in',
-            builder: (context, state) => const SignInScreen(),
+            name: RouteConstants.auth,
+            path: '/auth',
+            builder: (context, state) => const AuthScreen(),
           ),
-          GoRoute(
-            name: RouteConstants.signUp,
-            path: '/sign_up',
-            builder: (context, state) => const SignUpScreen(),
-          ),
-          GoRoute(
-            parentNavigatorKey: _rootNavigatorKey,
-            name: RouteConstants.checkLink,
-            path: '/check_link',
-            builder: (context, state) => const CheckLinkScreen(),
-          ),
-          GoRoute(
-            parentNavigatorKey: _rootNavigatorKey,
-            name: RouteConstants.setUsername,
-            path: '/set_username',
-            builder: (context, state) => const SetUsernameScreen(),
-          ),
+          // ==============================
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,
               name: RouteConstants.loading,

@@ -6,6 +6,7 @@ class User {
   final String password;
   final int verify;
   final String? username;
+  final String? avatar;
   final List<String>? invitationsToMe;
   final List<String>? invitationsFromMe;
   final List<String>? friends;
@@ -15,6 +16,7 @@ class User {
     required this.password,
     required this.verify,
     this.username,
+    this.avatar,
     this.invitationsToMe,
     this.invitationsFromMe,
     this.friends,
@@ -27,6 +29,7 @@ class User {
       'password': password,
       'verify': verify,
       'username': username,
+      'avatar': avatar,
       'invitationsToMe': invitationsToMe,
       'invitationsFromMe': invitationsFromMe,
       'friends': friends,
@@ -40,6 +43,7 @@ class User {
       password: map['password'] ?? '',
       verify: map['verify']?.toInt() ?? 0,
       username: map['username'] ?? '',
+      avatar: map['avatar'] ?? '',
       invitationsToMe: List<String>.from(map['invitationsToMe'] ?? []),
       invitationsFromMe: List<String>.from(map['invitationsFromMe'] ?? []),
       friends: List<String>.from(map['friends'] ?? []),
@@ -60,6 +64,7 @@ class User {
     List<String>? invitationsFromMe,
     List<String>? friends,
     String? username,
+    String? avatar,
   }) {
     return User(
       id: id ?? this.id,

@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:drawtask/models/models.dart';
 
 class Drawing {
   final String id;
