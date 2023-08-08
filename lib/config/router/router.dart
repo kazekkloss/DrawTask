@@ -4,6 +4,7 @@ import 'package:drawtask/screens/main/user_screen.dart';
 import 'package:drawtask/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../blocs/blocs.dart';
@@ -24,18 +25,38 @@ class AppRouter {
 
   // Tabs for bottom navigation bar
   final tabs = [
-    const NavBarItem(
-        initialLocation: '/home', icon: Icon(Icons.home), label: ''),
-    const NavBarItem(
-        initialLocation: '/dashboard', icon: Icon(Icons.dashboard), label: ''),
-    const NavBarItem(
-        initialLocation: '/new_game', icon: Icon(Icons.games), label: ''),
-    const NavBarItem(
-        initialLocation: '/profile', icon: Icon(Icons.person), label: ''),
+    NavBarItem(
+        initialLocation: '/home',
+        icon: SvgPicture.asset(
+          'assets/svg/home.svg',
+          fit: BoxFit.fitHeight,
+        ),
+        label: ''),
+    NavBarItem(
+        initialLocation: '/dashboard',
+        icon: SvgPicture.asset(
+          'assets/svg/drawings.svg',
+          fit: BoxFit.fitHeight,
+        ),
+        label: ''),
+    NavBarItem(
+        initialLocation: '/new_game',
+        icon: SvgPicture.asset(
+          'assets/svg/new_game.svg',
+          fit: BoxFit.fitHeight,
+        ),
+        label: ''),
+    NavBarItem(
+        initialLocation: '/profile',
+        icon: SvgPicture.asset(
+          'assets/svg/profile.svg',
+          fit: BoxFit.fitHeight,
+        ),
+        label: ''),
   ];
 
   GoRouter _router() => GoRouter(
-        //debugLogDiagnostics: true,
+        debugLogDiagnostics: true,
         navigatorKey: _rootNavigatorKey,
         redirect: (context, state) {
           var authState = context.read<AuthBloc>().state;
@@ -44,10 +65,11 @@ class AppRouter {
               return state.namedLocation(RouteConstants.splash);
             case AuthStatus.authenticated:
               if (previousStatus != authState.status) {
-
                 previousStatus = authState.status;
 
-                context.read<ThemeCubit>().updateAvatarColor(authState.user.avatar!);
+                context
+                    .read<ThemeCubit>()
+                    .updateAvatarColor(authState.user.avatar!);
 
                 GameSocket().gameOnListener(context);
 
@@ -65,10 +87,6 @@ class AppRouter {
               } else {
                 return null;
               }
-            //case AuthStatus.notVerified:
-            //return state.namedLocation(RouteConstants.checkLink);
-            //case AuthStatus.noUsername:
-            //return state.namedLocation(RouteConstants.setUsername);
           }
         },
         refreshListenable: RouterRefreshBloc<AuthBloc, AuthState>(
@@ -110,14 +128,14 @@ class AppRouter {
                 GoRoute(
                   name: RouteConstants.home,
                   path: '/home',
-                  pageBuilder: (context, state) => MaterialPage(
+                  pageBuilder: (context, state) => NoTransitionPage(
                       child: const HomeScreen(), key: state.pageKey),
                 ),
                 // Game Screen
                 GoRoute(
                     name: RouteConstants.dashboard,
                     path: '/dashboard',
-                    pageBuilder: (context, state) => MaterialPage(
+                    pageBuilder: (context, state) => NoTransitionPage(
                         child: const DashboardScreen(), key: state.pageKey),
                     routes: [
                       GoRoute(
@@ -158,7 +176,7 @@ class AppRouter {
                 GoRoute(
                   name: RouteConstants.newGame,
                   path: '/new_game',
-                  pageBuilder: (context, state) => MaterialPage(
+                  pageBuilder: (context, state) => NoTransitionPage(
                       child: const NewGameScreen(), key: state.pageKey),
                   routes: [
                     GoRoute(
@@ -173,7 +191,7 @@ class AppRouter {
                 GoRoute(
                   name: RouteConstants.profile,
                   path: '/profile',
-                  pageBuilder: (context, state) => MaterialPage(
+                  pageBuilder: (context, state) => NoTransitionPage(
                       child: const ProfileScreen(), key: state.pageKey),
                   routes: [
                     GoRoute(
@@ -204,7 +222,7 @@ class AppRouter {
               })),
         ],
         errorPageBuilder: (context, state) {
-          return const MaterialPage(
+          return const NoTransitionPage(
               child: Scaffold(
             body: Center(
               child: Text('Error route'),

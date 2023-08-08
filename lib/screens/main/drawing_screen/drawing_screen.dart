@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:drawtask/cubits/cubits.dart';
+import 'package:drawtask/screens/main/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +11,7 @@ import '../../../blocs/blocs.dart';
 import '../../../config/config.dart';
 import '../../../models/models.dart';
 import '../../../sockets/sockets.dart';
+import 'widgets/widgets.dart';
 
 class DrawingScreen extends StatefulWidget {
   final Game game;
@@ -24,766 +27,257 @@ class _DrawingScreenState extends State<DrawingScreen> {
   bool loading = false;
   bool preparing = false;
 
-  bool colorsPalette = false;
-  bool shapesPalette = false;
-  bool widthPalette = false;
+  bool colorsTool = false;
+  bool shapesTool = false;
+  bool backgroundTool = false;
+  bool widthTool = false;
 
-  String formatDuration(Duration duration) {
-    return '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}';
-  }
+  bool show = true;
+
+  Color backgroundColor = const Color.fromRGBO(255, 255, 255, 1);
 
   @override
   Widget build(BuildContext context) {
-    final timeStream =
-        Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now())
-            .map((currentTime) => currentTime.difference(widget.game.createdAt))
-            .transform(DurationTransformer(context, widget.game.id));
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(
-              '#${widget.game.gameWords[0]}',
-              style: const TextStyle(
-                  fontSize: 18, fontFamily: 'IrishGrover', color: Colors.black),
-            ),
-            Text(
-              '#${widget.game.gameWords[1]}',
-              style: const TextStyle(
-                  fontSize: 18, fontFamily: 'IrishGrover', color: Colors.black),
-            ),
-            Text(
-              '#${widget.game.gameWords[2]}',
-              style: const TextStyle(
-                  fontSize: 18, fontFamily: 'IrishGrover', color: Colors.black),
-            )
-          ],
-        ),
-        backgroundColor: Colors.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(15),
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Stack(
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: TopAppBar(gameWords: widget.game.gameWords),
+          body: Column(
             children: [
-              ClipRRect(
-                child: RepaintBoundary(
-                  key: controller.containerKey,
-                  child: GestureDetector(
-                    onPanStart: (details) {
-                      context.read<DrawBloc>().add(
-                          OnStartEvent(details: details, context: context));
+              Stack(children: [
+                ClipRRect(
+                  child: RepaintBoundary(
+                    key: controller.containerKey,
+                    child: GestureDetector(
+                      onPanStart: (details) {
+                        context.read<DrawBloc>().add(
+                            OnStartEvent(details: details, context: context));
+                        setState(() {
+                          show = false;
+                        });
+                      },
+                      onPanUpdate: (details) {
+                        context.read<DrawBloc>().add(
+                            OnUpdateEvent(details: details, context: context));
+                      },
+                      onPanEnd: (details) {
+                        context.read<DrawBloc>().add(
+                            OnEndEvent(details: details, context: context));
+                        setState(() {
+                          show = true;
+                        });
+                      },
+                      child: BlocBuilder<DrawBloc, DrawState>(
+                        builder: (context, state) {
+                          return Container(
+                            color: backgroundColor,
+                            child: SizedBox(
+                              height: 60.3.h,
+                              width: 100.w,
+                              child: Stack(
+                                children: [
+                                  CustomPaint(
+                                    painter: Sketcher(
+                                      sketches: state.listSketch,
+                                    ),
+                                  ),
+                                  CustomPaint(
+                                    painter: Sketcher(
+                                      sketches: [state.sketch],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+                AnimatedPositioned(
+                  bottom: backgroundTool ? 0 : -20.9.h,
+                  curve: Curves.linearToEaseOut,
+                  duration: const Duration(milliseconds: 500),
+                  left: 10.w,
+                  child: ColorsTool(
+                    onColorSelected: (color) {
+                      setState(() {
+                        backgroundColor = color;
+                        backgroundTool = false;
+                      });
                     },
-                    onPanUpdate: (details) {
-                      context.read<DrawBloc>().add(
-                          OnUpdateEvent(details: details, context: context));
-                    },
-                    onPanEnd: (details) {
+                    splashColor: state.themeData.splashColor,
+                  ),
+                ),
+                AnimatedPositioned(
+                  bottom: widthTool ? 0 : -20.9.h,
+                  curve: Curves.linearToEaseOut,
+                  duration: const Duration(milliseconds: 500),
+                  left: 31.w,
+                  child: WidthTool(
+                    splashColor: state.themeData.splashColor,
+                    widthVoid: () => setState(() {
+                      widthTool = false;
+                    }),
+                  ),
+                ),
+                AnimatedPositioned(
+                  bottom: colorsTool ? 0 : -20.9.h,
+                  curve: Curves.linearToEaseOut,
+                  duration: const Duration(milliseconds: 500),
+                  left: 43.w,
+                  child: ColorsTool(
+                    onColorSelected: (color) {
                       context
                           .read<DrawBloc>()
-                          .add(OnEndEvent(details: details, context: context));
-                    },
-                    child: BlocBuilder<DrawBloc, DrawState>(
-                      builder: (context, state) {
-                        return Container(
-                          color: Colors.white,
-                          child: SizedBox(
-                            height: 60.3.h,
-                            width: 100.w,
-                            child: Stack(
-                              children: [
-                                CustomPaint(
-                                  painter: Sketcher(
-                                    sketches: state.listSketch,
-                                  ),
-                                ),
-                                CustomPaint(
-                                  painter: Sketcher(
-                                    sketches: [state.sketch],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              if (colorsPalette)
-                Positioned(
-                  bottom: 0,
-                  left: 10.w,
-                  child: Container(
-                    height: 20.9.h,
-                    width: 26.1.w,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        color: Color.fromRGBO(183, 160, 213, 1)),
-                    child: Center(
-                      child: SizedBox(
-                        height: 17.7.h,
-                        width: 18.7.w,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeColorEvent(
-                                            color: const Color.fromRGBO(
-                                                87, 220, 54, 1)));
-                                    setState(() {
-                                      colorsPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: Color.fromRGBO(87, 220, 54, 1)),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeColorEvent(
-                                            color: const Color.fromRGBO(
-                                                0, 0, 0, 1)));
-                                    setState(() {
-                                      colorsPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: Color.fromRGBO(0, 0, 0, 1)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeColorEvent(
-                                            color: const Color.fromRGBO(
-                                                40, 46, 193, 1)));
-                                    setState(() {
-                                      colorsPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: Color.fromRGBO(40, 46, 193, 1)),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeColorEvent(
-                                            color: const Color.fromRGBO(
-                                                232, 201, 39, 1)));
-                                    setState(() {
-                                      colorsPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: Color.fromRGBO(232, 201, 39, 1)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeColorEvent(
-                                            color: const Color.fromRGBO(
-                                                205, 41, 41, 1)));
-                                    setState(() {
-                                      colorsPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: Color.fromRGBO(205, 41, 41, 1)),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeColorEvent(
-                                            color: const Color.fromRGBO(
-                                                187, 45, 190, 1)));
-                                    setState(() {
-                                      colorsPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color: Color.fromRGBO(187, 45, 190, 1)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeColorEvent(
-                                            color: const Color.fromRGBO(
-                                                255, 255, 255, 1)));
-                                    setState(() {
-                                      colorsPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color:
-                                            Color.fromRGBO(255, 255, 255, 1)),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeColorEvent(
-                                            color: const Color.fromRGBO(
-                                                204, 204, 204, 1)));
-                                    setState(() {
-                                      colorsPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: const BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(10)),
-                                        color:
-                                            Color.fromRGBO(204, 204, 204, 1)),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              if (widthPalette)
-                Positioned(
-                  bottom: 0,
-                  left: 31.w,
-                  child: Container(
-                    height: 20.9.h,
-                    width: 26.1.w,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        color: Color.fromRGBO(183, 160, 213, 1)),
-                    child: Center(
-                      child: SizedBox(
-                        height: 17.7.h,
-                        width: 18.7.w,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<DrawBloc>()
-                                    .add(SkechWidthEvent(width: 40));
-                                setState(() {
-                                  widthPalette = false;
-                                });
-                              },
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 2.2.h,
-                                decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(51, 51, 51, 1),
-                                    borderRadius: BorderRadius.circular(100)),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<DrawBloc>()
-                                    .add(SkechWidthEvent(width: 34));
-                                setState(() {
-                                  widthPalette = false;
-                                });
-                              },
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 1.5.h,
-                                decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(51, 51, 51, 1),
-                                    borderRadius: BorderRadius.circular(100)),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<DrawBloc>()
-                                    .add(SkechWidthEvent(width: 24));
-                                setState(() {
-                                  widthPalette = false;
-                                });
-                              },
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 1.h,
-                                decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(51, 51, 51, 1),
-                                    borderRadius: BorderRadius.circular(100)),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<DrawBloc>()
-                                    .add(SkechWidthEvent(width: 18));
-                                setState(() {
-                                  widthPalette = false;
-                                });
-                              },
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 0.8.h,
-                                decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(51, 51, 51, 1),
-                                    borderRadius: BorderRadius.circular(100)),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<DrawBloc>()
-                                    .add(SkechWidthEvent(width: 10));
-                                setState(() {
-                                  widthPalette = false;
-                                });
-                              },
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 0.5.h,
-                                decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(51, 51, 51, 1),
-                                    borderRadius: BorderRadius.circular(100)),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<DrawBloc>()
-                                    .add(SkechWidthEvent(width: 5));
-                                setState(() {
-                                  widthPalette = false;
-                                });
-                              },
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 0.3.h,
-                                decoration: BoxDecoration(
-                                    color: const Color.fromRGBO(51, 51, 51, 1),
-                                    borderRadius: BorderRadius.circular(100)),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              if (shapesPalette)
-                Positioned(
-                  bottom: 0,
-                  right: 9.7.w,
-                  child: Container(
-                    height: 20.9.h,
-                    width: 26.1.w,
-                    decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(25)),
-                        color: Color.fromRGBO(183, 160, 213, 1)),
-                    child: Center(
-                      child: SizedBox(
-                        height: 17.7.h,
-                        width: 18.7.w,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeModeEvent(
-                                            mode: DrawingMode.square));
-                                    context
-                                        .read<DrawBloc>()
-                                        .add(SetFillEvent(filled: true));
-                                    setState(() {
-                                      shapesPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                      height: 8.4.w,
-                                      width: 8.4.w,
-                                      color:
-                                          const Color.fromRGBO(51, 51, 51, 1)),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeModeEvent(
-                                            mode: DrawingMode.square));
-                                    context
-                                        .read<DrawBloc>()
-                                        .add(SetFillEvent(filled: false));
-                                    setState(() {
-                                      shapesPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                      height: 8.4.w,
-                                      width: 8.4.w,
-                                      decoration:
-                                          BoxDecoration(border: Border.all())),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeModeEvent(
-                                            mode: DrawingMode.circle));
-                                    context
-                                        .read<DrawBloc>()
-                                        .add(SetFillEvent(filled: true));
-                                    setState(() {
-                                      shapesPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 8.4.w,
-                                    width: 8.4.w,
-                                    decoration: BoxDecoration(
-                                        color:
-                                            const Color.fromRGBO(51, 51, 51, 1),
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        border: Border.all()),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    context.read<DrawBloc>().add(
-                                        ChangeModeEvent(
-                                            mode: DrawingMode.circle));
-                                    context
-                                        .read<DrawBloc>()
-                                        .add(SetFillEvent(filled: false));
-                                    setState(() {
-                                      shapesPalette = false;
-                                    });
-                                  },
-                                  child: Container(
-                                      height: 8.4.w,
-                                      width: 8.4.w,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(100),
-                                          border: Border.all())),
-                                ),
-                              ],
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                context.read<DrawBloc>().add(
-                                    ChangeModeEvent(mode: DrawingMode.line));
-                                setState(() {
-                                  shapesPalette = false;
-                                });
-                              },
-                              child: Container(
-                                width: double.maxFinite,
-                                height: 3,
-                                color: const Color.fromRGBO(51, 51, 51, 1),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      context.read<DrawBloc>().add(
-                                          ChangeModeEvent(
-                                              mode: DrawingMode.pencil));
-                                      context
-                                          .read<DrawBloc>()
-                                          .add(SetFillEvent(filled: false));
-                                      setState(() {
-                                        shapesPalette = false;
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.mode_edit_outline,
-                                    )),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              Positioned(
-                left: 2.8.w,
-                top: 2.8.w,
-                child: Column(
-                  children: [
-                    GestureDetector(
-                      onTap: () => context.read<DrawBloc>().add(UndoEvent()),
-                      child: Container(
-                        height: 9.4.w,
-                        width: 9.4.w,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: const Color.fromRGBO(210, 184, 245, 1),
-                                width: 2.5),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: const Icon(
-                          Icons.replay,
-                          color: Color.fromRGBO(210, 184, 245, 1),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 1.h,
-                    ),
-                    GestureDetector(
-                      onTap: () => context.read<DrawBloc>().add(ClearEvent()),
-                      child: Container(
-                        height: 9.4.w,
-                        width: 9.4.w,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: const Color.fromRGBO(210, 184, 245, 1),
-                                width: 2.5),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: const Icon(
-                          Icons.layers_clear,
-                          color: Color.fromRGBO(210, 184, 245, 1),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                right: 2.8.w,
-                top: 2.8.w,
-                child: StreamBuilder<Object>(
-                    stream: timeStream,
-                    builder: (context, snapshot) {
-                      return Container(
-                        height: 10.7.h,
-                        width: 10.7.h,
-                        decoration: BoxDecoration(
-                            color: const Color.fromRGBO(255, 255, 255, 0.5),
-                            border: Border.all(
-                                color: const Color.fromRGBO(210, 184, 245, 1),
-                                width: 3.5),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                            child: Text(
-                          '${snapshot.data ?? "loading"}',
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                        )),
+                          .add(ChangeColorEvent(color: color));
+                      setState(
+                        () {
+                          colorsTool = false;
+                        },
                       );
+                    },
+                    splashColor: state.themeData.splashColor,
+                  ),
+                ),
+                AnimatedPositioned(
+                  bottom: shapesTool ? 0 : -20.9.h,
+                  curve: Curves.linearToEaseOut,
+                  duration: const Duration(milliseconds: 500),
+                  right: 9.7.w,
+                  child: ShapesTool(
+                    splashColor: state.themeData.splashColor,
+                    shapesVoid: () => setState(() {
+                      shapesTool = false;
                     }),
+                  ),
+                ),
+                AnimatedPositioned(
+                  left: show ? 2.8.w : -4.4.h,
+                  curve: Curves.linearToEaseOut,
+                  duration: const Duration(milliseconds: 350),
+                  top: 2.8.w,
+                  child: TopButtons(primaryColor: state.themeData.primaryColor),
+                ),
+                AnimatedPositioned(
+                  right: show ? 2.8.w : -10.7.h,
+                  curve: Curves.linearToEaseOut,
+                  duration: const Duration(milliseconds: 350),
+                  top: 2.8.w,
+                  child: DrawTimer(
+                      game: widget.game,
+                      primaryColor: state.themeData.primaryColor),
+                ),
+              ]),
+              Tools(
+                primaryColor: state.themeData.primaryColor,
+                splashColor: state.themeData.splashColor,
+                colorVoid: () {
+                  setState(() {
+                    widthTool = false;
+                    shapesTool = false;
+                    backgroundTool = false;
+                    colorsTool = !colorsTool;
+                  });
+                },
+                widthVoid: () {
+                  setState(() {
+                    colorsTool = false;
+                    shapesTool = false;
+                    backgroundTool = false;
+                    widthTool = !widthTool;
+                  });
+                },
+                backgroundVoid: () {
+                  setState(() {
+                    colorsTool = false;
+                    shapesTool = false;
+                    widthTool = false;
+                    backgroundTool = !backgroundTool;
+                  });
+                },
+                shapeVoid: () {
+                  setState(() {
+                    widthTool = false;
+                    colorsTool = false;
+                    backgroundTool = false;
+                    shapesTool = !shapesTool;
+                  });
+                },
               ),
+              SizedBox(height: 2.3.h),
+              InkWell(
+                splashColor: const Color.fromRGBO(217, 217, 217, 1),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                onTap: () => {
+                  context.goNamed(RouteConstants.dashboard),
+                  context.read<DrawBloc>().add(ClearEvent())
+                },
+                child: Ink(
+                  decoration: const BoxDecoration(
+                      color: Color.fromRGBO(217, 217, 217, 1),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  height: 4.7.h,
+                  width: 84.w,
+                  child: const Center(
+                      child: Text(
+                    'Back',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  )),
+                ),
+              ),
+              SizedBox(height: 1.2.h),
+              !loading
+                  ? InkWell(
+                      splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
+                      borderRadius: const BorderRadius.all(Radius.circular(10)),
+                      onTap: () {
+                        setState(() {
+                          preparing = true;
+                        });
+
+                        Future.microtask(() async {
+                          final bytes = await controller.capture();
+                          setState(() {
+                            this.bytes = bytes!;
+                            loading = true;
+                            PictureSocket()
+                                .addPicture(context, bytes, widget.game.id);
+                          });
+                        });
+                      },
+                      child: Ink(
+                        decoration: const BoxDecoration(
+                            color: Color.fromRGBO(75, 75, 75, 1.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        height: 4.7.h,
+                        width: 84.w,
+                        child: Center(
+                            child: !preparing
+                                ? const Text(
+                                    'Finish',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  )
+                                : const Text(
+                                    'Preparing...',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  )),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 4.7.h,
+                      width: 4.7.h,
+                      child:
+                          const CircularProgressIndicator(color: Colors.black),
+                    ),
             ],
           ),
-          Container(
-            height: 8.3.h,
-            width: 100.w,
-            decoration: BoxDecoration(
-                color: const Color.fromRGBO(210, 184, 245, 1),
-                borderRadius: BorderRadius.circular(25)),
-            child: Padding(
-              padding: EdgeInsets.only(top: 0.4.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                      onPressed: () {
-                        setState(() {
-                          widthPalette = false;
-                          shapesPalette = false;
-                          colorsPalette = !colorsPalette;
-                        });
-                      },
-                      icon: Icon(
-                        Icons.format_color_fill,
-                        color: Colors.white,
-                        size: 5.3.h,
-                      )),
-                  IconButton(
-                      onPressed: () {
-                        setState(() {
-                          colorsPalette = false;
-                          shapesPalette = false;
-                          widthPalette = !widthPalette;
-                        });
-                      },
-                      icon: Icon(
-                        Icons.draw,
-                        color: Colors.white,
-                        size: 5.3.h,
-                      )),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.palette,
-                        color: Colors.white,
-                        size: 5.3.h,
-                      )),
-                  IconButton(
-                      onPressed: () {
-                        setState(() {
-                          widthPalette = false;
-                          colorsPalette = false;
-                          shapesPalette = !shapesPalette;
-                        });
-                      },
-                      icon: Icon(
-                        Icons.bubble_chart,
-                        color: Colors.white,
-                        size: 5.3.h,
-                      ))
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 2.3.h),
-          InkWell(
-            splashColor: const Color.fromRGBO(217, 217, 217, 1),
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            onTap: () => {
-              context.goNamed(RouteConstants.dashboard),
-              context.read<DrawBloc>().add(ClearEvent())
-            },
-            child: Ink(
-              decoration: const BoxDecoration(
-                  color: Color.fromRGBO(217, 217, 217, 1),
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              height: 4.7.h,
-              width: 84.w,
-              child: const Center(
-                  child: Text(
-                'Back',
-                style: TextStyle(color: Colors.white, fontSize: 18),
-              )),
-            ),
-          ),
-          SizedBox(height: 1.2.h),
-          !loading
-              ? InkWell(
-                  splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  onTap: () {
-                    setState(() {
-                      preparing = true;
-                    });
-
-                    Future.microtask(() async {
-                      final bytes = await controller.capture();
-                      setState(() {
-                        this.bytes = bytes!;
-                        loading = true;
-                        PictureSocket()
-                            .addPicture(context, bytes, widget.game.id);
-                      });
-                    });
-                  },
-                  child: Ink(
-                    decoration: const BoxDecoration(
-                        color: Color.fromRGBO(75, 75, 75, 1.0),
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
-                    height: 4.7.h,
-                    width: 84.w,
-                    child: Center(
-                        child: !preparing
-                            ? const Text(
-                                'Finish',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              )
-                            : const Text(
-                                'Preparing...',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              )),
-                  ),
-                )
-              : SizedBox(
-                  height: 4.7.h,
-                  width: 4.7.h,
-                  child: const CircularProgressIndicator(color: Colors.black),
-                ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

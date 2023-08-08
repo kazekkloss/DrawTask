@@ -21,7 +21,7 @@ class ThemeCubit extends Cubit<ThemeState> {
       switch (avatar) {
         case 'assets/avatars/green_avatar.json':
           primaryColor = const Color.fromRGBO(96, 190, 191, 1);
-          splashColor = const Color.fromRGBO(92, 183, 184, 1);
+          splashColor = const Color.fromRGBO(83, 154, 155, 1);
           break;
         case 'assets/avatars/grey_avatar.json':
           primaryColor = const Color.fromRGBO(217, 217, 217, 1);

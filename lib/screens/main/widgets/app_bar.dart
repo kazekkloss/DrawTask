@@ -1,15 +1,20 @@
+import 'package:drawtask/cubits/cubits.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
 class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const TopAppBar({super.key});
+  final List<String>? gameWords;
+  const TopAppBar({super.key, this.gameWords});
 
   @override
   State<TopAppBar> createState() => _TopAppBarState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(64);
 }
 
 class _TopAppBarState extends State<TopAppBar> {
@@ -36,6 +41,11 @@ class _TopAppBarState extends State<TopAppBar> {
 
   void settingsAppBar() {
     switch (_router.location) {
+      case "/new_game":
+        setState(() {
+          _title = "New Game";
+        });
+        break;
       case "/new_game/friends_game":
         setState(() {
           _isLeading = true;
@@ -76,29 +86,90 @@ class _TopAppBarState extends State<TopAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      iconTheme: const IconThemeData(
-        color: Colors.black,
-      ),
-      leading: _isLeading
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                context.pop();
-              },
-            )
-          : null,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(15),
-        ),
-      ),
-      centerTitle: true,
-      title: Text(
-        _title,
-        style: TextStyle(
-            fontSize: 2.8.h, fontFamily: 'IrishGrover', color: Colors.black),
+    return PreferredSize(
+      preferredSize: widget.preferredSize,
+      child: BlocBuilder<ThemeCubit, ThemeState>(
+        builder: (context, state) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(255, 255, 255, 255),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 0),
+                  spreadRadius: -2,
+                  blurRadius: 8,
+                  color: Color.fromRGBO(0, 0, 0, 1),
+                ),
+              ],
+              borderRadius: BorderRadius.all(
+                Radius.circular(15),
+              ),
+            ),
+            child: SizedBox.expand(
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SizedBox(
+                    height: 35,
+                    child: widget.gameWords != null
+                        ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: widget.gameWords!.map((word) {
+                                  return Text(
+                                    " #$word ",
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Righteous',
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                }).toList())
+                            .animate()
+                            .shimmer(
+                                duration: 2000.ms,
+                                color: state.themeData.primaryColor)
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 29),
+                                child: _isLeading
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          context.pop();
+                                        },
+                                        child: SvgPicture.asset(
+                                          'assets/svg/arrow_back.svg',
+                                          fit: BoxFit.fitHeight,
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        width: 35,
+                                        child: SvgPicture.asset(
+                                          'assets/svg/hamburger.svg',
+                                          fit: BoxFit.fitHeight,
+                                        ),
+                                      ),
+                              ),
+                              Text(
+                                _title,
+                                style: const TextStyle(
+                                    fontSize: 24,
+                                    fontFamily: 'Righteous',
+                                    color: Colors.black),
+                              ),
+                              const SizedBox(
+                                width: 64,
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

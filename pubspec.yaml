@@ -51,6 +51,7 @@ dependencies:
   rive: ^0.11.4
   flutter_svg: ^2.0.7
   lottie: ^2.4.0
+  flutter_animate: ^4.2.0+1
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,18 @@ flutter:
   assets:
     - assets/svg/background_animation.svg
     - assets/svg/static_background.svg
+    - assets/svg/home.svg
+    - assets/svg/drawings.svg
+    - assets/svg/new_game.svg
+    - assets/svg/profile.svg
+    - assets/svg/hamburger.svg
+    - assets/svg/arrow_back.svg
+    - assets/svg/tools/paint.svg
+    - assets/svg/tools/palette.svg
+    - assets/svg/tools/pen.svg
+    - assets/svg/tools/shapes.svg
+    - assets/svg/pencil_tool.svg
+    - assets/svg/eraser_tool.svg
     - assets/avatars/green_avatar.json
     - assets/avatars/grey_avatar.json
     - assets/avatars/pink_avatar.json

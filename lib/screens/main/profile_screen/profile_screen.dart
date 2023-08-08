@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../blocs/blocs.dart';
+import '../widgets/widgets.dart';
 
 enum ContentType {
   accountSettings,
@@ -33,19 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: EdgeInsets.only(top: 3.h),
                 child: Column(
                   children: [
-                    Container(
-                      height: 11.h,
-                      width: 11.h,
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 149, 149, 149),
-                          borderRadius: BorderRadius.circular(15)),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      state.user.username.toString(),
-                      style: const TextStyle(fontSize: 25),
-                    ),
-                    SizedBox(height: 2.h),
+                    Avatar(user: state.user),
                     SizedBox(
                       width: 84.w,
                       child: Row(
