@@ -56,7 +56,7 @@ class AppRouter {
   ];
 
   GoRouter _router() => GoRouter(
-        debugLogDiagnostics: true,
+        //debugLogDiagnostics: true,
         navigatorKey: _rootNavigatorKey,
         redirect: (context, state) {
           var authState = context.read<AuthBloc>().state;
@@ -102,10 +102,10 @@ class AppRouter {
           // new auth screen ==============
 
           GoRoute(
-            name: RouteConstants.auth,
-            path: '/auth',
-            builder: (context, state) => const AuthScreen(),
-          ),
+              name: RouteConstants.auth,
+              path: '/auth',
+              pageBuilder: ((context, state) =>
+                  const NoTransitionPage(child: AuthScreen()))),
           // ==============================
           GoRoute(
               parentNavigatorKey: _rootNavigatorKey,

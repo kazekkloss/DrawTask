@@ -26,15 +26,15 @@ class DurationTransformer extends StreamTransformerBase<Duration, String> {
     if (remainingTime.inMinutes >= 60) {
       // Ostatnia godzina
       final hours = remainingTime.inHours + 1;
-      return '${hours.toString()} h';
+      return '${hours.toString()}h';
     } else if (remainingTime.inMinutes >= 1) {
       // Ostatnia minuta
       final minutes = remainingTime.inMinutes + 1;
-      return '${minutes.toString()} m';
+      return '${minutes.toString()}m';
     } else {
       // Poniżej jednej minuty
       final seconds = remainingTime.inSeconds;
-      return '${seconds.toString()} s';
+      return '${seconds.toString()}s';
     }
   }
 }

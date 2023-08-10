@@ -2,6 +2,7 @@ import 'package:drawtask/screens/auth/auth_tabs/create_tab.dart';
 import 'package:drawtask/screens/auth/auth_tabs/sign_in.dart';
 import 'package:drawtask/screens/auth/auth_tabs/sign_up.dart';
 import 'package:drawtask/screens/auth/auth_tabs/verify_tab.dart';
+import 'package:drawtask/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -22,8 +23,6 @@ class AuthTab extends StatefulWidget {
 
 class _AuthTabState extends State<AuthTab> {
   bool signIn = true;
-  bool create = false;
-  bool verify = false;
 
   @override
   void initState() {
@@ -37,23 +36,8 @@ class _AuthTabState extends State<AuthTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 255, 255, 255),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(35.0),
-            topRight: Radius.circular(35.0),
-          ),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 0),
-              spreadRadius: -2,
-              blurRadius: 8,
-              color: Color.fromRGBO(0, 0, 0, 1),
-            ),
-          ]),
+    return AnimatedTab(
       height: 58.8.h,
-      width: 100.w,
       child: Stack(
         children: [
           AnimatedPositioned(
@@ -75,9 +59,6 @@ class _AuthTabState extends State<AuthTab> {
                   Text(
                     "Get Creative!",
                     style: TextStyle(fontSize: 2.4.h, fontFamily: 'NotoSans'),
-                  ),
-                  SizedBox(
-                    height: 2.5.h,
                   ),
                   Expanded(
                       child: Stack(
@@ -120,7 +101,7 @@ class _AuthTabState extends State<AuthTab> {
                                   : 100.w,
                           curve: Curves.linearToEaseOut,
                           duration: const Duration(milliseconds: 600),
-                          child: const VerifyTab()),
+                          child: VerifyTab(authStatus: widget.authStatus)),
                     ],
                   ))
                 ],

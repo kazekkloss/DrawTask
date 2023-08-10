@@ -33,14 +33,16 @@ class _AuthScreenState extends State<AuthScreen> {
         return Scaffold(
           body: Stack(
             children: [
-              Container(
-                  color: Colors.white,
-                  width: 100.w,
-                  height: 100.h,
-                  child: SvgPicture.asset(
-                    'assets/svg/static_background.svg',
-                    fit: BoxFit.cover,
-                  )),
+              SingleChildScrollView(
+                child: Container(
+                    color: Colors.white,
+                    width: 100.w,
+                    height: 100.h,
+                    child: SvgPicture.asset(
+                      'assets/svg/static_background.svg',
+                      fit: BoxFit.cover,
+                    )),
+              ),
               AnimatedPositioned(
                 bottom: showAuthTab ? 0 : -62.h,
                 curve: Curves.linearToEaseOut,

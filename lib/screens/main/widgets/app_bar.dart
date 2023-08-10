@@ -4,11 +4,11 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sizer/sizer.dart';
 
 class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
+  final GlobalKey<ScaffoldState>? scaffoldKey;
   final List<String>? gameWords;
-  const TopAppBar({super.key, this.gameWords});
+  const TopAppBar({super.key, this.gameWords, this.scaffoldKey});
 
   @override
   State<TopAppBar> createState() => _TopAppBarState();
@@ -21,6 +21,8 @@ class _TopAppBarState extends State<TopAppBar> {
   bool _isLeading = false;
   String _title = 'DrawTask';
   late GoRouter _router;
+
+  bool openDrawer = false;
 
   @override
   void didChangeDependencies() {
@@ -43,6 +45,7 @@ class _TopAppBarState extends State<TopAppBar> {
     switch (_router.location) {
       case "/new_game":
         setState(() {
+          _isLeading = false;
           _title = "New Game";
         });
         break;
@@ -101,8 +104,9 @@ class _TopAppBarState extends State<TopAppBar> {
                   color: Color.fromRGBO(0, 0, 0, 1),
                 ),
               ],
-              borderRadius: BorderRadius.all(
-                Radius.circular(15),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15),
               ),
             ),
             child: SizedBox.expand(
@@ -144,11 +148,31 @@ class _TopAppBarState extends State<TopAppBar> {
                                           fit: BoxFit.fitHeight,
                                         ),
                                       )
-                                    : SizedBox(
-                                        width: 35,
-                                        child: SvgPicture.asset(
-                                          'assets/svg/hamburger.svg',
-                                          fit: BoxFit.fitHeight,
+                                    : GestureDetector(
+                                        onTap: () {
+                                          if (widget.scaffoldKey!.currentState!
+                                              .isDrawerOpen) {
+                                            setState(() {
+                                              openDrawer = false;
+                                            });
+                                            widget.scaffoldKey!.currentState!
+                                                .closeDrawer();
+                                          } else {
+                                            setState(() {
+                                              openDrawer = true;
+                                            });
+                                            widget.scaffoldKey!.currentState!
+                                                .openDrawer();
+                                          }
+                                        },
+                                        child: SizedBox(
+                                          width: 35,
+                                          child: SvgPicture.asset(
+                                            openDrawer
+                                                ? 'assets/svg/arrow_back.svg'
+                                                : 'assets/svg/hamburger.svg',
+                                            fit: BoxFit.fitHeight,
+                                          ),
                                         ),
                                       ),
                               ),

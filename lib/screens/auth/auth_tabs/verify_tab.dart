@@ -3,15 +3,17 @@ import 'dart:async';
 import 'package:drawtask/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rive/rive.dart';
+import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../blocs/blocs.dart';
 import '../../../repositories/repositories.dart';
 
 class VerifyTab extends StatefulWidget {
+  final AuthStatus authStatus;
   const VerifyTab({
     super.key,
+    required this.authStatus,
   });
 
   @override
@@ -19,23 +21,26 @@ class VerifyTab extends StatefulWidget {
 }
 
 class _VerifyTabState extends State<VerifyTab> {
-  late RiveAnimationController _controller;
-
-  /// Is the animation currently playing?
-  bool _isPlaying = false;
-
   Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _startChecking();
-    _controller = OneShotAnimation(
-      'Timeline 1',
-      autoplay: false,
-      onStop: () => setState(() => _isPlaying = false),
-      onStart: () => setState(() => _isPlaying = true),
-    );
+    if (widget.authStatus == AuthStatus.notVerified) {
+      _startChecking();
+    }
+  }
+
+  @override
+  void didUpdateWidget(VerifyTab oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.authStatus != widget.authStatus) {
+      if (widget.authStatus == AuthStatus.notVerified) {
+        _startChecking();
+      } else {
+        _stopChecking();
+      }
+    }
   }
 
   @override
@@ -79,7 +84,7 @@ class _VerifyTabState extends State<VerifyTab> {
                 width: SizerUtil.deviceType == DeviceType.mobile
                     ? 84.w
                     : 5.6.h * 7,
-                height: 11.3.h,
+                height: 21.4.h,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -92,31 +97,42 @@ class _VerifyTabState extends State<VerifyTab> {
                     ),
                   ],
                 ),
-                child: Center(
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: const TextStyle(
-                        color: Colors.black,
-                      ),
-                      children: [
-                        TextSpan(
-                            text: 'Please check your e-mail and click ',
-                            style: TextStyle(fontSize: 2.h)),
-                        TextSpan(
-                          text: 'link',
-                          style: TextStyle(
-                            fontSize: 2.h,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Center(
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: const TextStyle(
+                            color: Colors.black,
                           ),
+                          children: [
+                            TextSpan(
+                                text: 'Please check your e-mail and click ',
+                                style: TextStyle(fontSize: 2.h)),
+                            TextSpan(
+                              text: 'link',
+                              style: TextStyle(
+                                fontSize: 2.h,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                            TextSpan(
+                                text: ' to activate your account.',
+                                style: TextStyle(fontSize: 2.h)),
+                          ],
                         ),
-                        TextSpan(
-                            text: ' to activate your account.',
-                            style: TextStyle(fontSize: 2.h)),
-                      ],
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 8.5.h,
+                      width: 8.5.h,
+                      child: Lottie.asset('assets/lottie/post.json',
+                          fit: BoxFit.cover),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(
@@ -126,7 +142,6 @@ class _VerifyTabState extends State<VerifyTab> {
                 builder: (context, state) {
                   return MainButton(
                     onPressed: () {
-                      _isPlaying ? null : _controller.isActive = true;
                       AuthRepository().resendMail(
                           context: context,
                           email: state.user.email,
@@ -146,24 +161,6 @@ class _VerifyTabState extends State<VerifyTab> {
                 child: const Text(
                   "Don't you have a link?",
                   textAlign: TextAlign.right,
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: 7.h),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: 8.5.h,
-                      width: 8.5.h,
-                      child: RiveAnimation.asset(
-                        'assets/animations/post.riv',
-                        animations: const ['Timeline 1'],
-                        fit: BoxFit.cover,
-                        controllers: [_controller],
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ],

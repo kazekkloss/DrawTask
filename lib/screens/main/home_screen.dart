@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../blocs/blocs.dart';
-import 'drawing_screen/widgets/draw_timer.dart';
 import 'widgets/avatar.dart';
 
 class HomeScreen extends StatelessWidget {

@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../config/config.dart';
 
 class CreateTab extends StatefulWidget {
   final VoidCallback voidSetDown;
@@ -22,6 +21,7 @@ class _CreateTabState extends State<CreateTab> {
   final _createTabFormKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   String selectedAvatar = '';
+  bool avatarValidate = false;
 
   void selectAvatar(String url) {
     setState(() {
@@ -31,8 +31,10 @@ class _CreateTabState extends State<CreateTab> {
         selectedAvatar = url;
       }
     });
-    print(selectedAvatar);
   }
+
+  final ValueNotifier<String?> _usernameErrorMessage =
+      ValueNotifier<String?>(null);
 
   Widget _avatar(String url) {
     final bool isSelected = selectedAvatar == url;
@@ -67,23 +69,20 @@ class _CreateTabState extends State<CreateTab> {
           SizedBox(
             height: 1.3.h,
           ),
-          SizedBox(
-            width: SizerUtil.deviceType == DeviceType.mobile ? 84.w : 5.6.h * 7,
-            height: 5.6.h,
-            child: TextFormField(
-              controller: _usernameController,
+          CustomTextFormField(
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'username is empty';
-                }
-                if (value.length <= 3) {
-                  return 'username is too short, min 4 characters';
+                  _usernameErrorMessage.value = 'username is empty';
+                } else if (value.length <= 3) {
+                  _usernameErrorMessage.value =
+                      'username is too short, min 4 characters';
+                } else {
+                  _usernameErrorMessage.value = null;
                 }
                 return null;
               },
-              decoration: textFormFieldDecoration(hintText: ''),
-            ),
-          ),
+              controller: _usernameController,
+              errorMessage: _usernameErrorMessage),
           SizedBox(
             height: 2.4.h,
           ),
@@ -92,7 +91,11 @@ class _CreateTabState extends State<CreateTab> {
             child: Text(
               'Choose Avatar',
               textAlign: TextAlign.left,
-              style: TextStyle(fontSize: 2.h),
+              style: TextStyle(
+                  fontSize: 2.h,
+                  color: avatarValidate
+                      ? const Color.fromRGBO(135, 4, 4, 1)
+                      : const Color.fromARGB(255, 0, 0, 0)),
             ),
           ),
           SizedBox(
@@ -116,16 +119,21 @@ class _CreateTabState extends State<CreateTab> {
           ),
           MainButton(
             onPressed: () {
-              if (_createTabFormKey.currentState!.validate() &&
-                  selectedAvatar.isNotEmpty) {
-                FocusScope.of(context).requestFocus(FocusNode());
-                widget.voidSetDown();
-                Future.delayed(const Duration(milliseconds: 1000), () {
-                  context.read<AuthBloc>().add(SaveUsernameEvent(
-                      context: context,
-                      username: _usernameController.text,
-                      avatar: selectedAvatar));
-                });
+              if (_createTabFormKey.currentState!.validate()) {
+                if (selectedAvatar.isEmpty) {
+                  setState(() {
+                    avatarValidate = true;
+                  });
+                } else if (_usernameErrorMessage.value == null) {
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  widget.voidSetDown();
+                  Future.delayed(const Duration(milliseconds: 1000), () {
+                    context.read<AuthBloc>().add(SaveUsernameEvent(
+                        context: context,
+                        username: _usernameController.text,
+                        avatar: selectedAvatar));
+                  });
+                }
               }
             },
             text: 'NEXT',

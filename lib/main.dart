@@ -3,18 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_statusbarcolor_ns/flutter_statusbarcolor_ns.dart';
 
 import 'blocs/blocs.dart';
-import 'config/router/router.dart';
 import 'cubits/cubits.dart';
 import 'repositories/repositories.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  await FlutterStatusbarcolor.setStatusBarWhiteForeground(false);
+  await FlutterStatusbarcolor.setStatusBarColor(
+      const Color.fromRGBO(255, 255, 255, 1));
+  await FlutterStatusbarcolor.setNavigationBarColor(
+      const Color.fromRGBO(255, 255, 255, 1));
   runApp(const DrawTask());
 }
 

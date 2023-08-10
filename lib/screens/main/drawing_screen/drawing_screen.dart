@@ -13,6 +13,8 @@ import '../../../models/models.dart';
 import '../../../sockets/sockets.dart';
 import 'widgets/widgets.dart';
 
+enum _ActiveBarTool { none, backgroundColor, width, colors, shapes }
+
 class DrawingScreen extends StatefulWidget {
   final Game game;
   const DrawingScreen({super.key, required this.game});
@@ -23,6 +25,7 @@ class DrawingScreen extends StatefulWidget {
 
 class _DrawingScreenState extends State<DrawingScreen> {
   WidgetsToImageController controller = WidgetsToImageController();
+  _ActiveBarTool activeBarTool = _ActiveBarTool.none;
   Uint8List? bytes;
   bool loading = false;
   bool preparing = false;
@@ -96,7 +99,9 @@ class _DrawingScreenState extends State<DrawingScreen> {
                   ),
                 ),
                 AnimatedPositioned(
-                  bottom: backgroundTool ? 0 : -20.9.h,
+                  bottom: activeBarTool == _ActiveBarTool.backgroundColor
+                      ? 0
+                      : -20.9.h,
                   curve: Curves.linearToEaseOut,
                   duration: const Duration(milliseconds: 500),
                   left: 10.w,
@@ -104,26 +109,26 @@ class _DrawingScreenState extends State<DrawingScreen> {
                     onColorSelected: (color) {
                       setState(() {
                         backgroundColor = color;
-                        backgroundTool = false;
+                        activeBarTool = _ActiveBarTool.none;
                       });
                     },
                     splashColor: state.themeData.splashColor,
                   ),
                 ),
                 AnimatedPositioned(
-                  bottom: widthTool ? 0 : -20.9.h,
+                  bottom: activeBarTool == _ActiveBarTool.width ? 0 : -20.9.h,
                   curve: Curves.linearToEaseOut,
                   duration: const Duration(milliseconds: 500),
                   left: 31.w,
                   child: WidthTool(
                     splashColor: state.themeData.splashColor,
                     widthVoid: () => setState(() {
-                      widthTool = false;
+                      activeBarTool = _ActiveBarTool.none;
                     }),
                   ),
                 ),
                 AnimatedPositioned(
-                  bottom: colorsTool ? 0 : -20.9.h,
+                  bottom: activeBarTool == _ActiveBarTool.colors ? 0 : -20.9.h,
                   curve: Curves.linearToEaseOut,
                   duration: const Duration(milliseconds: 500),
                   left: 43.w,
@@ -134,7 +139,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
                           .add(ChangeColorEvent(color: color));
                       setState(
                         () {
-                          colorsTool = false;
+                          activeBarTool = _ActiveBarTool.none;
                         },
                       );
                     },
@@ -142,14 +147,14 @@ class _DrawingScreenState extends State<DrawingScreen> {
                   ),
                 ),
                 AnimatedPositioned(
-                  bottom: shapesTool ? 0 : -20.9.h,
+                  bottom: activeBarTool == _ActiveBarTool.shapes ? 0 : -20.9.h,
                   curve: Curves.linearToEaseOut,
                   duration: const Duration(milliseconds: 500),
                   right: 9.7.w,
                   child: ShapesTool(
                     splashColor: state.themeData.splashColor,
                     shapesVoid: () => setState(() {
-                      shapesTool = false;
+                      activeBarTool = _ActiveBarTool.none;
                     }),
                   ),
                 ),
@@ -173,36 +178,24 @@ class _DrawingScreenState extends State<DrawingScreen> {
               Tools(
                 primaryColor: state.themeData.primaryColor,
                 splashColor: state.themeData.splashColor,
-                colorVoid: () {
+                backgroundVoid: () {
                   setState(() {
-                    widthTool = false;
-                    shapesTool = false;
-                    backgroundTool = false;
-                    colorsTool = !colorsTool;
+                    activeBarTool = _ActiveBarTool.backgroundColor;
                   });
                 },
                 widthVoid: () {
                   setState(() {
-                    colorsTool = false;
-                    shapesTool = false;
-                    backgroundTool = false;
-                    widthTool = !widthTool;
+                    activeBarTool = _ActiveBarTool.width;
                   });
                 },
-                backgroundVoid: () {
+                colorVoid: () {
                   setState(() {
-                    colorsTool = false;
-                    shapesTool = false;
-                    widthTool = false;
-                    backgroundTool = !backgroundTool;
+                    activeBarTool = _ActiveBarTool.colors;
                   });
                 },
                 shapeVoid: () {
                   setState(() {
-                    widthTool = false;
-                    colorsTool = false;
-                    backgroundTool = false;
-                    shapesTool = !shapesTool;
+                    activeBarTool = _ActiveBarTool.shapes;
                   });
                 },
               ),
