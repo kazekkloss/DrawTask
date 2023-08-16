@@ -92,7 +92,8 @@ class _SignUpTabState extends State<SignUpTab> {
               labelText: 'repeat password',
               validator: (value) {
                 if (value!.isEmpty) {
-                  _confirmPasswordErrorMessage.value = 'repeat password is empty';
+                  _confirmPasswordErrorMessage.value =
+                      'repeat password is empty';
                 } else if (value != _passwordController.text) {
                   _confirmPasswordErrorMessage.value = 'password not match';
                 } else {
@@ -132,8 +133,11 @@ class _SignUpTabState extends State<SignUpTab> {
                     onTap: () {
                       widget.navigate();
                       _emailController.clear();
+                      _emailErrorMessage.value = null;
                       _passwordController.clear();
+                      _passwordErrorMessage.value = null;
                       _confirmPasswordController.clear();
+                      _confirmPasswordErrorMessage.value = null;
                     },
                     child: RichText(
                       text: const TextSpan(

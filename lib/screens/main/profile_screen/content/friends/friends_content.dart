@@ -1,130 +1,59 @@
-import 'package:drawtask/config/router/route_constants.dart';
+import 'package:drawtask/screens/main/profile_screen/content/friends/autocomplete.dart';
+import 'package:drawtask/screens/main/widgets/widgets.dart';
+import 'package:drawtask/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../../../blocs/blocs.dart';
-import '../../../../../models/models.dart';
+import '../../../../../models/user.dart';
 import '../../../../../repositories/repositories.dart';
-import 'friends_list.dart';
+
+enum _FriendsType { accepted, waiting, invitations }
 
 class FriendsContent extends StatefulWidget {
-  const FriendsContent({super.key});
+  final void Function(int searchItem) onSearchResultsChanged;
+  const FriendsContent({super.key, required this.onSearchResultsChanged});
 
   @override
   State<FriendsContent> createState() => _FriendsContentState();
 }
 
 class _FriendsContentState extends State<FriendsContent> {
+  _FriendsType friendsType = _FriendsType.accepted;
+
   final TextEditingController _searchUsersController = TextEditingController();
   bool searchResults = false;
   List<User> users = [];
 
+  final ValueNotifier<String?> _searchUsersMessage =
+      ValueNotifier<String?>(null);
+
   @override
   Widget build(BuildContext context) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-    User currentUser = authBloc.state.user;
-    return Stack(
-      children: [
-        const FriendsList(),
-        if (searchResults)
-          Padding(
-            padding: EdgeInsets.only(top: 2.5.h),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                height: users.length * 5.h + 5.h,
-                width: 84.w,
-                decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                          offset: Offset(0, 0),
-                          spreadRadius: -2,
-                          blurRadius: 6,
-                          color: Colors.black)
-                    ],
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15)),
-                child: Padding(
-                  padding: EdgeInsets.only(top: 5.h),
-                  child: BlocBuilder<UsersBloc, UsersState>(
-                    builder: (context, state) {
-                      return ListView.builder(
-                        itemCount: users.length,
-                        itemBuilder: (context, index) {
-                          return SizedBox(
-                            height: 5.h,
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 40),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () => users[index].id !=
-                                            currentUser.id
-                                        ? context.pushNamed(RouteConstants.user,
-                                            extra: users[index])
-                                        : null,
-                                    child: Text(
-                                      users[index].username!,
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                  ),
-                                  if (users[index].id == currentUser.id)
-                                    const Text('')
-                                  else if (state.invitationsFromMe.any(
-                                      (user) => user.id == users[index].id))
-                                    const Text('')
-                                  else if (state.friends.any(
-                                      (user) => user.id == users[index].id))
-                                    const Text('')
-                                  else if (state.invitationsToMe.any(
-                                      (user) => user.id == users[index].id))
-                                    const Text('')
-                                  else
-                                    IconButton(
-                                        onPressed: () {
-                                          context.read<UsersBloc>().add(
-                                              SendInvitationEvent(
-                                                  context: context,
-                                                  userId: users[index].id));
-                                        },
-                                        icon: const Icon(
-                                            Icons.add_circle_outline))
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ),
-        Align(
-          alignment: Alignment.topCenter,
-          child: SizedBox(
-            width: 84.w,
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          SizedBox(
+            width: SizerUtil.deviceType == DeviceType.mobile ? 84.w : 5.6.h * 7,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Search Friends',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                const Text(
+                  'Search Friends',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                 ),
-                SizedBox(height: 0.6.h),
-                SizedBox(
-                  height: 4.7.h,
-                  child: TextFormField(
-                    controller: _searchUsersController,
+                SizedBox(height: 0.8.h),
+                CustomTextFormField(
+                    suffixIcon: _searchUsersController.value.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              _searchUsersController.clear();
+                              setState(() {
+                                users.clear();
+                              });
+                            },
+                          )
+                        : null,
                     onChanged: (value) async {
                       if (value.isNotEmpty) {
                         users = await UserRepository().searchUsers(
@@ -133,54 +62,73 @@ class _FriendsContentState extends State<FriendsContent> {
                         );
                         setState(() {
                           users = users;
+                          widget.onSearchResultsChanged(users.length);
                           searchResults = true;
                         });
                       } else {
                         setState(() {
                           searchResults = false;
+                          widget.onSearchResultsChanged(users.length);
                         });
                       }
                     },
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      prefixIcon: const Icon(
-                        Icons.search,
-                        color: Colors.black,
-                      ),
-                      suffixIcon: IconButton(
-                          onPressed: () {
-                            _searchUsersController.clear();
-                            setState(() {
-                              searchResults = false;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.black,
-                          )),
-                      focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 0, horizontal: 14),
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                    ),
+                    controller: _searchUsersController,
+                    errorMessage: _searchUsersMessage),
+                SizedBox(height: 3.2.h),
+                const Text(
+                  'Your Friends',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
+                SizedBox(height: 2.1.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomTextButton(
+                        text: 'ACCEPTED',
+                        fontSize: 13,
+                        onTap: () {
+                          setState(() {
+                            friendsType = _FriendsType.accepted;
+                          });
+                        },
+                        onTapped: friendsType == _FriendsType.accepted),
+                    CustomTextButton(
+                        text: 'WAITING',
+                        fontSize: 13,
+                        onTap: () {
+                          setState(() {
+                            friendsType = _FriendsType.waiting;
+                          });
+                        },
+                        onTapped: friendsType == _FriendsType.waiting),
+                    CustomTextButton(
+                        text: 'INVITATIONS',
+                        fontSize: 13,
+                        onTap: () {
+                          setState(() {
+                            friendsType = _FriendsType.invitations;
+                          });
+                        },
+                        onTapped: friendsType == _FriendsType.invitations)
+                  ],
+                ),
+                SizedBox(height: 3.h),
+                ShadowContainer(
+                    height: 13.9.h,
+                    child:
+                        const Center(child: Text("You don't have any friends")))
               ],
             ),
           ),
-        ),
-      ],
+          Positioned(
+              top: 8.9.h,
+              child: CustomAutocomplete(
+                  searchResults: searchResults, users: users)),
+        ],
+      ),
     );
   }
 }

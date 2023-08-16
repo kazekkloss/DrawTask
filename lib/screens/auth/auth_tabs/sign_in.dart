@@ -78,9 +78,7 @@ class _SignInTabState extends State<SignInTab> {
                   });
                 },
                 child: Icon(
-                  _obscureText.value
-                      ? Icons.visibility
-                      : Icons.visibility_off,
+                  _obscureText.value ? Icons.visibility : Icons.visibility_off,
                 ),
               ),
             ),
@@ -106,9 +104,8 @@ class _SignInTabState extends State<SignInTab> {
               height: 1.4.h,
             ),
             SizedBox(
-              width: SizerUtil.deviceType == DeviceType.mobile
-                  ? 84.w
-                  : 5.6.h * 7,
+              width:
+                  SizerUtil.deviceType == DeviceType.mobile ? 84.w : 5.6.h * 7,
               child: const Text(
                 'Forgot password or username?',
                 textAlign: TextAlign.right,
@@ -122,9 +119,10 @@ class _SignInTabState extends State<SignInTab> {
                   child: GestureDetector(
                     onTap: () {
                       widget.onPressed();
-
                       _emailController.clear();
+                      _emailErrorMessage.value = null;
                       _passwordController.clear();
+                      _passwordErrorMessage.value = null;
                     },
                     child: RichText(
                       text: const TextSpan(

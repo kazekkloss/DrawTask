@@ -33,14 +33,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: TopAppBar(
         scaffoldKey: scaffoldKey,
       ),
       body: Scaffold(
-
         key: scaffoldKey,
         backgroundColor: Colors.white,
         drawer: const CustomDrawer(),
+        drawerEnableOpenDragGesture: false,
         body: widget.child,
         bottomNavigationBar: Container(
           height: 64,
@@ -96,15 +97,15 @@ class _BottomNavBarState extends State<BottomNavBar> {
                       child: Column(
                         children: [
                           Container(
-                            height: 14,
+                            height: 15,
                             width: 25.w,
                             color: state.themeData.primaryColor,
                           ),
                           const SizedBox(
-                            height: 34,
+                            height: 32,
                           ),
                           Container(
-                            height: 16,
+                            height: 17,
                             width: 25.w,
                             decoration: BoxDecoration(
                                 color: state.themeData.primaryColor,

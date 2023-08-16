@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:drawtask/cubits/cubits.dart';
 import 'package:drawtask/screens/main/widgets/app_bar.dart';
+import 'package:drawtask/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -179,46 +180,50 @@ class _DrawingScreenState extends State<DrawingScreen> {
                 primaryColor: state.themeData.primaryColor,
                 splashColor: state.themeData.splashColor,
                 backgroundVoid: () {
-                  setState(() {
-                    activeBarTool = _ActiveBarTool.backgroundColor;
-                  });
+                  activeBarTool == _ActiveBarTool.backgroundColor
+                      ? setState(() {
+                          activeBarTool = _ActiveBarTool.none;
+                        })
+                      : setState(() {
+                          activeBarTool = _ActiveBarTool.backgroundColor;
+                        });
                 },
                 widthVoid: () {
-                  setState(() {
-                    activeBarTool = _ActiveBarTool.width;
-                  });
+                  activeBarTool == _ActiveBarTool.width
+                      ? setState(() {
+                          activeBarTool = _ActiveBarTool.none;
+                        })
+                      : setState(() {
+                          activeBarTool = _ActiveBarTool.width;
+                        });
                 },
                 colorVoid: () {
-                  setState(() {
-                    activeBarTool = _ActiveBarTool.colors;
-                  });
+                  activeBarTool == _ActiveBarTool.colors
+                      ? setState(() {
+                          activeBarTool = _ActiveBarTool.none;
+                        })
+                      : setState(() {
+                          activeBarTool = _ActiveBarTool.colors;
+                        });
                 },
                 shapeVoid: () {
-                  setState(() {
-                    activeBarTool = _ActiveBarTool.shapes;
-                  });
+                  activeBarTool == _ActiveBarTool.shapes
+                      ? setState(() {
+                          activeBarTool = _ActiveBarTool.none;
+                        })
+                      : setState(() {
+                          activeBarTool = _ActiveBarTool.shapes;
+                        });
                 },
               ),
               SizedBox(height: 2.3.h),
-              InkWell(
-                splashColor: const Color.fromRGBO(217, 217, 217, 1),
-                borderRadius: const BorderRadius.all(Radius.circular(10)),
-                onTap: () => {
-                  context.goNamed(RouteConstants.dashboard),
-                  context.read<DrawBloc>().add(ClearEvent())
+              MainButton(
+                text: 'Back',
+                textColor: const Color.fromRGBO(255, 255, 255, 1),
+                onPressed: () {
+                  context.goNamed(RouteConstants.dashboard);
+                  context.read<DrawBloc>().add(ClearEvent());
                 },
-                child: Ink(
-                  decoration: const BoxDecoration(
-                      color: Color.fromRGBO(217, 217, 217, 1),
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  height: 4.7.h,
-                  width: 84.w,
-                  child: const Center(
-                      child: Text(
-                    'Back',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  )),
-                ),
               ),
               SizedBox(height: 1.2.h),
               !loading

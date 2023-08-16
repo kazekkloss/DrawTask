@@ -11,13 +11,15 @@ class CustomTextFormField extends StatelessWidget {
   final ValueNotifier<String?> errorMessage;
   final ValueNotifier<bool?>? obscureText;
   final Widget? suffixIcon;
+  final Function(String)? onChanged;
   const CustomTextFormField(
       {super.key,
       this.labelText,
-      required this.validator,
+      this.validator,
       required this.controller,
       required this.errorMessage,
       this.obscureText,
+      this.onChanged,
       this.suffixIcon});
 
   @override
@@ -39,6 +41,7 @@ class CustomTextFormField extends StatelessWidget {
                       obscureText: currentObscureText ?? false,
                       validator: validator,
                       controller: controller,
+                      onChanged: onChanged,
                       decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(

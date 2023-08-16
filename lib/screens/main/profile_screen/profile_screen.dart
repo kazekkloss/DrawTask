@@ -1,11 +1,12 @@
 import 'package:drawtask/screens/main/profile_screen/content/drawings/drawings.dart';
-import 'package:drawtask/screens/main/profile_screen/content/friends/friends_content.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../blocs/blocs.dart';
 import '../widgets/widgets.dart';
+import 'content/friends/friends_content.dart';
 
 enum _ContentType {
   accountSettings,
@@ -22,6 +23,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   _ContentType currentContentType = _ContentType.drawings;
+  ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       builder: (context, state) {
         return Scaffold(
           body: SingleChildScrollView(
+            controller: _scrollController,
             child: Center(
               child: Padding(
                 padding: EdgeInsets.only(top: 3.h),
@@ -97,7 +100,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       case _ContentType.drawings:
         return const DrawingsWidget();
       case _ContentType.firends:
-        return const FriendsContent();
+        return FriendsContent(
+          onSearchResultsChanged: (value) {
+            _scrollController.animateTo(
+              5.h * value,
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOut,
+            );
+          },
+        );
     }
   }
 }
