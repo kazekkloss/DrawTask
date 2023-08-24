@@ -1,14 +1,15 @@
 import 'dart:convert';
 
-import 'package:drawtask/blocs/user/user_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+import '../blocs/blocs.dart';
 import '../config/config.dart';
 import '../models/models.dart';
 
-class UserRepository {
+class FriendsRepository {
   // search users from text field -------------------------------------
   Future<List<User>> searchUsers({
     required BuildContext context,
@@ -41,7 +42,9 @@ class UserRepository {
         );
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
     }
     return usersList;
   }
@@ -95,9 +98,8 @@ class UserRepository {
     return userList;
   }
 
-  Future<User> sendInvitation(
+  void sendInvitation(
       {required BuildContext context, required String userId}) async {
-    User user = User.empty;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
@@ -118,27 +120,22 @@ class UserRepository {
           response: res,
           context: context,
           onSuccess: () {
-            var resUser = User.fromJson(
-              jsonEncode(
-                jsonDecode(res.body),
-              ),
-            );
-            user = resUser;
+            context.read<FriendsBloc>().add(GetFriendsEvent(
+                friendsType: FriendsType.waiting,
+                context: context,
+                listLength: 0));
           },
         );
       }
     } catch (e) {
-      if(context.mounted) {
+      if (context.mounted) {
         showSnackBar(context, e.toString());
       }
-      return User.empty;
     }
-    return user;
   }
 
-  Future<User> confirmInvitation(
+  void confirmInvitation(
       {required BuildContext context, required String userId}) async {
-    User user = User.empty;
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
@@ -159,21 +156,22 @@ class UserRepository {
           response: res,
           context: context,
           onSuccess: () {
-            var resUser = User.fromJson(
-              jsonEncode(
-                jsonDecode(res.body),
-              ),
-            );
-            user = resUser;
+            context.read<FriendsBloc>().add(GetFriendsEvent(
+                friendsType: FriendsType.invitations,
+                context: context,
+                listLength: 0));
+            context.read<FriendsBloc>().add(GetFriendsEvent(
+                friendsType: FriendsType.accepted,
+                context: context,
+                listLength: 0));
           },
         );
       }
     } catch (e) {
-      if(context.mounted){
+      if (context.mounted) {
         showSnackBar(context, e.toString());
       }
     }
-    return user;
   }
 
   void deleteFriend({
@@ -202,11 +200,32 @@ class UserRepository {
         httpErrorHandle(
           response: res,
           context: context,
-          onSuccess: () {},
+          onSuccess: () {
+            if (friendsType == FriendsType.accepted) {
+              context.read<FriendsBloc>().add(GetFriendsEvent(
+                  friendsType: FriendsType.accepted,
+                  context: context,
+                  listLength: 0));
+            }
+            if (friendsType == FriendsType.waiting) {
+              context.read<FriendsBloc>().add(GetFriendsEvent(
+                  friendsType: FriendsType.waiting,
+                  context: context,
+                  listLength: 0));
+            }
+            if (friendsType == FriendsType.invitations) {
+              context.read<FriendsBloc>().add(GetFriendsEvent(
+                  friendsType: FriendsType.invitations,
+                  context: context,
+                  listLength: 0));
+            }
+          },
         );
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
     }
   }
 }

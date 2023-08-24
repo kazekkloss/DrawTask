@@ -41,8 +41,8 @@ class _DrawTaskState extends State<DrawTask> {
           RepositoryProvider<AuthRepository>(
             create: (context) => AuthRepository(),
           ),
-          RepositoryProvider<UserRepository>(
-            create: (context) => UserRepository(),
+          RepositoryProvider<FriendsRepository>(
+            create: (context) => FriendsRepository(),
           ),
           RepositoryProvider<DrawingsRepository>(
             create: (context) => DrawingsRepository(),
@@ -56,8 +56,8 @@ class _DrawTaskState extends State<DrawTask> {
               ),
             ),
             BlocProvider(
-              create: (context) => UsersBloc(
-                userRepository: context.read<UserRepository>(),
+              create: (context) => FriendsBloc(
+                friendsRepository: context.read<FriendsRepository>(),
               ),
             ),
             BlocProvider(

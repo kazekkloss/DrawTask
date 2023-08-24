@@ -7,9 +7,7 @@ class User {
   final int verify;
   final String? username;
   final String? avatar;
-  final List<String>? invitationsToMe;
-  final List<String>? invitationsFromMe;
-  final List<String>? friends;
+  final String? friends;
   const User({
     required this.id,
     required this.email,
@@ -17,8 +15,6 @@ class User {
     required this.verify,
     this.username,
     this.avatar,
-    this.invitationsToMe,
-    this.invitationsFromMe,
     this.friends,
   });
 
@@ -30,8 +26,6 @@ class User {
       'verify': verify,
       'username': username,
       'avatar': avatar,
-      'invitationsToMe': invitationsToMe,
-      'invitationsFromMe': invitationsFromMe,
       'friends': friends,
     };
   }
@@ -44,9 +38,7 @@ class User {
       verify: map['verify']?.toInt() ?? 0,
       username: map['username'] ?? '',
       avatar: map['avatar'] ?? '',
-      invitationsToMe: List<String>.from(map['invitationsToMe'] ?? []),
-      invitationsFromMe: List<String>.from(map['invitationsFromMe'] ?? []),
-      friends: List<String>.from(map['friends'] ?? []),
+      friends: map['friends'] ?? '',
     );
   }
 
@@ -60,9 +52,7 @@ class User {
     String? password,
     String? token,
     int? verify,
-    List<String>? invitationsToMe,
-    List<String>? invitationsFromMe,
-    List<String>? friends,
+    String? friends,
     String? username,
     String? avatar,
   }) {
@@ -72,8 +62,6 @@ class User {
       password: password ?? this.password,
       verify: verify ?? this.verify,
       username: username ?? this.username,
-      invitationsToMe: invitationsToMe ?? this.invitationsToMe,
-      invitationsFromMe: invitationsFromMe ?? this.invitationsFromMe,
       friends: friends ?? this.friends,
     );
   }

@@ -1,13 +1,14 @@
 import 'package:drawtask/screens/main/profile_screen/content/friends/autocomplete.dart';
+import 'package:drawtask/screens/main/profile_screen/content/friends/friends_list.dart';
 import 'package:drawtask/screens/main/widgets/widgets.dart';
 import 'package:drawtask/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../../../blocs/blocs.dart';
 import '../../../../../models/user.dart';
 import '../../../../../repositories/repositories.dart';
-
-enum _FriendsType { accepted, waiting, invitations }
 
 class FriendsContent extends StatefulWidget {
   final void Function(int searchItem) onSearchResultsChanged;
@@ -18,7 +19,7 @@ class FriendsContent extends StatefulWidget {
 }
 
 class _FriendsContentState extends State<FriendsContent> {
-  _FriendsType friendsType = _FriendsType.accepted;
+  FriendsType friendsType = FriendsType.accepted;
 
   final TextEditingController _searchUsersController = TextEditingController();
   bool searchResults = false;
@@ -56,7 +57,7 @@ class _FriendsContentState extends State<FriendsContent> {
                         : null,
                     onChanged: (value) async {
                       if (value.isNotEmpty) {
-                        users = await UserRepository().searchUsers(
+                        users = await FriendsRepository().searchUsers(
                           context: context,
                           searchQuery: value,
                         );
@@ -91,35 +92,52 @@ class _FriendsContentState extends State<FriendsContent> {
                         fontSize: 13,
                         onTap: () {
                           setState(() {
-                            friendsType = _FriendsType.accepted;
+                            friendsType = FriendsType.accepted;
                           });
                         },
-                        onTapped: friendsType == _FriendsType.accepted),
+                        onTapped: friendsType == FriendsType.accepted),
                     CustomTextButton(
                         text: 'WAITING',
                         fontSize: 13,
                         onTap: () {
                           setState(() {
-                            friendsType = _FriendsType.waiting;
+                            friendsType = FriendsType.waiting;
                           });
                         },
-                        onTapped: friendsType == _FriendsType.waiting),
+                        onTapped: friendsType == FriendsType.waiting),
                     CustomTextButton(
                         text: 'INVITATIONS',
                         fontSize: 13,
                         onTap: () {
                           setState(() {
-                            friendsType = _FriendsType.invitations;
+                            friendsType = FriendsType.invitations;
                           });
                         },
-                        onTapped: friendsType == _FriendsType.invitations)
+                        onTapped: friendsType == FriendsType.invitations)
                   ],
                 ),
                 SizedBox(height: 3.h),
-                ShadowContainer(
-                    height: 13.9.h,
-                    child:
-                        const Center(child: Text("You don't have any friends")))
+                BlocBuilder<FriendsBloc, FriendsState>(
+                  builder: (context, state) {
+                    switch (friendsType) {
+                      case FriendsType.accepted:
+                        return FriendsList(
+                            friendsType: friendsType,
+                            userlist: state.friends,
+                            status: state.status);
+                      case FriendsType.waiting:
+                        return FriendsList(
+                            friendsType: friendsType,
+                            userlist: state.invitationsFromMe,
+                            status: state.status);
+                      case FriendsType.invitations:
+                        return FriendsList(
+                            friendsType: friendsType,
+                            userlist: state.invitationsToMe,
+                            status: state.status);
+                    }
+                  },
+                )
               ],
             ),
           ),

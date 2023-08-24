@@ -94,6 +94,8 @@ flutter:
     - assets/svg/eraser_tool.svg
     - assets/svg/hi.svg
     - assets/svg/post.svg
+    - assets/svg/add_friend.svg
+    - assets/svg/trash.svg
     - assets/lottie/post.json
     - assets/avatars/green_avatar.json
     - assets/avatars/grey_avatar.json

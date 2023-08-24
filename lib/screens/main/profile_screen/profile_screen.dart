@@ -23,7 +23,18 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   _ContentType currentContentType = _ContentType.drawings;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    context.read<FriendsBloc>().add(GetFriendsEvent(
+        friendsType: FriendsType.accepted, context: context, listLength: 0));
+    context.read<FriendsBloc>().add(GetFriendsEvent(
+        friendsType: FriendsType.waiting, context: context, listLength: 0));
+    context.read<FriendsBloc>().add(GetFriendsEvent(
+        friendsType: FriendsType.invitations, context: context, listLength: 0));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

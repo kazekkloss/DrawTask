@@ -1,41 +1,41 @@
-part of 'user_bloc.dart';
+part of 'friends_bloc.dart';
 
-enum UsersStatus { loading, loaded }
+enum FriendsStatus { loading, loaded }
 
-class UsersState extends Equatable {
-  final UsersStatus status;
+class FriendsState extends Equatable {
+  final FriendsStatus status;
   final List<User> friends;
   final List<User> invitationsToMe;
   final List<User> invitationsFromMe;
-  const UsersState(
+  const FriendsState(
       {required this.status,
       required this.friends,
       required this.invitationsToMe,
       required this.invitationsFromMe});
 
-  const UsersState._(
-      {this.status = UsersStatus.loading,
+  const FriendsState._(
+      {this.status = FriendsStatus.loading,
       this.friends = const [],
       this.invitationsToMe = const [],
       this.invitationsFromMe = const []});
 
-  const UsersState.loading() : this._();
+  const FriendsState.loading() : this._();
 
-  const UsersState.loaded(List<User> friends, List<User> invitationsToMe,
+  const FriendsState.loaded(List<User> friends, List<User> invitationsToMe,
       List<User> invitationsFromMe)
       : this._(
-            status: UsersStatus.loaded,
+            status: FriendsStatus.loaded,
             friends: friends,
             invitationsToMe: invitationsToMe,
             invitationsFromMe: invitationsFromMe);
 
-  UsersState copyWith({
-    UsersStatus? status,
+  FriendsState copyWith({
+    FriendsStatus? status,
     List<User>? friends,
     List<User>? invitationsToMe,
     List<User>? invitationsFromMe,
   }) {
-    return UsersState(
+    return FriendsState(
       status: status ?? this.status,
       friends: friends ?? this.friends,
       invitationsToMe: invitationsToMe ?? this.invitationsToMe,
