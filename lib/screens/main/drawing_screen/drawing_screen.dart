@@ -218,8 +218,10 @@ class _DrawingScreenState extends State<DrawingScreen> {
               ),
               SizedBox(height: 2.3.h),
               MainButton(
+                primaryColor: const Color.fromARGB(255, 51, 51, 51),
+                splashColor: const Color.fromARGB(255, 81, 81, 81),
                 text: 'Back',
-                textColor: const Color.fromRGBO(255, 255, 255, 1),
+                textColor: const Color.fromARGB(255, 255, 255, 255),
                 onPressed: () {
                   context.goNamed(RouteConstants.dashboard);
                   context.read<DrawBloc>().add(ClearEvent());
@@ -227,14 +229,12 @@ class _DrawingScreenState extends State<DrawingScreen> {
               ),
               SizedBox(height: 1.2.h),
               !loading
-                  ? InkWell(
-                      splashColor: const Color.fromRGBO(75, 75, 75, 1.0),
-                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      onTap: () {
+                  ? MainButton(
+                      text: !preparing ? 'Finish' : 'Preparing...',
+                      onPressed: () {
                         setState(() {
                           preparing = true;
                         });
-
                         Future.microtask(() async {
                           final bytes = await controller.capture();
                           setState(() {
@@ -245,26 +245,6 @@ class _DrawingScreenState extends State<DrawingScreen> {
                           });
                         });
                       },
-                      child: Ink(
-                        decoration: const BoxDecoration(
-                            color: Color.fromRGBO(75, 75, 75, 1.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        height: 4.7.h,
-                        width: 84.w,
-                        child: Center(
-                            child: !preparing
-                                ? const Text(
-                                    'Finish',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
-                                  )
-                                : const Text(
-                                    'Preparing...',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
-                                  )),
-                      ),
                     )
                   : SizedBox(
                       height: 4.7.h,

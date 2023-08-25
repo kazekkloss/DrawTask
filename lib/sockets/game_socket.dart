@@ -45,7 +45,7 @@ class GameSocket {
       _socketClient.on("joinedToGame", (data) {
         final game = Game.fromJson(jsonEncode(data));
         // add game to list in block state
-        context.read<GameBloc>().add(AddGameEvent(game: game));
+        //context.read<GameBloc>().add(AddGameEvent(game: game));
 
         // turn off listener
         _socketClient.off('joinedToGame');

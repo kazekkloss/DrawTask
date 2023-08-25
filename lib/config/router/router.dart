@@ -1,5 +1,4 @@
 import 'package:drawtask/cubits/theme/theme_cubit.dart';
-import 'package:drawtask/screens/main/dashboard_screen/zoom_widget.dart';
 import 'package:drawtask/screens/main/user_screen.dart';
 import 'package:drawtask/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +55,7 @@ class AppRouter {
   ];
 
   GoRouter _router() => GoRouter(
-        //debugLogDiagnostics: true,
+        debugLogDiagnostics: true,
         navigatorKey: _rootNavigatorKey,
         redirect: (context, state) {
           var authState = context.read<AuthBloc>().state;
@@ -139,17 +138,6 @@ class AppRouter {
                         child: const DashboardScreen(), key: state.pageKey),
                     routes: [
                       GoRoute(
-                        name: RouteConstants.gameScreen,
-                        path: 'game',
-                        pageBuilder: ((context, state) {
-                          String gameId = state.extra as String;
-                          return NoTransitionPage(
-                              child: GameScreen(
-                            gameId: gameId,
-                          ));
-                        }),
-                      ),
-                      GoRoute(
                         name: RouteConstants.scoreScreen,
                         path: 'score',
                         pageBuilder: ((context, state) {
@@ -157,17 +145,6 @@ class AppRouter {
                           return NoTransitionPage(
                               child: ScoreScreen(
                             game: game,
-                          ));
-                        }),
-                      ),
-                      GoRoute(
-                        name: RouteConstants.zoomDrawing,
-                        path: 'zoom',
-                        pageBuilder: ((context, state) {
-                          String imageUrl = state.extra as String;
-                          return NoTransitionPage(
-                              child: ZoomDrawing(
-                            imageUrl: imageUrl,
                           ));
                         }),
                       ),
@@ -220,6 +197,28 @@ class AppRouter {
                   game: game,
                 ));
               })),
+          GoRoute(
+            name: RouteConstants.gameScreen,
+            path: '/game',
+            pageBuilder: ((context, state) {
+              String gameId = state.extra as String;
+              return NoTransitionPage(
+                  child: GameScreen(
+                gameId: gameId,
+              ));
+            }),
+          ),
+          GoRoute(
+            name: RouteConstants.voteScreen,
+            path: '/vote',
+            pageBuilder: ((context, state) {
+              String gameId = state.extra as String;
+              return NoTransitionPage(
+                  child: VoteScreen(
+                gameId: gameId,
+              ));
+            }),
+          ),
         ],
         errorPageBuilder: (context, state) {
           return const NoTransitionPage(

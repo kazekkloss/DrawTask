@@ -15,5 +15,4 @@ export 'drawing/controller.dart';
 export 'duration/duration_transformer.dart';
 
 // utils
-export 'utils/textFormFieldDecoration.dart';
 export 'utils/theme.dart';

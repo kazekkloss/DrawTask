@@ -3,8 +3,8 @@ import 'package:sizer/sizer.dart';
 
 class ShadowContainer extends StatelessWidget {
   final Widget child;
-  final double height;
-  const ShadowContainer({super.key, required this.child, required this.height});
+  final double? height;
+  const ShadowContainer({super.key, required this.child, this.height});
 
   @override
   Widget build(BuildContext context) {

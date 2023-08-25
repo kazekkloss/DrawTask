@@ -34,8 +34,7 @@ class _GameTabState extends State<GameTab> {
       (picture) => picture.userOwner.id == widget.user.id,
     );
 
-    final hasMatchingPicture = widget.game.pictures.any((picture) =>
-        picture.userOwner.id == widget.user.id && picture.imageUrl.isNotEmpty);
+    GameStep gameStep = stepInGame(widget.game, picture);
 
     var timeStream =
         Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now())
@@ -46,20 +45,7 @@ class _GameTabState extends State<GameTab> {
       padding: EdgeInsets.only(left: 5.4.w, right: 5.4.w, top: 1.18.h),
       child: GestureDetector(
         onTap: () {
-          if (!hasMatchingPicture) {
-            context.goNamed(RouteConstants.drawingScreen, extra: widget.game);
-          } else {
-            if (widget.game.pictures.length != 5) {
-              // context.goNamed(RouteConstants.zoomDrawing,
-              //     extra: picture.imageUrl);
-            } else if (widget.game.voted.length ==
-                widget.game.pictures.length) {
-              context.goNamed(RouteConstants.scoreScreen, extra: widget.game);
-            } else {
-              context.pushNamed(RouteConstants.gameScreen,
-                  extra: widget.game.id);
-            }
-          }
+          context.goNamed(RouteConstants.gameScreen, extra: widget.game.id);
         },
         child: Container(
           height: 13.5.h,
@@ -102,12 +88,11 @@ class _GameTabState extends State<GameTab> {
                                     color: Color.fromRGBO(255, 255, 255, 1)),
                               ),
                               Text(
-                                widget.game.voted.length ==
-                                        widget.game.pictures.length
+                                gameStep == GameStep.finish
                                     ? "Finish!"
-                                    : widget.game.voted.contains(widget.user.id)
+                                    : gameStep == GameStep.waiting
                                         ? "Waiting!"
-                                        : hasMatchingPicture
+                                        : gameStep == GameStep.vote
                                             ? "Vote!"
                                             : "Draw!",
                                 style: const TextStyle(

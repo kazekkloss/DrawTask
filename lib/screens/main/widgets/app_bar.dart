@@ -55,15 +55,10 @@ class _TopAppBarState extends State<TopAppBar> {
           _title = "Friend's Game";
         });
         break;
-      case "/dashboard/game":
+      case "/dashboard/vote":
         setState(() {
           _isLeading = true;
           _title = "Vote";
-        });
-        break;
-      case "/dashboard/zoom":
-        setState(() {
-          _isLeading = true;
         });
         break;
       case "/dashboard/score":
