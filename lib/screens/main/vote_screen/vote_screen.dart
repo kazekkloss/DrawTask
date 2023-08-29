@@ -21,6 +21,7 @@ class VoteScreen extends StatefulWidget {
 
 class _VoteScreenState extends State<VoteScreen> {
   List<Vote> votes = [];
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GameBloc, GameState>(
@@ -35,6 +36,7 @@ class _VoteScreenState extends State<VoteScreen> {
         Game game = state.games.firstWhere((game) => game.id == widget.gameId);
         List<Picture> pictures = sortedPictures(game, authBloc.state.user.id);
         pictures = pictures.reversed.toList();
+        print('rebuild');
         return Scaffold(
           appBar: TopAppBar(gameWords: game.gameWords),
           body: Column(
@@ -72,7 +74,7 @@ class _VoteScreenState extends State<VoteScreen> {
                                         pictures[index].userOwner.id ==
                                                 authBloc.state.user.id
                                             ? 'Your image'
-                                            : 'Player ${index + 1}',
+                                            : 'Drawing ${index + 1}',
                                         style: TextStyle(fontSize: 1.9.h),
                                       ),
                                     ),

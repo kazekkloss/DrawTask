@@ -17,4 +17,4 @@ export 'main/joining_to_game_screen.dart';
 export 'main/drawing_screen/drawing_screen.dart';
 export 'main/game_screen/game_screen.dart';
 export 'main/vote_screen/vote_screen.dart';
-export 'main/score_screen.dart';
+export 'main/score_screen/score_screen.dart';

@@ -5,8 +5,10 @@ import 'package:sizer/sizer.dart';
 import '../../../models/user.dart';
 
 class Avatar extends StatelessWidget {
+  final bool? isUsername;
   final User user;
-  const Avatar({super.key, required this.user});
+  const Avatar({super.key, required this.user, bool? isUsername})
+      : isUsername = isUsername ?? true;
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +25,16 @@ class Avatar extends StatelessWidget {
           ),
         ),
         SizedBox(height: 2.h),
-        Text(
-          user.username.toString(),
-          style: const TextStyle(fontSize: 25),
-        ),
-        SizedBox(height: 2.h),
+        if (isUsername!)
+          Column(
+            children: [
+              Text(
+                user.username.toString(),
+                style: const TextStyle(fontSize: 25),
+              ),
+              SizedBox(height: 2.h),
+            ],
+          ),
       ],
     );
   }

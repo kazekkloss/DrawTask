@@ -34,7 +34,7 @@ class _GameTabState extends State<GameTab> {
       (picture) => picture.userOwner.id == widget.user.id,
     );
 
-    GameStep gameStep = stepInGame(widget.game, picture);
+    GameStep gameStep = stepInGame(widget.game, picture, widget.user.id);
 
     var timeStream =
         Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now())
@@ -45,7 +45,11 @@ class _GameTabState extends State<GameTab> {
       padding: EdgeInsets.only(left: 5.4.w, right: 5.4.w, top: 1.18.h),
       child: GestureDetector(
         onTap: () {
-          context.goNamed(RouteConstants.gameScreen, extra: widget.game.id);
+          if (widget.game.voted.length == widget.game.pictures.length) {
+            context.goNamed(RouteConstants.scoreScreen, extra: widget.game);
+          } else {
+            context.goNamed(RouteConstants.gameScreen, extra: widget.game.id);
+          }
         },
         child: Container(
           height: 13.5.h,

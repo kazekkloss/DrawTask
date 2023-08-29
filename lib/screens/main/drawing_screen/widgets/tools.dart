@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sizer/sizer.dart';
 
-enum ActiveTool { color, width, shape, none }
+import '../drawing_screen.dart';
 
-class Tools extends StatefulWidget {
+class Tools extends StatelessWidget {
   final Color primaryColor;
   final Color splashColor;
   final VoidCallback colorVoid;
   final VoidCallback widthVoid;
   final VoidCallback backgroundVoid;
   final VoidCallback shapeVoid;
+  final ActiveBarTool activeBarTool;
   const Tools({
     required this.primaryColor,
     required this.splashColor,
@@ -18,18 +19,9 @@ class Tools extends StatefulWidget {
     required this.backgroundVoid,
     required this.widthVoid,
     required this.shapeVoid,
+    required this.activeBarTool,
     super.key,
   });
-
-  @override
-  State<Tools> createState() => _ToolsState();
-}
-
-class _ToolsState extends State<Tools> {
-  bool paint = false;
-  bool pen = false;
-  bool palette = false;
-  bool shapes = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,28 +29,22 @@ class _ToolsState extends State<Tools> {
       height: 8.3.h,
       width: 100.w,
       decoration: BoxDecoration(
-          color: widget.primaryColor, borderRadius: BorderRadius.circular(25)),
+          color: primaryColor, borderRadius: BorderRadius.circular(25)),
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onTap: () {
-                widget.backgroundVoid();
-                setState(() {
-                  paint = !paint;
-                  pen = false;
-                  palette = false;
-                  shapes = false;
-                });
-              },
+              onTap: backgroundVoid,
               child: Container(
                 height: 8.3.h,
                 width: 17.w,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: paint ? widget.splashColor : widget.primaryColor),
+                    color: activeBarTool == ActiveBarTool.backgroundColor
+                        ? splashColor
+                        : primaryColor),
                 child: SvgPicture.asset(
                   'assets/svg/tools/paint.svg',
                   fit: BoxFit.scaleDown,
@@ -67,20 +53,16 @@ class _ToolsState extends State<Tools> {
             ),
             GestureDetector(
               onTap: () {
-                widget.widthVoid();
-                setState(() {
-                  paint = false;
-                  pen = !pen;
-                  palette = false;
-                  shapes = false;
-                });
+                widthVoid();
               },
               child: Container(
                 height: 8.3.h,
                 width: 17.w,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: pen ? widget.splashColor : widget.primaryColor),
+                    color: activeBarTool == ActiveBarTool.width
+                        ? splashColor
+                        : primaryColor),
                 child: SvgPicture.asset(
                   'assets/svg/tools/pen.svg',
                   fit: BoxFit.scaleDown,
@@ -88,21 +70,15 @@ class _ToolsState extends State<Tools> {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                widget.colorVoid();
-                setState(() {
-                  paint = false;
-                  pen = false;
-                  palette = !palette;
-                  shapes = false;
-                });
-              },
+              onTap: colorVoid,
               child: Container(
                 height: 8.3.h,
                 width: 17.w,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: palette ? widget.splashColor : widget.primaryColor),
+                    color: activeBarTool == ActiveBarTool.colors
+                        ? splashColor
+                        : primaryColor),
                 child: SvgPicture.asset(
                   'assets/svg/tools/palette.svg',
                   fit: BoxFit.scaleDown,
@@ -110,21 +86,15 @@ class _ToolsState extends State<Tools> {
               ),
             ),
             GestureDetector(
-              onTap: () {
-                widget.shapeVoid();
-                setState(() {
-                  paint = false;
-                  pen = false;
-                  palette = false;
-                  shapes = !shapes;
-                });
-              },
+              onTap: shapeVoid,
               child: Container(
                 height: 8.3.h,
                 width: 17.w,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
-                    color: shapes ? widget.splashColor : widget.primaryColor),
+                    color: activeBarTool == ActiveBarTool.shapes
+                        ? splashColor
+                        : primaryColor),
                 child: SvgPicture.asset(
                   'assets/svg/tools/shapes.svg',
                   fit: BoxFit.scaleDown,

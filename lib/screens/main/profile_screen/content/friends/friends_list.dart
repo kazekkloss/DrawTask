@@ -1,4 +1,5 @@
 import 'package:drawtask/repositories/friends_repository.dart';
+import 'package:drawtask/screens/main/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -44,13 +45,8 @@ class FriendsList extends StatelessWidget {
                           return Padding(
                             padding: EdgeInsets.only(
                                 left: 5.4.w, right: 5.4.w, top: 1.18.h),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: const Color.fromARGB(255, 75, 75, 75),
-                              ),
-                              height: 9.3.h,
-                              width: 74.w,
+                            child: SmallTab(
+                              color: const Color.fromARGB(255, 75, 75, 75),
                               child: Padding(
                                 padding:
                                     EdgeInsets.only(left: 4.1.w, right: 7.7.w),

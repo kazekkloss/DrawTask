@@ -55,7 +55,7 @@ class AppRouter {
   ];
 
   GoRouter _router() => GoRouter(
-        debugLogDiagnostics: true,
+        //debugLogDiagnostics: true,
         navigatorKey: _rootNavigatorKey,
         redirect: (context, state) {
           var authState = context.read<AuthBloc>().state;
@@ -132,23 +132,11 @@ class AppRouter {
                 ),
                 // Game Screen
                 GoRoute(
-                    name: RouteConstants.dashboard,
-                    path: '/dashboard',
-                    pageBuilder: (context, state) => NoTransitionPage(
-                        child: const DashboardScreen(), key: state.pageKey),
-                    routes: [
-                      GoRoute(
-                        name: RouteConstants.scoreScreen,
-                        path: 'score',
-                        pageBuilder: ((context, state) {
-                          Game game = state.extra as Game;
-                          return NoTransitionPage(
-                              child: ScoreScreen(
-                            game: game,
-                          ));
-                        }),
-                      ),
-                    ]),
+                  name: RouteConstants.dashboard,
+                  path: '/dashboard',
+                  pageBuilder: (context, state) => NoTransitionPage(
+                      child: const DashboardScreen(), key: state.pageKey),
+                ),
                 // New Game Screen
                 GoRoute(
                   name: RouteConstants.newGame,
@@ -216,6 +204,17 @@ class AppRouter {
               return NoTransitionPage(
                   child: VoteScreen(
                 gameId: gameId,
+              ));
+            }),
+          ),
+          GoRoute(
+            name: RouteConstants.scoreScreen,
+            path: '/score',
+            pageBuilder: ((context, state) {
+              Game game = state.extra as Game;
+              return NoTransitionPage(
+                  child: ScoreScreen(
+                game: game,
               ));
             }),
           ),

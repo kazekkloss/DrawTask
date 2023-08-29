@@ -4,3 +4,7 @@ export 'bottom_nav_bar.dart';
 export 'drawer/drawer.dart';
 export 'custom_text_button.dart';
 export 'image_widget.dart';
+export 'small_tab.dart';
+export 'image_button.dart';
+export 'zoom_drawing.dart';
+export 'bottom_panel.dart';
