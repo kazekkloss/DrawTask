@@ -34,7 +34,8 @@ class _GameTabState extends State<GameTab> {
       (picture) => picture.userOwner.id == widget.user.id,
     );
 
-    GameStep gameStep = stepInGame(widget.game, picture, widget.user.id);
+    GameStep gameStep =
+        GlobalVariables().stepInGame(widget.game, picture, widget.user.id);
 
     var timeStream =
         Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now())

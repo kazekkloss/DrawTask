@@ -1,14 +1,18 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:drawtask/cubits/cubits.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sizer/sizer.dart';
 
 class TopAppBar extends StatefulWidget implements PreferredSizeWidget {
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final List<String>? gameWords;
-  const TopAppBar({super.key, this.gameWords, this.scaffoldKey});
+  final bool? isLeading;
+  const TopAppBar(
+      {super.key, this.gameWords, this.scaffoldKey, this.isLeading});
 
   @override
   State<TopAppBar> createState() => _TopAppBarState();
@@ -55,18 +59,6 @@ class _TopAppBarState extends State<TopAppBar> {
           _title = "Friend's Game";
         });
         break;
-      case "/dashboard/vote":
-        setState(() {
-          _isLeading = true;
-          _title = "Vote";
-        });
-        break;
-      case "/dashboard/score":
-        setState(() {
-          _isLeading = true;
-          _title = "Score";
-        });
-        break;
       case "/profile/user":
         setState(() {
           _isLeading = true;
@@ -111,84 +103,96 @@ class _TopAppBarState extends State<TopAppBar> {
                   alignment: Alignment.bottomCenter,
                   child: SizedBox(
                     height: 35,
-                    child: widget.gameWords != null
-                        ? Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: widget.gameWords!.map((word) {
-                                  return Text(
-                                    " #$word ",
-                                    style: const TextStyle(
-                                      fontSize: 20,
-                                      fontFamily: 'Righteous',
-                                      color: Colors.black,
-                                    ),
-                                  );
-                                }).toList())
-                            .animate()
-                            .shimmer(
-                                duration: 2000.ms,
-                                color: state.themeData.primaryColor)
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 29),
-                                child: _isLeading
-                                    ? GestureDetector(
-                                        onTap: () {
-                                          context.pop();
-                                        },
-                                        child: SvgPicture.asset(
-                                          'assets/svg/arrow_back.svg',
-                                          fit: BoxFit.fitHeight,
-                                        ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.only(left: 29),
+                            child: widget.isLeading != null
+                                ? widget.isLeading == true
+                                    ? backButton()
+                                    : const SizedBox(
+                                        width: 35,
                                       )
-                                    : GestureDetector(
-                                        onTap: () {
-                                          if (widget.scaffoldKey!.currentState!
-                                              .isDrawerOpen) {
-                                            setState(() {
-                                              openDrawer = false;
-                                            });
-                                            widget.scaffoldKey!.currentState!
-                                                .closeDrawer();
-                                          } else {
-                                            setState(() {
-                                              openDrawer = true;
-                                            });
-                                            widget.scaffoldKey!.currentState!
-                                                .openDrawer();
-                                          }
-                                        },
-                                        child: SizedBox(
-                                          width: 35,
-                                          child: SvgPicture.asset(
-                                            openDrawer
-                                                ? 'assets/svg/arrow_back.svg'
-                                                : 'assets/svg/hamburger.svg',
-                                            fit: BoxFit.fitHeight,
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                              Text(
+                                : _isLeading
+                                    ? backButton()
+                                    : hamburger()),
+                        widget.gameWords == null
+                            ? Text(
                                 _title,
                                 style: const TextStyle(
                                     fontSize: 24,
                                     fontFamily: 'Righteous',
                                     color: Colors.black),
+                              )
+                            : SizedBox(
+                                width: 63.w,
+                                child: Center(
+                                  child: AutoSizeText(
+                                    '#${widget.gameWords![0]} #${widget.gameWords![1]} #${widget.gameWords![2]}',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      fontFamily: 'Righteous',
+                                      color: Colors.black,
+                                    ),
+                                    maxLines: 1,
+                                    minFontSize: 8,
+                                    maxFontSize: 20,
+                                  ).animate().shimmer(
+                                      duration: 2000.ms,
+                                      color: state.themeData.primaryColor),
+                                ),
                               ),
-                              const SizedBox(
-                                width: 64,
-                              ),
-                            ],
-                          ),
+                        const SizedBox(
+                          width: 64,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  // Arrow Back Button ---------------
+  Widget backButton() {
+    return GestureDetector(
+      onTap: () {
+        context.pop();
+      },
+      child: SvgPicture.asset(
+        'assets/svg/arrow_back.svg',
+        fit: BoxFit.fitHeight,
+      ),
+    );
+  }
+
+  // Hamburger Button ----------------
+  Widget hamburger() {
+    return GestureDetector(
+      onTap: () {
+        if (widget.scaffoldKey!.currentState!.isDrawerOpen) {
+          setState(() {
+            openDrawer = false;
+          });
+          widget.scaffoldKey!.currentState!.closeDrawer();
+        } else {
+          setState(() {
+            openDrawer = true;
+          });
+          widget.scaffoldKey!.currentState!.openDrawer();
+        }
+      },
+      child: SizedBox(
+        width: 35,
+        child: SvgPicture.asset(
+          openDrawer ? 'assets/svg/arrow_back.svg' : 'assets/svg/hamburger.svg',
+          fit: BoxFit.fitHeight,
+        ),
       ),
     );
   }

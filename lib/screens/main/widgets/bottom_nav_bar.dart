@@ -30,13 +30,59 @@ class _BottomNavBarState extends State<BottomNavBar> {
     }
   }
 
+  bool gameWords = false;
+
+  // Settings to appBar. if there are gameWords in the appbar, they must disable it to call the appBar in the screen file
+
+  late GoRouter _router;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _router = GoRouter.of(context);
+    _router.addListener(() {
+      if (mounted) {
+        settingsAppBar();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _router.removeListener(settingsAppBar);
+    super.dispose();
+  }
+
+  void settingsAppBar() {
+    switch (_router.location) {
+      case "/dashboard/game":
+        setState(() {
+          gameWords = true;
+        });
+        break;
+      case "/dashboard/game/vote":
+        setState(() {
+          gameWords = true;
+        });
+        break;
+      case "/dashboard/score":
+        setState(() {
+          gameWords = true;
+        });
+        break;
+      default:
+        setState(() {
+          gameWords = false;
+        });
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: TopAppBar(
-        scaffoldKey: scaffoldKey,
-      ),
+      appBar: !gameWords ? TopAppBar(scaffoldKey: scaffoldKey) : null,
       body: Scaffold(
         key: scaffoldKey,
         backgroundColor: Colors.white,

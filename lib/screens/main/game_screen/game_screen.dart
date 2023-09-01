@@ -23,88 +23,87 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GameBloc, GameState>(
+    return BlocConsumer<GameBloc, GameState>(
+      listener: (context, state) {
+        Game game = state.games.firstWhere((game) => game.id == widget.gameId);
+        if (game.voted.length == game.pictures.length) {
+          context.goNamed(RouteConstants.scoreScreen, extra: game);
+        }
+      },
       builder: (context, state) {
         final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
         final Game game =
             state.games.firstWhere((game) => game.id == widget.gameId);
-        List<Picture> pictures = sortedPictures(game, authBloc.state.user.id);
+        List<Picture> pictures =
+            GlobalVariables().sortedPictures(game, authBloc.state.user.id);
         return Scaffold(
-            appBar: TopAppBar(gameWords: game.gameWords),
+            appBar: TopAppBar(
+              gameWords: game.gameWords,
+              isLeading: true,
+            ),
             body: Stack(
               children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Center(
-                      child: SizedBox(
-                        width: 85.w,
-                        child: Column(
-                          children: [
-                            SizedBox(height: 3.0.h),
-                            const Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Players",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
+                Center(
+                  child: SizedBox(
+                    width: 85.w,
+                    child: Column(
+                      children: [
+                        SizedBox(height: 3.0.h),
+                        const Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Players",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
                             ),
-                            SizedBox(height: 1.2.h),
-                            ShadowContainer(
-                              height: pictures.isEmpty
-                                  ? 14.2.h
-                                  : 10.48.h * pictures.length.toDouble() +
-                                      3.48.h,
-                              child: Padding(
-                                padding: EdgeInsets.only(top: 1.18.h),
-                                child: ListView.builder(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: pictures.length,
-                                    itemBuilder: (context, index) {
-                                      GameStep gameStep = stepInGame(
-                                          game,
-                                          pictures[index],
-                                          authBloc.state.user.id);
-                                      return Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 5.4.w,
-                                              right: 5.4.w,
-                                              top: 1.18.h),
-                                          child: PlayerTab(
-                                              numInList: index,
-                                              game: game,
-                                              gameStep: gameStep,
-                                              picture: pictures[index],
-                                              isCurrenUserOwner:
-                                                  pictures[index] ==
-                                                      pictures.first));
-                                    }),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                      ),
+                        SizedBox(height: 1.2.h),
+                        ShadowContainer(
+                          height: pictures.isEmpty
+                              ? 14.2.h
+                              : 10.48.h * pictures.length.toDouble() + 3.48.h,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 1.18.h),
+                            child: ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: pictures.length,
+                                itemBuilder: (context, index) {
+                                  GameStep gameStep = GlobalVariables()
+                                      .stepInGame(game, pictures[index],
+                                          authBloc.state.user.id);
+                                  return Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 5.4.w,
+                                          right: 5.4.w,
+                                          top: 1.18.h),
+                                      child: PlayerTab(
+                                          numInList: index,
+                                          game: game,
+                                          gameStep: gameStep,
+                                          picture: pictures[index],
+                                          isCurrenUserOwner: pictures[index] ==
+                                              pictures.first));
+                                }),
+                          ),
+                        ),
+                      ],
                     ),
-                    BottomPanel(voidBack: () {
-                      context.goNamed(RouteConstants.dashboard);
-                    }),
-                  ],
+                  ),
                 ),
-                if (pictures.first.imageUrl.isNotEmpty &&
-                    pictures.any((picture) => picture.imageUrl.isEmpty))
-                  ZoomDrawing(
-                    onTap: () {
-                      setState(() {
-                        zoom = !zoom;
-                      });
-                    },
-                    imageUrl: pictures.first.imageUrl,
-                    zoom: zoom,
-                  )
+
+                // if (pictures.first.imageUrl.isNotEmpty &&
+                //     pictures.any((picture) => picture.imageUrl.isEmpty))
+                //   ZoomDrawing(
+                //     onTap: () {
+                //       setState(() {
+                //         zoom = !zoom;
+                //       });
+                //     },
+                //     imageUrl: pictures.first.imageUrl,
+                //     zoom: zoom,
+                //   )
               ],
             ));
       },

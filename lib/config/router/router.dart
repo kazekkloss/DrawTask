@@ -55,7 +55,7 @@ class AppRouter {
   ];
 
   GoRouter _router() => GoRouter(
-        //debugLogDiagnostics: true,
+        debugLogDiagnostics: true,
         navigatorKey: _rootNavigatorKey,
         redirect: (context, state) {
           var authState = context.read<AuthBloc>().state;
@@ -132,11 +132,46 @@ class AppRouter {
                 ),
                 // Game Screen
                 GoRoute(
-                  name: RouteConstants.dashboard,
-                  path: '/dashboard',
-                  pageBuilder: (context, state) => NoTransitionPage(
-                      child: const DashboardScreen(), key: state.pageKey),
-                ),
+                    name: RouteConstants.dashboard,
+                    path: '/dashboard',
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        child: const DashboardScreen(), key: state.pageKey),
+                    routes: [
+                      GoRoute(
+                          name: RouteConstants.gameScreen,
+                          path: 'game',
+                          pageBuilder: ((context, state) {
+                            String gameId = state.extra as String;
+                            return NoTransitionPage(
+                                child: GameScreen(
+                              gameId: gameId,
+                            ));
+                          }),
+                          routes: [
+                            GoRoute(
+                              name: RouteConstants.voteScreen,
+                              path: 'vote',
+                              pageBuilder: ((context, state) {
+                                String gameId = state.extra as String;
+                                return NoTransitionPage(
+                                    child: VoteScreen(
+                                  gameId: gameId,
+                                ));
+                              }),
+                            ),
+                          ]),
+                      GoRoute(
+                        name: RouteConstants.scoreScreen,
+                        path: 'score',
+                        pageBuilder: ((context, state) {
+                          Game game = state.extra as Game;
+                          return NoTransitionPage(
+                              child: ScoreScreen(
+                            game: game,
+                          ));
+                        }),
+                      ),
+                    ]),
                 // New Game Screen
                 GoRoute(
                   name: RouteConstants.newGame,
@@ -185,39 +220,6 @@ class AppRouter {
                   game: game,
                 ));
               })),
-          GoRoute(
-            name: RouteConstants.gameScreen,
-            path: '/game',
-            pageBuilder: ((context, state) {
-              String gameId = state.extra as String;
-              return NoTransitionPage(
-                  child: GameScreen(
-                gameId: gameId,
-              ));
-            }),
-          ),
-          GoRoute(
-            name: RouteConstants.voteScreen,
-            path: '/vote',
-            pageBuilder: ((context, state) {
-              String gameId = state.extra as String;
-              return NoTransitionPage(
-                  child: VoteScreen(
-                gameId: gameId,
-              ));
-            }),
-          ),
-          GoRoute(
-            name: RouteConstants.scoreScreen,
-            path: '/score',
-            pageBuilder: ((context, state) {
-              Game game = state.extra as Game;
-              return NoTransitionPage(
-                  child: ScoreScreen(
-                game: game,
-              ));
-            }),
-          ),
         ],
         errorPageBuilder: (context, state) {
           return const NoTransitionPage(

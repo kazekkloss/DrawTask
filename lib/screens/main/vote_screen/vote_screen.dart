@@ -34,11 +34,11 @@ class _VoteScreenState extends State<VoteScreen> {
       builder: (context, state) {
         final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
         Game game = state.games.firstWhere((game) => game.id == widget.gameId);
-        List<Picture> pictures = sortedPictures(game, authBloc.state.user.id);
+        List<Picture> pictures =
+            GlobalVariables().sortedPictures(game, authBloc.state.user.id);
         pictures = pictures.reversed.toList();
-        print('rebuild');
         return Scaffold(
-          appBar: TopAppBar(gameWords: game.gameWords),
+          appBar: TopAppBar(gameWords: game.gameWords, isLeading: true),
           body: Column(
             children: [
               Expanded(

@@ -45,7 +45,10 @@ class _DrawingScreenState extends State<DrawingScreen> {
     return BlocBuilder<ThemeCubit, ThemeState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: TopAppBar(gameWords: widget.game.gameWords),
+          appBar: TopAppBar(
+            gameWords: widget.game.gameWords,
+            isLeading: false,
+          ),
           body: SizedBox(
             height: 100.h,
             child: Column(
@@ -81,7 +84,7 @@ class _DrawingScreenState extends State<DrawingScreen> {
                                 return Container(
                                   color: backgroundColor,
                                   child: SizedBox(
-                                    height: 65.2.h,
+                                    height: 61.2.h,
                                     width: 100.w,
                                     child: Stack(
                                       children: [
