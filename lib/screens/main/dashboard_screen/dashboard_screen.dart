@@ -29,7 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 width: 85.w,
                 child: Column(
                   children: [
-                    SizedBox(height: 3.h),
+                    SizedBox(height: 3.07.h),
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(

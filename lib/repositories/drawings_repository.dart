@@ -51,4 +51,46 @@ class DrawingsRepository {
     }
     return drawingsList;
   }
+
+    Future<List<Drawing>> getWallDrawings({required BuildContext context}) async {
+    List<Drawing> drawingsList = [];
+    try {
+      final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('x-auth-token');
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/get_my_drawings'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': token!,
+        },
+        body: jsonEncode(
+          {
+            'currentUserId': authBloc.state.user.id,
+          },
+        ),
+      );
+      if (context.mounted) {
+        httpErrorHandle(
+          response: res,
+          context: context,
+          onSuccess: () {
+            final List<dynamic> responseData = jsonDecode(res.body);
+            for (int i = 0; i < responseData.length; i++) {
+              drawingsList.add(
+                Drawing.fromMap(
+                    responseData[i]),
+              );
+            }
+          },
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
+    }
+    return drawingsList;
+  }
 }
