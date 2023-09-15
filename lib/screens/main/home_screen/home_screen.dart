@@ -1,14 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:drawtask/config/config.dart';
-import 'package:drawtask/screens/home_screen/widgets/drawing_tab.dart';
+import 'package:drawtask/screens/main/home_screen/widgets/drawing_tab.dart';
 import 'package:drawtask/screens/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../blocs/blocs.dart';
-import '../main/widgets/avatar.dart';
+import '../../../blocs/blocs.dart';
+import '../widgets/avatar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

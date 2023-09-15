@@ -19,12 +19,13 @@ class GameTab extends StatefulWidget {
 }
 
 class _GameTabState extends State<GameTab> {
-  late Duration remainingTime;
+  late Duration timeLeft;
 
   @override
   void initState() {
-    final deadline = widget.game.createdAt.add(const Duration(hours: 12));
-    remainingTime = deadline.difference(DateTime.now());
+    timeLeft = widget.game.createdAt
+        .add(const Duration(hours: 12))
+        .difference(DateTime.now());
     super.initState();
   }
 
@@ -33,15 +34,8 @@ class _GameTabState extends State<GameTab> {
     final picture = widget.game.pictures.firstWhere(
       (picture) => picture.userOwner.id == widget.user.id,
     );
-
     GameStep gameStep =
         GlobalVariables().stepInGame(widget.game, picture, widget.user.id);
-
-    var timeStream =
-        Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now())
-            .map((currentTime) => currentTime.difference(widget.game.createdAt))
-            .transform(DurationTransformer(context, widget.game.id));
-
     return Padding(
       padding: EdgeInsets.only(left: 5.4.w, right: 5.4.w, top: 1.18.h),
       child: GestureDetector(
@@ -117,40 +111,16 @@ class _GameTabState extends State<GameTab> {
                                     fontWeight: FontWeight.w300,
                                     color: Color.fromRGBO(255, 255, 255, 1)),
                               ),
-                              remainingTime.inHours < 1
-                                  ? StreamBuilder<String>(
-                                      stream: timeStream,
-                                      builder: (context, snapshot) {
-                                        return snapshot.data != null
-                                            ? Text(
-                                                snapshot.data.toString(),
-                                                style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Color.fromRGBO(
-                                                      255, 255, 255, 1),
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              )
-                                            : const SizedBox(
-                                                height: 12,
-                                                width: 12,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 1,
-                                                  color: Color.fromRGBO(
-                                                      255, 255, 255, 1),
-                                                ),
-                                              );
-                                      },
-                                    )
-                                  : Text(
-                                      '${remainingTime.inHours.toString()}h',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Color.fromRGBO(255, 255, 255, 1),
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                              Text(
+                                timeLeft.inHours > 1
+                                    ? '${timeLeft.inHours}h'
+                                    : '${timeLeft.inMinutes} min',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
                             ],
                           ),
                         ],

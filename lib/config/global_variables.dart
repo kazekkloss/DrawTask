@@ -1,7 +1,6 @@
 import '../models/models.dart';
 
 
-
 // GameStep to use in game screen and dashboard screen
 
 enum GameStep { none, waiting, draw, vote, finish }

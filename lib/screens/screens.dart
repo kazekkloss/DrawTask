@@ -7,7 +7,7 @@ export 'auth/loading_screen.dart';
 
 // Screens to home
 export 'main/new_game_screen/new_game_screen.dart';
-export 'home_screen/home_screen.dart';
+export 'main/home_screen/home_screen.dart';
 export 'main/dashboard_screen/dashboard_screen.dart';
 export 'main/profile_screen/profile_screen.dart';
 

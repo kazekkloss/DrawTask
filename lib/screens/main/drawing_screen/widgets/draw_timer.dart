@@ -1,10 +1,12 @@
+import 'dart:math';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../../config/config.dart';
+import '../../../../cubits/cubits.dart';
 import '../../../../models/models.dart';
-
-import 'dart:async';
 
 class DrawTimer extends StatefulWidget {
   final Color primaryColor;
@@ -15,29 +17,123 @@ class DrawTimer extends StatefulWidget {
   State<DrawTimer> createState() => _DrawTimerState();
 }
 
-class _DrawTimerState extends State<DrawTimer> {
+class _DrawTimerState extends State<DrawTimer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  late double progress;
+  late Duration timeLeft;
+
+  @override
+  void initState() {
+    super.initState();
+    timeLeft = widget.game.createdAt
+        .add(const Duration(hours: 12))
+        .difference(DateTime.now());
+    setState(() {
+      progress = getProgress();
+    });
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(hours: 12));
+
+    _animation = Tween<double>(
+      begin: progress,
+      end: 1.0,
+    ).animate(_controller)
+      ..addListener(() {
+        setState(() {
+          progress = getProgress();
+        });
+      });
+
+    _controller.forward();
+  }
+
+  double getProgress() {
+    return 1.0 - (timeLeft.inSeconds / const Duration(hours: 12).inSeconds);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final timeStream =
-        Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now())
-            .map((currentTime) => currentTime.difference(widget.game.createdAt))
-            .transform(DurationTransformer(context, widget.game.id));
-    return StreamBuilder<Object>(
-        stream: timeStream,
-        builder: (context, snapshot) {
-          return Container(
-            height: 10.7.h,
-            width: 10.7.h,
-            decoration: BoxDecoration(
-                color: const Color.fromRGBO(255, 255, 255, 0.5),
-                border: Border.all(color: widget.primaryColor, width: 5),
-                borderRadius: BorderRadius.circular(25)),
-            child: Center(
-                child: Text(
-              '${snapshot.data ?? "loading"}',
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-            )),
-          );
-        });
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, state) {
+        return RotatedBox(
+          quarterTurns: 90,
+          child: SizedBox(
+            height: 9.95.h,
+            width: 9.95.h,
+            child: CustomPaint(
+              size: Size(9.95.h, 9.95.h),
+              painter: SquarePainter(
+                  progress: 0.0 - 1,
+                  borderColor: const ui.Color.fromRGBO(217, 217, 217, 1)),
+              child: CustomPaint(
+                size: Size(9.95.h, 9.95.h),
+                painter: SquarePainter(
+                    progress: _animation.value,
+                    borderColor: state.themeData.primaryColor),
+                child: RotatedBox(
+                    quarterTurns: 90,
+                    child: Center(
+                        child: Text(
+                      timeLeft.inHours > 1
+                          ? '${timeLeft.inHours}h'
+                          : '${timeLeft.inMinutes} min',
+                      style: const TextStyle(
+                          fontSize: 22, fontWeight: FontWeight.w400),
+                    ))),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class SquarePainter extends CustomPainter {
+  SquarePainter({required this.progress, required this.borderColor});
+  double progress;
+  Color borderColor;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double x = min(size.height, size.width);
+    double x2 = x / 2;
+    Paint paintt = Paint()
+      ..color = progress == 0 ? Colors.transparent : borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5;
+
+    double cornerRadius = 28;
+
+    Path path = Path()
+      ..moveTo(x2, x)
+      ..lineTo(cornerRadius, x)
+      ..quadraticBezierTo(0, x, 0, x - cornerRadius)
+      ..lineTo(0, cornerRadius)
+      ..quadraticBezierTo(0, 0, cornerRadius, 0)
+      ..lineTo(x - cornerRadius, 0)
+      ..quadraticBezierTo(x, 0, x, cornerRadius)
+      ..lineTo(x, x - cornerRadius)
+      ..quadraticBezierTo(x, x, x - cornerRadius, x)
+      ..lineTo(x2, x);
+
+    ui.PathMetric pathMetric = path.computeMetrics().first;
+
+    Path extractPath =
+        pathMetric.extractPath(pathMetric.length * progress, pathMetric.length);
+    canvas.drawPath(extractPath, paintt);
+  }
+
+  @override
+  bool shouldRepaint(covariant SquarePainter oldDelegate) {
+    return oldDelegate.progress != progress;
   }
 }
