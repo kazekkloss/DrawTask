@@ -53,7 +53,6 @@ class FriendsRepository {
 
   Future<List<User>> getUsersList({
     required BuildContext context,
-    required int currentListLength,
     required FriendsType friendsType,
   }) async {
     List<User> userList = [];
@@ -68,7 +67,6 @@ class FriendsRepository {
         },
         body: jsonEncode(
           {
-            'currentListLength': currentListLength,
             'friendsType': friendsType.toString(),
           },
         ),

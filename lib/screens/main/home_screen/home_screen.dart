@@ -9,8 +9,19 @@ import 'package:sizer/sizer.dart';
 import '../../../blocs/blocs.dart';
 import '../widgets/avatar.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    context.read<DrawingsBloc>().add(GetWallDrawingsEvent(context: context));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +63,20 @@ class HomeScreen extends StatelessWidget {
                                     color: Colors.black,
                                   ))
                                 : ListView.builder(
+                                    physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
-                                    itemCount: state.myDrawings.length,
+                                    itemCount: state.wallDrawings.length,
                                     itemBuilder: (context, index) {
-                                      return DrawingTab(imageUrl: state.myDrawings[index].imageUrl);
+                                      return Column(
+                                        children: [
+                                          DrawingTab(
+                                            drawing: state.wallDrawings[index],
+                                          ),
+                                          SizedBox(
+                                            height: 5.h,
+                                          )
+                                        ],
+                                      );
                                     },
                                   ),
                           );

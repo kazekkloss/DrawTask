@@ -8,3 +8,4 @@ export 'small_tab.dart';
 export 'image_button.dart';
 export 'zoom_drawing.dart';
 export 'bottom_panel.dart';
+export 'user_tab.dart';

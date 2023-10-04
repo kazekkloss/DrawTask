@@ -178,14 +178,6 @@ class AppRouter {
                   path: '/new_game',
                   pageBuilder: (context, state) => NoTransitionPage(
                       child: const NewGameScreen(), key: state.pageKey),
-                  routes: [
-                    GoRoute(
-                        name: RouteConstants.friendsGame,
-                        path: 'friends_game',
-                        pageBuilder: ((context, state) =>
-                            const NoTransitionPage(
-                                child: FriendsGameScreen()))),
-                  ],
                 ),
                 // Profile Screen
                 GoRoute(
@@ -210,6 +202,11 @@ class AppRouter {
               path: '/joining_to_game',
               pageBuilder: ((context, state) =>
                   const NoTransitionPage(child: JoiningToGameScreen()))),
+          GoRoute(
+              name: RouteConstants.friendsGame,
+              path: '/friends_game',
+              pageBuilder: ((context, state) =>
+                  const NoTransitionPage(child: FriendsGameScreen()))),
           GoRoute(
               name: RouteConstants.drawingScreen,
               path: '/drawing',

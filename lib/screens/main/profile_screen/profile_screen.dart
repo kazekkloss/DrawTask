@@ -27,12 +27,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    context.read<FriendsBloc>().add(GetFriendsEvent(
-        friendsType: FriendsType.accepted, context: context, listLength: 0));
-    context.read<FriendsBloc>().add(GetFriendsEvent(
-        friendsType: FriendsType.waiting, context: context, listLength: 0));
-    context.read<FriendsBloc>().add(GetFriendsEvent(
-        friendsType: FriendsType.invitations, context: context, listLength: 0));
+    context.read<FriendsBloc>().add(GetFriendsEvent(friendsType: FriendsType.accepted, context: context, listLength: 0));
+    context.read<FriendsBloc>().add(GetFriendsEvent(friendsType: FriendsType.waiting, context: context, listLength: 0));
+    context.read<FriendsBloc>().add(GetFriendsEvent(friendsType: FriendsType.invitations, context: context, listLength: 0));
     super.initState();
   }
 
@@ -59,12 +56,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               fontSize: 13,
                               onTap: () {
                                 setState(() {
-                                  currentContentType =
-                                      _ContentType.accountSettings;
+                                  currentContentType = _ContentType.accountSettings;
                                 });
                               },
-                              onTapped: currentContentType ==
-                                  _ContentType.accountSettings),
+                              onTapped: currentContentType == _ContentType.accountSettings),
                           CustomTextButton(
                               text: 'DRAWINGS',
                               fontSize: 13,
@@ -73,8 +68,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   currentContentType = _ContentType.drawings;
                                 });
                               },
-                              onTapped:
-                                  currentContentType == _ContentType.drawings),
+                              onTapped: currentContentType == _ContentType.drawings),
                           CustomTextButton(
                               text: 'FRIENDS',
                               fontSize: 13,
@@ -83,8 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   currentContentType = _ContentType.firends;
                                 });
                               },
-                              onTapped:
-                                  currentContentType == _ContentType.firends),
+                              onTapped: currentContentType == _ContentType.firends),
                         ],
                       ),
                     ),

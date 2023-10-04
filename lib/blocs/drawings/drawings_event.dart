@@ -9,3 +9,11 @@ class GetMyDrawingsEvent extends DrawingsEvent {
   @override
   List<Object?> get props => [context];
 }
+
+class GetWallDrawingsEvent extends DrawingsEvent {
+  final BuildContext context;
+  GetWallDrawingsEvent({required this.context});
+
+  @override
+  List<Object?> get props => [context];
+}

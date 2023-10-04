@@ -95,6 +95,8 @@ flutter:
     - assets/svg/hi.svg
     - assets/svg/post.svg
     - assets/svg/add_friend.svg
+    - assets/svg/minus.svg
+    - assets/svg/plus.svg
     - assets/svg/trash.svg
     - assets/svg/go_draw.svg
     - assets/svg/vote.svg

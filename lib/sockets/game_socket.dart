@@ -21,8 +21,7 @@ class GameSocket {
     try {
       List<Game> gamesList = [];
       final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-      _socketClient
-          .emit("getAllGames", {"currentUserId": authBloc.state.user.id});
+      _socketClient.emit("getAllGames", {"currentUserId": authBloc.state.user.id});
 
       _socketClient.on("allGamesToState", (data) {
         for (var gameData in data) {
@@ -39,8 +38,7 @@ class GameSocket {
   void joinToGame({required BuildContext context}) {
     try {
       final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
-      _socketClient
-          .emit("joinToGame", {"currentUserId": authBloc.state.user.id});
+      _socketClient.emit("joinToGame", {"currentUserId": authBloc.state.user.id});
 
       _socketClient.on("joinedToGame", (data) {
         final game = Game.fromJson(jsonEncode(data));
@@ -51,6 +49,14 @@ class GameSocket {
         _socketClient.off('joinedToGame');
         context.goNamed(RouteConstants.drawingScreen, extra: game);
       });
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void createFriendsGame({required BuildContext context, required List<String> selectedUsers}) {
+    try {
+      _socketClient.emit("createFriendsGame", {"selectedUsers": selectedUsers});
     } catch (e) {
       showSnackBar(context, e.toString());
     }

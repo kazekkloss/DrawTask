@@ -53,12 +53,6 @@ class _TopAppBarState extends State<TopAppBar> {
           _title = "New Game";
         });
         break;
-      case "/new_game/friends_game":
-        setState(() {
-          _isLeading = true;
-          _title = "Friend's Game";
-        });
-        break;
       case "/profile/user":
         setState(() {
           _isLeading = true;
@@ -72,6 +66,20 @@ class _TopAppBarState extends State<TopAppBar> {
         });
         break;
     }
+  }
+
+  String buildDynamicText(List<String>? gameWords) {
+    String dynamicText = '';
+
+    if (gameWords!.length != 1) {
+      for (int i = 0; i < gameWords.length; i++) {
+        dynamicText += '#${gameWords[i]} ';
+      }
+    } else {
+      dynamicText = gameWords[0];
+    }
+
+    return dynamicText.trim();
   }
 
   @override
@@ -129,7 +137,7 @@ class _TopAppBarState extends State<TopAppBar> {
                                 width: 63.w,
                                 child: Center(
                                   child: AutoSizeText(
-                                    '#${widget.gameWords![0]} #${widget.gameWords![1]} #${widget.gameWords![2]}',
+                                    buildDynamicText(widget.gameWords),
                                     style: const TextStyle(
                                       fontSize: 20,
                                       fontFamily: 'Righteous',

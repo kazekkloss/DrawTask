@@ -28,6 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: SizedBox(
                 width: 85.w,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(height: 3.07.h),
                     const Align(
@@ -42,9 +43,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     SizedBox(height: 1.2.h),
                     ShadowContainer(
-                      height: state.games.isEmpty
-                          ? 20.h
-                          : 14.68.h * state.games.length.toDouble() + 3.48.h,
+                      height: state.games.isEmpty ? 18.16.h : 14.68.h * state.games.length.toDouble() + 3.48.h,
                       child: Padding(
                         padding: EdgeInsets.only(top: 1.18.h),
                         child: state.games.isEmpty
@@ -61,8 +60,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: state.games.length,
                                 itemBuilder: (context, index) {
-                                  final AuthBloc authBloc =
-                                      BlocProvider.of<AuthBloc>(context);
+                                  final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
                                   return GameTab(
                                     game: state.games[index],
                                     user: authBloc.state.user,
@@ -70,7 +68,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 }),
                       ),
                     ),
-                    SizedBox(height: 3.h),
+                    SizedBox(height: 3.43.h),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Your Rooms Games",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 3.43.h),
+                    ShadowContainer(
+                        height: 18.16.h,
+                        child: const Center(
+                          child: Text(
+                            "You don't have any rooms yet",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                        )),
                   ],
                 ),
               ),

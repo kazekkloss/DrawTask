@@ -73,7 +73,7 @@ class NewGameTab extends StatelessWidget {
                     height: 1.4.h,
                   ),
                   NewGameButton(
-                    textButton: "Friend’s Games",
+                    textButton: "Friend’s",
                     onTap: () => context.goNamed(RouteConstants.friendsGame),
                   ),
                 ],

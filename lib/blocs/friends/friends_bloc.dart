@@ -20,7 +20,6 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
       GetFriendsEvent event, Emitter<FriendsState> emit) async {
     List<User> usersList = await _friendsRepository.getUsersList(
         context: event.context,
-        currentListLength: event.listLength,
         friendsType: event.friendsType);
     try {
       if (event.friendsType == FriendsType.accepted) {
@@ -28,11 +27,9 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
           List<User> updatedList = List.from(state.friends)..addAll(usersList);
           emit(state.copyWith(
               status: FriendsStatus.loaded, friends: updatedList));
-          print(state.friends.length);
         } else {
           emit(
               state.copyWith(status: FriendsStatus.loaded, friends: usersList));
-          print(state.friends.length);
         }
       } 
       if (event.friendsType == FriendsType.waiting) {

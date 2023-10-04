@@ -37,8 +37,7 @@ class DrawingsRepository {
             final List<dynamic> responseData = jsonDecode(res.body);
             for (int i = 0; i < responseData.length; i++) {
               drawingsList.add(
-                Drawing.fromMap(
-                    responseData[i]),
+                Drawing.fromMap(responseData[i]),
               );
             }
           },
@@ -52,22 +51,23 @@ class DrawingsRepository {
     return drawingsList;
   }
 
-    Future<List<Drawing>> getWallDrawings({required BuildContext context}) async {
+  Future<List<Drawing>> getWallDrawings({required BuildContext context}) async {
     List<Drawing> drawingsList = [];
     try {
       final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
+      //final FriendsBloc friendsBloc = BlocProvider.of<FriendsBloc>(context);
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
       http.Response res = await http.post(
-        Uri.parse('$uri/api/get_my_drawings'),
+        Uri.parse('$uri/api/wall_drawings'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': token!,
         },
         body: jsonEncode(
           {
-            'currentUserId': authBloc.state.user.id,
+            'currentUserFriends': authBloc.state.user.friends,
           },
         ),
       );
@@ -79,8 +79,7 @@ class DrawingsRepository {
             final List<dynamic> responseData = jsonDecode(res.body);
             for (int i = 0; i < responseData.length; i++) {
               drawingsList.add(
-                Drawing.fromMap(
-                    responseData[i]),
+                Drawing.fromMap(responseData[i]),
               );
             }
           },

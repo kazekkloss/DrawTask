@@ -13,15 +13,23 @@ class DrawingsBloc extends Bloc<DrawingsEvent, DrawingsState> {
   DrawingsBloc({required DrawingsRepository drawingsRepository})
       : _drawingsRepository = drawingsRepository,
         super(const DrawingsState.loading()) {
-    on<GetMyDrawingsEvent>(_testEventToState);
+    on<GetMyDrawingsEvent>(_getMyDrawingsEventToState);
+    on<GetWallDrawingsEvent>(_getWallDrawingsEventState);
   }
 
-  void _testEventToState(
-      GetMyDrawingsEvent event, Emitter<DrawingsState> emit) async {
+  void _getMyDrawingsEventToState(GetMyDrawingsEvent event, Emitter<DrawingsState> emit) async {
     try {
-      List<Drawing> drawings =
-          await _drawingsRepository.getMyDrawings(context: event.context);
-      emit(DrawingsState.loaded(drawings));
+      List<Drawing> drawings = await _drawingsRepository.getMyDrawings(context: event.context);
+      emit(state.copyWith(status: DrawingsStatus.loaded, myDrawings: drawings));
+    } catch (e) {
+      debugPrint('$e');
+    }
+  }
+
+  void _getWallDrawingsEventState(GetWallDrawingsEvent event, Emitter<DrawingsState> emit) async {
+    try {
+      List<Drawing> drawings = await _drawingsRepository.getWallDrawings(context: event.context);
+      emit(state.copyWith(status: DrawingsStatus.loaded, wallDrawings: drawings));
     } catch (e) {
       debugPrint('$e');
     }
